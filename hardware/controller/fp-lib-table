@@ -3,4 +3,6 @@
   (lib (name "Teensy")(type "KiCad")(uri "${KIPRJMOD}/Teensy.pretty")(options "")(descr ""))
   (lib (name "Lightpipe")(type "KiCad")(uri "${KIPRJMOD}/Lightpipe.pretty")(options "")(descr ""))
   (lib (name "Button")(type "KiCad")(uri "${KIPRJMOD}/Button.pretty")(options "")(descr ""))
+  (lib (name "NKK_BB15AH")(type "KiCad")(uri "${KIPRJMOD}/NKK_BB15AH.pretty")(options "")(descr ""))
+  (lib (name "RotatorController")(type "KiCad")(uri "${KIPRJMOD}/RotatorController.pretty")(options "")(descr ""))
 )
