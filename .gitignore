@@ -1,0 +1,49 @@
+# KiCad
+*-backups/
+*.kicad_prl
+*.kicad_pcb-bak
+*.kicad_sch-bak
+*.kicad_pro-bak
+fp-info-cache
+~*.lck
+*.lck
+_autosave-*
+*-save.kicad_pcb
+*-save.pro
+*.kicad_sch_old
+
+# CMake / C++
+**/build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+Testing/
+compile_commands.json
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.exe
+
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# Simulator binaries (software/sim)
+software/sim/pc_rotator_sim
+software/sim/gui_server
+software/sim/tests/run_tests
+software/sim/tests/run_integration_tests
+
+# Python drawing scripts
+__pycache__/
+*.pyc
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~

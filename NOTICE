@@ -1,0 +1,20 @@
+Copyright (C) 2026 Jeff Millar, WA1HCO
+
+This repository holds more than one kind of work. The license that
+applies depends on the path:
+
+- Software (software/, and the programs and scripts under it) is
+  GPL-3.0-only. See LICENSE.
+- Hardware (hardware/, including the KiCad board) is CERN-OHL-S-2.0.
+  See hardware/LICENSE.
+- Documentation (docs/, including design notes, drawings, and ADRs)
+  is CC BY-SA 4.0. See docs/LICENSE.
+
+The KiCad files under hardware/controller/ were previously published
+by the same author in wa1hco/Rotator-Controller-V2 under CC0-1.0.
+See hardware/controller/README.md for the source commit.
+
+The simulator and GS-232 test harness under software/sim/ were copied
+from wa1hco/k3ng_rotator_controller, a GPL-3.0 fork of Anthony Good,
+K3NG's rotator controller. See software/sim/README.md for the source
+commit.
