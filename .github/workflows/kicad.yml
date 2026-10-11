@@ -18,8 +18,11 @@ jobs:
   erc-drc:
     name: Load schematic, ERC and DRC reports
     runs-on: ubuntu-latest
+    # The image's default user is `kicad` (uid 1000), which cannot write the
+    # Actions workspace or /__w/_temp. Root is required for checkout.
     container:
       image: kicad/kicad:9.0
+      options: --user root
     steps:
       - uses: actions/checkout@v4
 
