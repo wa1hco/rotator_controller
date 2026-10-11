@@ -1,0 +1,27 @@
+name: firmware
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  host:
+    name: Host build and unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install compiler and CMake
+        run: sudo apt-get update && sudo apt-get install -y build-essential cmake
+
+      - name: Configure
+        run: cmake -S software/firmware -B software/firmware/build -DCMAKE_CXX_COMPILER=g++
+
+      - name: Build
+        run: cmake --build software/firmware/build
+
+      - name: Test
+        run: ctest --test-dir software/firmware/build --output-on-failure

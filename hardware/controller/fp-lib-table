@@ -1,0 +1,6 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "Lightpipe")(type "KiCad")(uri "${KIPRJMOD}/Lightpipe.pretty")(options "")(descr "Project-local light pipe"))
+  (lib (name "NKK_BB15AH")(type "KiCad")(uri "${KIPRJMOD}/NKK_BB15AH.pretty")(options "")(descr "Project-local NKK BB15AH"))
+  (lib (name "RotatorController")(type "KiCad")(uri "${KIPRJMOD}/RotatorController.pretty")(options "")(descr "Project-local rotator controller footprints"))
+)

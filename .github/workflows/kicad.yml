@@ -1,0 +1,72 @@
+name: kicad
+
+# Report-only. The imported V4 schematic has many known ERC violations
+# (unconnected MCU pins and similar), and the PCB has known DRC violations.
+# This job proves kicad-cli can load the project, writes ERC and DRC
+# reports, and uploads them. It does not pass --exit-code-violations, so
+# those violations do not fail the build. A failure to load or export the
+# schematic still fails the job.
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  erc-drc:
+    name: Load schematic, ERC and DRC reports
+    runs-on: ubuntu-latest
+    # The image's default user is `kicad` (uid 1000), which cannot write the
+    # Actions workspace or /__w/_temp. Root is required for checkout.
+    container:
+      image: kicad/kicad:9.0
+      options: --user root
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: KiCad version
+        run: kicad-cli version
+
+      - name: Point KiCad at the stock libraries
+        run: |
+          ver=$(kicad-cli version | cut -d. -f1,2)
+          dest="${HOME}/.config/kicad/${ver}"
+          mkdir -p "${dest}"
+          if [ -f /usr/share/kicad/template/sym-lib-table ]; then
+            cp /usr/share/kicad/template/sym-lib-table "${dest}/"
+            cp /usr/share/kicad/template/fp-lib-table "${dest}/"
+          else
+            echo "Stock library tables are not at /usr/share/kicad/template; using the image default."
+          fi
+
+      - name: Export schematic netlist
+        run: |
+          mkdir -p reports
+          kicad-cli sch export netlist \
+            --output reports/rotator.net \
+            hardware/controller/Rotator-Controller-V4.kicad_sch
+          test -s reports/rotator.net
+
+      - name: ERC report
+        run: |
+          kicad-cli sch erc --severity-all \
+            --output reports/erc.rpt \
+            hardware/controller/Rotator-Controller-V4.kicad_sch
+          tail -n 5 reports/erc.rpt
+
+      - name: DRC report
+        run: |
+          kicad-cli pcb drc --severity-all \
+            --output reports/drc.rpt \
+            hardware/controller/Rotator-Controller-V4.kicad_pcb
+          tail -n 8 reports/drc.rpt
+
+      - name: Upload ERC and DRC reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kicad-erc-drc
+          path: reports/
+          if-no-files-found: error

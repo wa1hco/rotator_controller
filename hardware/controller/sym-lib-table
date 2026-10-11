@@ -1,0 +1,5 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "LightPipe")(type "KiCad")(uri "${KIPRJMOD}/LightPipe.kicad_sym")(options "")(descr "Project-local light pipe"))
+  (lib (name "RotatorController")(type "KiCad")(uri "${KIPRJMOD}/RotatorController.kicad_sym")(options "")(descr "Project-local rotator controller symbols"))
+)
