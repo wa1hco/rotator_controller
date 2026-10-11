@@ -28,7 +28,7 @@ The reference points are K3NG (very broad features, compile-time `#define` confi
 |---|---|---|---|
 | A. Monolith (K3NG style) | One firmware, features chosen with `#define` | Simple to flash | Hard to test; configuration needs a rebuild; this is the problem we are leaving |
 | B. Layered single box | One shack box; firmware split into modules with fixed interfaces; configuration is runtime data | Testable; matches the stock-cable baseline | Display and network options add to the box's BOM |
-| C. Box + separate bridge | Shack box is the real-time controller (USB serial plus an optional Ethernet/Wi-Fi module); a PC or Pi service adds web, MQTT, and many-client handling | Keeps safety-critical code small; PC-side features can change fast | Two things to deploy |
+| C. Box + separate bridge | Shack box is the real-time controller (USB and Ethernet); a PC or Pi service adds web, MQTT, and many-client handling | Keeps safety-critical code small; PC-side features can change fast | Two things to deploy |
 | D. Distributed (*new idea*) | Driver/sensor unit on the tower, control head in the shack, linked by RS-485, CAN, or Ethernet | Short motor/sensor runs; digital link is immune to cable resistance and hum; one cable for many rotators | **Needs new cable and tower electronics** (lightning, weather, power at the tower); breaks the baseline |
 
 ### Recommendation: B inside the box, with C as an optional add-on
@@ -119,7 +119,7 @@ Each serial or TCP port is configured to one protocol. One box can expose USB-se
 
 ### Transport
 
-**USB CDC serial** is the baseline. It works with everything and needs no drivers. Isolated USB is already in the V4 design, and it keeps ground loops out of the shack PC. **Ethernet** is preferred over Wi-Fi in a contest station: it is deterministic, keeps RF out of the 2.4 GHz band, and is easy to configure with a static IP. Wi-Fi is fine for a portable box. If the box has no network hardware, the **bridge service** can run on the shack PC or a Pi. It holds the USB port and offers rotctld, JSON, and MQTT. This is the same pattern as the WIMS host agent that owns a serial port.
+**USB CDC serial** is required. It works with everything and needs no drivers. Isolated USB is already in the V4 design, and it keeps ground loops out of the shack PC. **Ethernet is also required** (STM32F407VGT6 MAC + LAN8720A; the W5500 path is dropped — see `mcu-ethernet-lcsc.md`). It is preferred over Wi-Fi in a contest station: it is deterministic, keeps RF out of the 2.4 GHz band, and is easy to configure with a static IP. A **bridge service** on the shack PC or a Pi can still hold the USB port and offer rotctld, JSON, and MQTT for clients that do not speak to the box directly. This is the same pattern as the WIMS host agent that owns a serial port.
 
 ### Multi-client arbitration
 

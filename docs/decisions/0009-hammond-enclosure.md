@@ -16,7 +16,7 @@ The board slides into the side-wall card slots.
 
 - Front end plate: buttons and LEDs only.
 - Rear end plate: every cable (rotor pigtail, 13.8 V, 26 VAC, USB-C,
-  optional Ethernet).
+  and the Ethernet MagJack). Ethernet is standard (ADR 0014).
 - No connectors on the other faces, and no internal wiring harness.
   The rear plate and the PCB connectors are one subassembly.
 

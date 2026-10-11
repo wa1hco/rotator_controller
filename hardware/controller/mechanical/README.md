@@ -16,8 +16,8 @@ two end plates are removable.
 - **Front end plate:** buttons and LEDs only. PCB-mounted actuators and
   light pipes pass through the plate. No connectors.
 - **Rear end plate:** every cable. Rotor pigtail, 13.8 V, 26 VAC, USB-C,
-  and optional Ethernet. No connectors on the other faces, and no
-  internal wiring harness.
+  and the Ethernet MagJack (through-hole, standard on every board).
+  No connectors on the other faces, and no internal wiring harness.
 
 Needed here later:
 

@@ -9,8 +9,8 @@
 namespace rotator::hal {
 
 // Byte pipe used by protocol modules.
-// USB serial is required on the board. Ethernet is an optional second Link.
-// The core does not include a TCP or USB stack.
+// USB and Ethernet are both required on the board. Each is one Link.
+// The core does not include a TCP or USB stack, and it does not name the MCU.
 class Link {
  public:
   virtual ~Link() = default;

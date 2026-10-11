@@ -109,7 +109,7 @@ To keep the tables readable, products with nothing in a row are left out of that
 |---|---|---|---|
 | USB virtual COM | K3NG ●, RT-21 ●, ERC-M ● (FTDI), ARS ●, DCU-3 ●, SPID ●, M2 ○ (PRKX2SU), wa1hco ● | **A** | USB device port; **isolation** (ADuM4160 on V4) recommended |
 | RS-232 DB-9 | RT-21 ● (also master/slave link), ERC-M ○, DCU-3 ●, Yaesu GS-232B ●, SPID MD ● (×2), M2 ● | **A** | Level shifter + DB-9; useful for legacy and daisy-chaining |
-| Ethernet / Wi-Fi on box | RT-21 ○ (add-in card), SPID MD-02 ● (Ethernet, TCP 23), ERC-M ○ (LAN option), K3NG ○ (Ethernet shield), Rot32/WiFiRotorCtl ● (Wi-Fi) | **A** | MAC+PHY or module (W5500-class, ESP32 coprocessor), magjack, extra RAM/flash |
+| Ethernet / Wi-Fi on box | RT-21 ○ (add-in card), SPID MD-02 ● (Ethernet, TCP 23), ERC-M ○ (LAN option), K3NG ○ (Ethernet shield), Rot32/WiFiRotorCtl ● (Wi-Fi) | **A** | Chosen path: MCU MAC + LAN8720A + MagJack. A W5500-class SPI module was considered and dropped |
 | RS-485 | SatNOGS ● (UART or RS-485), SPID MD ○ (expansion) | **A** (header) | Transceiver footprint. Useful for "new idea" tower units |
 | GS-232A/B | K3NG ●, ERC-M ●, ARS ● (A), Yaesu ●, SPID MD ●, wa1hco ● | **B** | Tier 1 |
 | DCU-1 | K3NG ●, RT-21 ● (all DCU-1 programs), ERC-M ●, SPID MD ● (HyGain) | **B** | Tier 1–2; very cheap |
@@ -169,7 +169,7 @@ To keep the tables readable, products with nothing in a row are left out of that
 2. **Full replacement vs. alongside the stock box** (section 3.3). This decides whether mains, a transformer, and a run capacitor live in your box. *Recommendation:* design for full replacement and leave the alongside path open through the same logic board (a "no power module" variant with open-collector outputs).
 3. **Sensor front ends included.** Dual-end pot (CDE) + single-ended pot with selectable excitation (Yaesu/Prosistel), plus pulse counter inputs. *Recommendation:* include all three on the board, even if pulse firmware waits until v2/later. Changing a board later costs much more than populating a few parts now.
 4. **Axes per box.** 1 or 2. *Recommendation:* the logic board supports 2 axes (az-el or dual-az, as in ERC-M and SPID MD-02). The first enclosure populates 1.
-5. **On-box network or bridge.** *Recommendation:* lay out Ethernet (module/footprint + magjack) but make it optional in v1. USB (isolated) + RS-232 are required.
+5. **On-box network or bridge.** *Updated 2026-10-11:* Ethernet is standard, not optional. The MCU is an STM32F407VGT6 with a LAN8720A (see `mcu-ethernet-lcsc.md`). USB stays required. The W5500-on-SPI option is dropped. RS-232 stays an optional population.
 6. **Front-panel interface.** *Recommendation:* a ribbon/connector to a separate panel board (I2C/SPI display, encoder, 4–6 buttons, LEDs), so the panel style can change without respinning the main board.
 7. **Station I/O count:** E-stop and inhibit inputs, aux outputs (see the list below).
 
@@ -205,7 +205,7 @@ To keep the tables readable, products with nothing in a row are left out of that
 - **Comms:**
   - USB device, **galvanically isolated** (as V4).
   - RS-232 DB-9 (level shifter).
-  - Ethernet footprint (module or MAC+PHY) + magjack, optional in v1.
+  - Ethernet is standard: STM32F407 MAC + LAN8720A + MagJack (not a W5500, and not an unpopulated footprint). See `mcu-ethernet-lcsc.md`.
   - RS-485 transceiver footprint (for "new idea" tower units / daisy-chain).
 - **Station I/O:**
   - 3 opto-isolated inputs: E-stop, rotate-inhibit (from SO4R_Interlock/sequencer), spare.

@@ -8,7 +8,7 @@
 2. **Full replacement** of the stock controller.
 3. **All sensor inputs:** dual-end pot, single-ended pot with excitation, pulse/reed counters.
 4. **Two axes** at the sensor and MCU level. The motor drive is modular or a conditional assembly.
-5. **USB serial is required**, plus whatever else makes sense. An Ethernet footprint is optional.
+5. **USB and Ethernet are both required.** The MCU is an STM32F407VGT6 with a LAN8720A RMII PHY. The W5500-on-SPI option is dropped. See the evening addendum below and `mcu-ethernet-lcsc.md`.
 
 Markers used below:
 - **[V]** verified against a datasheet or manual (sources in section 13).
@@ -35,7 +35,7 @@ flowchart LR
   end
 
   subgraph LB["Logic board"]
-    MCU["MCU (TBD)"]
+    MCU["STM32F407VGT6"]
     AFE["Sensor AFE x2:<br/>dual-end / single-end pot,<br/>notch + anti-alias,<br/>clamps + TVS"]
     PUL["Pulse inputs x2:<br/>pull-up, RC, Schmitt, TVS"]
     ADC["Optional ext. ADC<br/>(simultaneous sampling)"]
@@ -44,7 +44,7 @@ flowchart LR
     SAF["Safety chain:<br/>E-stop loop, ext. watchdog,<br/>CW/CCW interlock + dead time"]
     ZX["AC sync / zero-cross sense"]
     USB["Isolated USB-UART"]
-    ETH["W5500 Ethernet (optional)"]
+    ETH["LAN8720A RMII PHY + MagJack"]
     SER["RS-232 / RS-485 (optional)"]
     SIO["Station I/O:<br/>3 opto in, 3 OC out"]
     EXP["Expansion header<br/>I2C/SPI/UART"]
@@ -85,7 +85,7 @@ flowchart LR
 
 | Board | Contents | Notes |
 |---|---|---|
-| **Logic board** (one) | MCU, 2 sensor front ends, pulse inputs, optional external ADC, FRAM, power-fail detect, safety chain, zero-cross sense, isolated USB, optional Ethernet/RS-232/RS-485, station I/O, drive-module connectors (x2), front-panel connector, expansion header, logic power | No mains and no motor current. Processor-independent interface to the drive modules |
+| **Logic board** (one) | STM32F407VGT6, 2 sensor front ends, pulse inputs, optional external ADC, FRAM, power-fail detect, safety chain, zero-cross sense, isolated USB, Ethernet (LAN8720A + MagJack), optional RS-232/RS-485, station I/O, drive-module connectors (x2), front-panel connector, expansion header, logic power | No mains and no motor current. The drive-module connector stays the same if the MCU changes |
 | **Drive module, AC variant** (one per AC axis) | Master-enable switch, CW/CCW/BRAKE switches, RC snubbers, MOV, run-capacitor terminals, Hall current sensor, output-presence opto sense, rotor-power terminal block | v1 build for HAM-IV/T2X |
 | **Drive module, DC variant** (one per DC axis) | Reverse-polarity + fuse, bulk caps, H-bridge, gate driver, shunt amp, TVS, output-presence/voltage sense, terminal block | v2 (Yaesu DC, Prosistel, SPID, M2) |
 | **Front panel board** | Display, encoder + push, CW/CCW/STOP + 2–4 buttons, status LEDs, I2C GPIO expander | Ribbon to the logic board; STOP also wired into the safety chain |
@@ -288,7 +288,7 @@ Order matters: you moved the overvoltage diodes after the notch so 60 Hz doesn't
 | Port | v1 status | Implementation options | Recommendation |
 |---|---|---|---|
 | **USB serial (control)** | **Required** | (a) USB-UART bridge (FT230X class, as on your SO4R board, with custom product strings) powered from VBUS + a **2–4 channel digital isolator** to the MCU UART. (b) MCU native USB + USB isolator (ADuM4160 class, as on V4 [V part on V4]) | **(a)** is processor-agnostic, gives stable port names ("FTDI WA1HCO / Rotator Az") and RTS/CTS, and allows a ROM-UART bootloader for updates. (b) allows composite CDC (multiple ports) but ties the design to an MCU with USB |
-| **Ethernet** | **Optional footprint** | (a) **W5500** SPI hardware TCP/IP (8 sockets) + magjack. (b) MCU MAC + RMII PHY (LAN8742 class) + lwIP | **(a) W5500**: MCU-agnostic, 6 pins, offloads TCP; 8 sockets cover GS-232-over-TCP, rotctld, HTTP, WebSocket, MQTT [U: confirm socket budget]. Magnetics give galvanic isolation. **PoE not needed** |
+| **Ethernet** | **Required** | STM32F407 MAC + LAN8720A-CP-TR RMII PHY + 25 MHz crystal (PHY supplies 50 MHz REF_CLK) + through-hole MagJack. LAN8742A-CZ-TR is the same-footprint fallback | Magnetics give galvanic isolation. **PoE is not used.** The earlier W5500-on-SPI option is dropped (evening addendum) |
 | **RS-232** | Optional (populate) | MAX3232-class + DB-9 | Legacy loggers/hardware; not isolated (document it) |
 | **RS-485** | Optional (populate) | Half-duplex transceiver + terminal block, shares a UART with RS-232 by population | For future tower units / daisy-chain ("new idea") |
 | **Debug** | Required | SWD/JTAG header + console UART on the expansion header | — |
@@ -364,20 +364,18 @@ It drives the master-enable switch on each drive module. Direction interlock and
 | AFE mode select (×2), pulse pull-up select (×2) | GPIO | 4 | Can move to the I2C expander |
 | USB-UART bridge | UART (+RTS/CTS) | 2–4 | |
 | RS-232 / RS-485 | UART (+DE) | 2–3 | Shared by population |
-| Ethernet W5500 | SPI + CS + INT + RST | 3 (shared SPI) + 3 | |
+| Ethernet RMII (LAN8720A) | RMII + MDIO/MDC + nRST | about 11 | REF_CLK from the PHY. Not a W5500 |
 | FRAM | I2C (shared) or SPI CS | 0–1 | |
 | Front panel | I2C (shared), SPI (shared) + CS, DC, enc A/B/SW, INT, backlight PWM, STOP | ~8 | |
 | Station I/O | GPIO | 6 | 3 in, 3 out (or via expander) |
 | Status LEDs | GPIO | 2 | |
 | Expansion header | I2C, SPI, UART, 2 GPIO | 2 GPIO + shared buses + 2 UART | |
 | Debug | SWD + reset + boot | 3–4 | |
-| **Total direct GPIO** | | **≈ 70 pins** all direct; **≈ 50** with an I2C expander for slow signals (sense, mode selects, station I/O) | → a 64-pin MCU works with an expander; 100-pin gives headroom |
+| **Total direct GPIO** | | **≈ 70 pins** all direct; **≈ 50** with an I2C expander for slow signals (sense, mode selects, station I/O) | The chosen MCU is the 100-pin STM32F407VGT6. A 64-pin F405 has no Ethernet MAC, and ST does not make a 64-pin F407 |
 
-**Peripheral counts:** UART ×3 (USB bridge, RS-232/485, expansion/console); SPI ×1–2 (Ethernet, display, external ADC); I2C ×1–2; timers for 4 PWM + 3 capture + system tick; ADC 11–13 channels with DMA; hardware watchdog; FPU helpful (dual-end solve, FIR).
+**Peripheral counts:** UART ×3 (USB, RS-232/485, expansion/console); SPI ×1 (display, external ADC); Ethernet is the MCU MAC, not a SPI controller; I2C ×1–2; timers for 4 PWM + 3 capture + system tick; ADC 11–13 channels with DMA; hardware watchdog; FPU helpful (dual-end solve, FIR).
 
-**Memory:**
-- **With W5500 offloading TCP:** flash ≥ 512 KB (firmware + web assets, or put assets in external SPI flash [U]); RAM ≥ 64–128 KB [U estimate].
-- **With MCU MAC + lwIP:** budget several hundred KB of RAM [U].
+**Memory:** the chosen part, STM32F407VGT6, has 1 MB flash and 192 KB RAM. The stack is the MCU MAC plus a host network stack (lwIP or equivalent), not a W5500 offload. 192 KB is the RAM the design has to live in [U: measure the stack].
 
 ---
 
@@ -421,7 +419,7 @@ It drives the master-enable switch on each drive module. Direction interlock and
 - M2 RC2800PX manual (27 VDC 3.2 A, reed ~11.3 VDC, 3960 divisor): https://www.m2inc.com/content/PDF%20MANUALS/RC2800%20SERIES/RC2800PXB-AZMAN04-W.pdf
 - Prosistel PST-61/71 manual (24 VDC, 10 kΩ pot, 5 V excitation): https://www.arraysolutions.com/pdfs/Prosistel%20PST-61%20-%20PST-71%20and%20PST-110%20User%20Manual.pdf
 - SPID RAS / Rot2Prog: http://spid.net.pl/en/ras-2/ ; https://www.wimo.com/media/manuals/SPID/25082_Satelliten-Rotor-Satellite-Rotator_Manual.pdf
-- Your repos: Rotator_Controller `src/ReadAzimuthCDE.cpp` (RBIAS 330 Ω, RPOT 500 Ω, 3.3 V, 2 ms ISR, 31-tap FIR); Rotator_Controller_Board (60 Hz notch, OVP after notch); Rotator-Controller-V2 V4 branch (STM32F405, CPC1966 ×3, ADuM4160, SMAJ90CA); SO4R_Interlock README (FT230X custom strings, 60 V/300 mA OC outputs).
+- Your repos: Rotator_Controller `src/ReadAzimuthCDE.cpp` (RBIAS 330 Ω, RPOT 500 Ω, 3.3 V, 2 ms ISR, 31-tap FIR); Rotator_Controller_Board (60 Hz notch, OVP after notch); Rotator-Controller-V2 V4 branch as imported (drawing still shows STM32F405RGT6, CPC1966 ×3, ADuM4160, SMAJ90CA; the chosen MCU is the STM32F407VGT6, evening addendum); SO4R_Interlock README (FT230X custom strings, 60 V/300 mA OC outputs).
 
 ## Addendum (Oct 11, 2026): Rotor cable connector standard
 
@@ -475,3 +473,22 @@ Design implication: no panel-mount female exists in shell 13, so the controller 
   - Height is fixed at 25.4 mm, so pick the slot (or pad thickness/shim) to suit.
 - **Rejected:** side-wall mounting (comb contact, lateral stack, side screws), no-screw interference fit (contact not guaranteed), bar on the lid with the board floating (lead stress), D²PAK to the belly plate (weak path, hot copper island, obsolete part). See `triac-thermal-packaging.md` §5.
 - §4.4 has been updated to match. The old "chassis wall through an insulator" wording is gone. Bond the box to chassis/GND at the rear plate.
+
+## Addendum (Oct 11, 2026, evening): MCU, Ethernet, and who solders what
+
+Locked the same day. The KiCad schematic and PCB in this repository are **not** updated here. They still show the STM32F405RGT6. The parts check is `mcu-ethernet-lcsc.md`. Decision records: `docs/decisions/0013-assembly-sourcing.md` and `docs/decisions/0014-stm32f407-lan8720.md`.
+
+**Assembly.** JLCPCB places every SMT part, and that part must be an LCSC catalog part. The owner hand-solders every through-hole part, bought from Mouser. Symbols get an `LCSC` field (the C-number) on SMT parts and a `Mouser` field on through-hole parts.
+
+**MCU and Ethernet.** Replace the STM32F405RGT6 (LQFP-64, no Ethernet MAC, zero JLCPCB/LCSC stock on the day of the check) with:
+
+| Function | Part | Catalog |
+|---|---|---|
+| MCU | STM32F407VGT6, LQFP-100 | LCSC C12345 |
+| PHY | LAN8720A-CP-TR. LAN8742A-CZ-TR (C621424) is the same footprint | LCSC C45223 |
+| Clock | 25 MHz crystal X322525MOB4SI (JLCPCB Basic). The PHY drives 50 MHz REF_CLK | LCSC C9006 |
+| USB ESD | USBLC6-2SC6 on D+/D- | LCSC C7519 |
+| Ethernet ESD | SRV05-4 on the PHY side of the jack | LCSC C13612 |
+| RJ45 | Through-hole MagJack, hand-soldered. Candidate Pulse J0011D01BNL, not confirmed on Mouser | Mouser |
+
+Ethernet is on every board. The W5500 path in the earlier draft of section 6 is not the design. LQFP-64 to LQFP-100 is a re-layout; the MCU area of the imported board was barely started, so that re-layout is accepted. Recheck stock before ordering.

@@ -19,7 +19,8 @@ the K3NG sketch. K3NG remains the reference for behavior and for the
 simulator that was copied in.
 
 The core does not use Arduino types. A host build links the same core
-against fakes. The processor on the board is chosen later.
+against fakes. The board target is an STM32F407VGT6 (ADR 0014). That
+choice stays out of the core.
 
 ## Consequences
 

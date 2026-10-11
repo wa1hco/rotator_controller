@@ -1,14 +1,37 @@
 # V4 controller board
 
-KiCad 9 project for the shack-side antenna rotator controller. The board
-as imported is the CPC1966 design: STM32F405RG, ADuM4160 isolated USB,
-and three CPC1966 AC solid-state relays (CW, CCW, brake).
+KiCad 9 project for the shack-side antenna rotator controller. The files
+in this directory are the imported CPC1966 design: STM32F405RGT6 in
+LQFP-64, ADuM4160 isolated USB, and three CPC1966 AC solid-state relays
+(CW, CCW, brake).
+
+That MCU is not the build target. The accepted part is an STM32F407VGT6
+(LQFP-100, LCSC C12345) with a LAN8720A RMII PHY, and Ethernet is
+standard. See `docs/decisions/0014-stm32f407-lan8720.md` and
+`docs/design/mcu-ethernet-lcsc.md`. The schematic and PCB are
+intentionally not edited for that change. The MCU area was barely
+routed, so the next layout pass replaces the 64-pin footprint.
 
 Newer edits that exist only on the owner's laptop are **not** in this
 import. Those are the discrete-triac swap (MOC3023M + BTA16-600SW and
 snubbers) and the annotated design notes. They will be added later.
 Until then, `docs/design/v4-discrete-triac-change.md` is the change plan,
 and the schematic still shows CPC1966 parts.
+
+## Assembly and part fields
+
+JLCPCB assembles every SMT part, and those parts come from the LCSC
+catalog. The owner hand-solders every through-hole part, and those parts
+are bought from Mouser. The record is
+`docs/decisions/0013-assembly-sourcing.md`.
+
+When symbols are updated (not done in the imported project):
+
+- An SMT part gets an `LCSC` field whose value is the LCSC C-number
+  (for example `C12345` on the STM32F407VGT6).
+- A through-hole part gets a `Mouser` field with the Mouser order number.
+  The RJ45 candidate is the Pulse J0011D01BNL; that order number is not
+  confirmed yet, so the field waits until it is.
 
 ## Source
 

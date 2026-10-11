@@ -5,10 +5,11 @@ replaces the stock controller and drives the existing rotor cable.
 Owner: Jeff Millar, WA1HCO.
 
 The firmware is a new processor-agnostic C++17 core, not a refactor of
-K3NG. The V4 KiCad board is the hardware starting point (STM32F405,
-isolated USB, CPC1966 AC switches as currently drawn). Discrete triacs,
-the Hammond enclosure, and the rest of the decisions below are accepted
-and not all drawn into the board yet.
+K3NG. The V4 KiCad board is the hardware starting point (drawn with an
+STM32F405RG, isolated USB, and CPC1966 AC switches). The accepted MCU
+is an STM32F407VGT6 with a LAN8720A, and Ethernet is standard. Discrete
+triacs, the Hammond enclosure, and that MCU change are accepted and are
+not drawn into the board yet.
 
 ## Layout
 
@@ -16,7 +17,7 @@ and not all drawn into the board yet.
 |---|---|
 | [hardware/controller/](hardware/controller/README.md) | V4 KiCad 9 project and the project-local libraries it uses |
 | [hardware/controller/mechanical/](hardware/controller/mechanical/README.md) | Placeholder for enclosure drill templates and the triac bar drawing |
-| [software/firmware/](software/firmware/README.md) | C++17 core, host CMake build, unit tests. Processor TBD |
+| [software/firmware/](software/firmware/README.md) | C++17 core, host CMake build, unit tests. Board target STM32F407VGT6; the core stays processor-agnostic |
 | [software/sim/](software/sim/README.md) | Physics simulator, GS-232 harness, browser compass |
 | [software/tools/](software/tools/README.md) | Placeholder for calibration scripts, plots, and a web compass |
 | [docs/design/](docs/README.md) | System, hardware, triac, and packaging notes |
@@ -31,7 +32,8 @@ and not all drawn into the board yet.
   in this tree yet. The change plan is
   [docs/design/v4-discrete-triac-change.md](docs/design/v4-discrete-triac-change.md).
 - The firmware core builds and tests on a PC. It is not flashed to a
-  board. `software/firmware/platformio.ini` is a stub.
+  board. `software/firmware/platformio.ini` names the STM32F407VGT6
+  and is still a stub. The KiCad project is not updated to that part.
 - The simulator's physics tests run on their own. Its integration harness
   and compass page still expect a K3NG process. Retargeting notes are in
   the simulator README.
