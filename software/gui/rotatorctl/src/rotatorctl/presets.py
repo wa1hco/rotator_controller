@@ -9,6 +9,7 @@ the confirm diff matches ``preset apply``.
 from __future__ import annotations
 
 import os
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
@@ -60,10 +61,46 @@ class Preset:
     raw: Mapping[str, Any]
 
 
+def bundle_roots() -> tuple[Path, ...]:
+    """Directories a frozen build may have unpacked the catalog into."""
+
+    if not getattr(sys, "frozen", False):
+        return ()
+    roots: list[Path] = []
+    meipass = getattr(sys, "_MEIPASS", None)
+    if meipass:
+        roots.append(Path(meipass).resolve())
+    roots.append(Path(sys.executable).resolve().parent)
+    return tuple(roots)
+
+
+def _bundled_preset_candidates() -> tuple[Path, ...]:
+    parts = ("rotatorctl", "data", "rotor-presets.yaml")
+    return tuple(root.joinpath(*parts) for root in bundle_roots())
+
+
+def preset_path_is_bundled(path: Path) -> bool:
+    """True when ``path`` sits inside the frozen app, not a repo checkout."""
+
+    resolved = path.resolve()
+    return any(resolved == root or root in resolved.parents for root in bundle_roots())
+
+
 def default_preset_path() -> Path:
+    """Find the rotor catalog.
+
+    Order: ``ROTATOR_PRESETS``, then the PyInstaller bundle, then a walk
+    up from this file to ``software/firmware/presets/rotor-presets.yaml``.
+    A checkout next to a half-built bundle must not win over the copy
+    inside the app.
+    """
+
     env = os.environ.get("ROTATOR_PRESETS")
     if env:
         return Path(env)
+    for candidate in _bundled_preset_candidates():
+        if candidate.is_file():
+            return candidate
     here = Path(__file__).resolve()
     for parent in here.parents:
         candidate = parent / "software" / "firmware" / "presets" / "rotor-presets.yaml"

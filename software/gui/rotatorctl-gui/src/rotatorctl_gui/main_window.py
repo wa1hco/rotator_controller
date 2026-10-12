@@ -41,6 +41,7 @@ from rotatorctl.discovery import (
 )
 from rotatorctl.document import Change, SettingsDocument, SettingsError, format_value, parse_ini_lines
 from rotatorctl.operate import stop_line
+from rotatorctl.paths import ensure_user_config_dir
 from rotatorctl.phases import OPERATE_MILESTONES, UPGRADE_MILESTONES
 from rotatorctl.presets import Preset, axis_prefixes, can_apply, load_presets, settings_from_preset
 from rotatorctl.rotcfg import RotConfig, dumps, loads, new_config, push_lines
@@ -534,8 +535,19 @@ class MainWindow(QMainWindow):
         self.config.overrides = dict(self.overrides)
         self.client.restore_text(push_lines(self.config))
 
+    def _dialog_start(self, filename: str = "") -> str:
+        directory = ensure_user_config_dir()
+        if filename:
+            return str(directory / filename)
+        return str(directory)
+
     def on_open_rotcfg(self) -> None:
-        path, _selected = QFileDialog.getOpenFileName(self, "Open configuration", "", "Configuration (*.rotcfg *.yaml *.yml *.json)")
+        path, _selected = QFileDialog.getOpenFileName(
+            self,
+            "Open configuration",
+            self._dialog_start(),
+            "Configuration (*.rotcfg *.yaml *.yml *.json)",
+        )
         if path:
             self.load_rotcfg_text(Path(path).read_text(encoding="utf-8"), path)
 
@@ -546,7 +558,12 @@ class MainWindow(QMainWindow):
         self.save_rotcfg_to(str(self.rotcfg_path))
 
     def on_save_rotcfg_as(self) -> None:
-        path, _selected = QFileDialog.getSaveFileName(self, "Save configuration", "station.rotcfg", "Configuration (*.rotcfg)")
+        path, _selected = QFileDialog.getSaveFileName(
+            self,
+            "Save configuration",
+            self._dialog_start("station.rotcfg"),
+            "Configuration (*.rotcfg)",
+        )
         if path:
             self.save_rotcfg_to(path)
 
@@ -819,7 +836,12 @@ class MainWindow(QMainWindow):
         if self.form.errors():
             QMessageBox.warning(self, "Backup", "Fix the highlighted fields before backup.")
             return
-        path, _selected = QFileDialog.getSaveFileName(self, "Backup settings", "rotator-settings.txt", "Settings (*.txt)")
+        path, _selected = QFileDialog.getSaveFileName(
+            self,
+            "Backup settings",
+            self._dialog_start("rotator-settings.txt"),
+            "Settings (*.txt)",
+        )
         if path:
             self.backup_to(path)
 
@@ -839,7 +861,7 @@ class MainWindow(QMainWindow):
     def on_restore(self) -> None:
         if self.client is None or self.schema is None:
             return
-        path, _selected = QFileDialog.getOpenFileName(self, "Restore settings", "", "Settings (*.txt)")
+        path, _selected = QFileDialog.getOpenFileName(self, "Restore settings", self._dialog_start(), "Settings (*.txt)")
         if not path:
             return
         text = Path(path).read_text(encoding="utf-8")
@@ -905,7 +927,7 @@ class MainWindow(QMainWindow):
     def on_compare(self) -> None:
         if self.form is None or self.schema is None:
             return
-        path, _selected = QFileDialog.getOpenFileName(self, "Compare with file", "", "Settings (*.txt)")
+        path, _selected = QFileDialog.getOpenFileName(self, "Compare with file", self._dialog_start(), "Settings (*.txt)")
         if not path:
             return
         text = Path(path).read_text(encoding="utf-8")

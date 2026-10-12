@@ -52,9 +52,10 @@ The simulator listens on TCP and on a pty, and it can advertise
 `_rotatorctl._tcp`. It is `rotatorctl.sim`, with a launcher in
 `software/gui/sim`. `software/sim` remains the C++ K3NG sandbox.
 
-A later Windows build can freeze the GUI with PyInstaller. That build
-is not part of this decision. CI runs pytest, including the offscreen
-GUI tests.
+Downloadable builds come from `.github/workflows/package.yml`, which
+freezes the GUI with PyInstaller for Windows, macOS, and Linux. Those
+builds are unsigned. CI also runs pytest, including the offscreen GUI
+tests.
 
 Tkinter would have avoided a Qt wheel and would have made the form
 layout and the headless test harder to keep. A second web UI would

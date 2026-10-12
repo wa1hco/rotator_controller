@@ -4,15 +4,22 @@
 
 from __future__ import annotations
 
+import os
 import sys
-
-from PySide6.QtWidgets import QApplication
-
-from rotatorctl_gui.main_window import MainWindow
 
 
 def main(argv: list[str] | None = None) -> int:
-    app = QApplication(sys.argv if argv is None else argv)
+    args = list(sys.argv if argv is None else argv)
+    if "--selftest" in args:
+        os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+        from rotatorctl_gui.selftest import run_selftest
+
+        return run_selftest()
+    from PySide6.QtWidgets import QApplication
+
+    from rotatorctl_gui.main_window import MainWindow
+
+    app = QApplication(args)
     window = MainWindow()
     window.resize(1280, 800)
     window.show()

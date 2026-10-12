@@ -1,12 +1,38 @@
 # Rotator controller, PC side
 
-The app opens offline. No controller is required. The first screen is the rotator catalog: all 39 rows in `software/firmware/presets/rotor-presets.yaml`, filtered by family, manufacturer, and a search across model, maker, and alias. A row shows its specs, the settings it would write, and `[?]` on values the catalog still marks unverified. Choosing a rotator fills a configuration document. Custom overrides and the other preference pages (axes, limits, park, calibration, display, network, console) edit that same document. Save writes a `.rotcfg` file (YAML, or JSON when the text starts with `{`). Push, once a controller is connected, sends the writable settings and leaves the controller's serial and board facts alone.
+## Download and double-click
 
-Controllers stay in the app, on the last page: USB and network discovery, the schema form, confirm-before-write, backup, restore, compare, and copy. That work is unchanged. It is not the start screen, because there is no controller to connect yet.
+No Python install. The rotor catalog is inside the app. After a release is published, these names stay stable:
+
+- Windows: [RotatorController-Windows.exe](https://github.com/wa1hco/rotator_controller/releases/latest/download/RotatorController-Windows.exe)
+- macOS: [RotatorController-macOS.dmg](https://github.com/wa1hco/rotator_controller/releases/latest/download/RotatorController-macOS.dmg)
+- Linux: [RotatorController-Linux.AppImage](https://github.com/wa1hco/rotator_controller/releases/latest/download/RotatorController-Linux.AppImage)
+
+`releases/latest` is the newest release that is not marked pre-release. A `v0.1.0-preview` tag is a pre-release, so use the tag URL until a stable tag exists, for example `https://github.com/wa1hco/rotator_controller/releases/download/v0.1.0-preview/RotatorController-Windows.exe`.
+
+Windows: download the `.exe` and double-click it. The first start unpacks the app and can take a few seconds. The build is unsigned, so SmartScreen may say it is unrecognized: choose More info, then Run anyway.
+
+macOS: the disk image is unsigned and built for Apple silicon. Open the `.dmg` and drag Rotator Controller to Applications. The first launch is blocked by Gatekeeper: right-click the app, choose Open, then Open again. An Intel build is not published yet.
+
+Linux: `chmod +x RotatorController-Linux.AppImage`, then double-click it or run it from a terminal. The image is x86_64, built on Ubuntu 22.04. It needs FUSE (`libfuse2`). If FUSE is unavailable, `APPIMAGE_EXTRACT_AND_RUN=1 ./RotatorController-Linux.AppImage` still starts.
+
+Open and Save start in the station config directory, which the app creates on first use:
+
+| System | Directory |
+|---|---|
+| Windows | `%APPDATA%\RotatorController` |
+| macOS | `~/Library/Application Support/RotatorController` |
+| Linux | `$XDG_CONFIG_HOME/rotator-controller`, or `~/.config/rotator-controller` |
+
+The app opens offline. No controller is required. The first screen is the rotator catalog: all 39 rotators, filtered by family, manufacturer, and a search across model, maker, and alias. A row shows its specs, the settings it would write, and `[?]` on values the catalog still marks unverified. Choosing a rotator fills a configuration document. Custom overrides and the other preference pages (axes, limits, park, calibration, display, network, console) edit that same document. Save writes a `.rotcfg` file (YAML, or JSON when the text starts with `{`). Push, once a controller is connected, sends the writable settings and leaves the controller's serial and board facts alone.
+
+Controllers stay in the app, on the last page: USB and network discovery, the schema form, confirm-before-write, backup, restore, compare, and copy. That work is not the start screen, because there is no controller to connect yet.
 
 Phases 2 and 3 are planned below. The window already reserves their places: STOP stays on screen, and the Operate and Upgrade menus are present and disabled.
 
-## Packages
+## For developers
+
+### Packages
 
 `software/gui/` holds two installable packages.
 
@@ -17,9 +43,9 @@ Phases 2 and 3 are planned below. The window already reserves their places: STOP
 
 Python 3.11 or newer. The toolkit decision is [ADR 0019](../../docs/decisions/0019-pc-gui-toolkit.md). PySide6 is the GUI because one codebase covers Windows, Linux, and macOS, the widgets fit a laptop, and pytest-qt can drive the window headless. pydantic holds the schema, pyserial opens the USB serial port, and zeroconf browses DNS-SD.
 
-A later Windows build can freeze `rotatorctl-gui` with PyInstaller (`rotatorctl-gui` as the entry point). That build is not wired up here. When it is, the PySide6 and zeroconf imports need to be collected explicitly.
+The downloadable apps are built by [`.github/workflows/package.yml`](../../.github/workflows/package.yml). Pull requests upload the three files as workflow artifacts. A `v*` tag attaches those same names to a GitHub Release. The build script is `software/gui/packaging/pyinstaller_build.py`. It bundles `software/firmware/presets/rotor-presets.yaml` and checks the result with `--selftest` under `QT_QPA_PLATFORM=offscreen`.
 
-## Run
+### Run from a checkout
 
 From the repository root, with the firmware preset file where it already lives:
 
@@ -47,7 +73,7 @@ rotatorctl save --target tcp://127.0.0.1:4533
 
 `set` changes the working record. `save` stores it. `restore` stores it as part of the command. The GUI save button does `set` for each changed field and then `save`, and only after the confirm dialog.
 
-## Simulator
+### Simulator
 
 The firmware console is not in the tree yet. `rotatorctl-sim` speaks the console protocol and the GS-232 subset over TCP, and it can open a pty and advertise `_rotatorctl._tcp`.
 
@@ -57,7 +83,7 @@ rotatorctl-sim -n 2 --pty --mdns
 
 `software/sim` is the C++ K3NG sandbox. The console simulator lives in the Python library so an install can start it. `software/gui/sim/rotator_sim.py` is a thin launcher. Details are in [sim/README.md](sim/README.md).
 
-## Tests
+### Tests
 
 ```bash
 cd software/gui
@@ -94,7 +120,7 @@ Connected-controller pages, from the simulator:
 | [docs/screenshots/confirm-save.png](docs/screenshots/confirm-save.png) | Diff before the write, including a reboot note |
 | [docs/screenshots/presets.png](docs/screenshots/presets.png) | Preset dialog used from the Controllers page |
 
-## Architecture
+### Architecture
 
 ```
 rotatorctl-gui  MainWindow
@@ -113,13 +139,13 @@ Dirty state is the open form against the last loaded record. The window title gr
 
 Preset preview and `preset apply` both use `settings_from_preset`, so the dialog matches the simulator. The catalog is `software/firmware/presets/rotor-presets.yaml`.
 
-## Phase plan
+### Phase plan
 
-### Phase 1, configuration (this tree)
+#### Phase 1, configuration (this tree)
 
 Offline, a `.rotcfg` document: pick a rotator, override a mapped value, and edit axes, limits, park, calibration, display, network, and the shared console. With a controller connected: discover, connect, edit, validate, confirm, save, backup, restore, compare, copy, and push that document. Several controllers at once. One identity when the same serial appears on USB and on Ethernet.
 
-### Phase 2, operate
+#### Phase 2, operate
 
 Milestones, in `rotatorctl.phases`, taken from the in-scope Operate rows of [feature-inventory.md](../../docs/design/feature-inventory.md):
 
@@ -139,7 +165,7 @@ Milestones, in `rotatorctl.phases`, taken from the in-scope Operate rows of [fea
 
 Moon, sun, and satellite tracking stay on the PC. The box accepts the next heading. The simulator answers `calibrate` with `ERR unsupported` until that wizard has a protocol to drive.
 
-### Phase 3, install and upgrade
+#### Phase 3, install and upgrade
 
 - First install by USB DFU, wrapping `dfu-util`. `rotatorctl.upgrade.dfu_argv` returns the command for address `0x08000000` and does not run it
 - Field upgrade over the console or HTTP into the inactive A/B slot, with progress
@@ -148,7 +174,7 @@ Moon, sun, and satellite tracking stay on the PC. The box accepts the next headi
 
 The simulator answers `upgrade` with `ERR unsupported`. The Upgrade menu shows the DFU command in its tooltip and stays disabled.
 
-## Protocol
+### Protocol
 
 Additions on top of the console in [configuration.md](../../docs/design/configuration.md) and [ADR 0015](../../docs/decisions/0015-configuration-and-ui.md):
 
@@ -161,7 +187,7 @@ Additions on top of the console in [configuration.md](../../docs/design/configur
 
 GS-232 and the console still share the port by whole-token grammar. `S` is stop. `status` and `save` are console commands.
 
-## Open questions
+### Open questions
 
 - USB VID `0x1209` and PID `0xF407` are a placeholder until a pid.codes assignment (or another VID) exists. The GUI matches those numbers.
 - An `az+el` catalog row has one travel block. Elevation is filled as 180 degrees and no overlap when the azimuth block is an overlap rotation. The catalog may grow a separate elevation travel block.
@@ -171,4 +197,4 @@ GS-232 and the console still share the port by whole-token grammar. `S` is stop.
 - Cross-field checks such as `speed_min_s` <= `speed_max_s` are not applied yet. Each field is checked against its own limits.
 - The simulator advertises `127.0.0.1`. A controller on the LAN will advertise its Ethernet address.
 - WIMS is not wired up in this repository. The split is what lets it import `rotatorctl` later.
-- PyInstaller for Windows is a later packaging step.
+- The macOS download is Apple silicon and unsigned. An Intel disk image, and signed or notarized builds, are still open.

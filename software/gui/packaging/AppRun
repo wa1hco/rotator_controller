@@ -1,0 +1,5 @@
+#!/bin/sh
+# Copyright (C) 2026 Jeff Millar, WA1HCO
+# SPDX-License-Identifier: GPL-3.0-only
+HERE="$(dirname "$(readlink -f "$0")")"
+exec "$HERE/usr/bin/RotatorController/RotatorController" "$@"

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Rotator Controller
+Comment=Configure a WA1HCO rotator controller
+Exec=RotatorController
+Icon=rotator-controller
+Categories=HamRadio;Utility;
+Terminal=false
