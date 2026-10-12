@@ -1,0 +1,20 @@
+(footprint "Panel_Gland_M16"
+	(version 20241229)
+	(generator "controller-f407")
+	(layer "F.Cu")
+	(descr "No-pad marker for the rear-plate Powerpole gland. PanelCutout is circle 16.3. Not a board hole.")
+	(attr board_only)
+	(fp_circle
+		(center 0 0)
+		(end 2 0)
+		(stroke (width 0.15) (type solid))
+		(fill no)
+		(layer "F.SilkS")
+	)
+	(fp_text user "PWR GLAND"
+		(at 0 -3 0)
+		(layer "Cmts.User")
+		(effects (font (size 1 1) (thickness 0.15)))
+	)
+	(embedded_fonts no)
+)
