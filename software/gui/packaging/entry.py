@@ -1,6 +1,6 @@
 # Copyright (C) 2026 Jeff Millar, WA1HCO
 # SPDX-License-Identifier: GPL-3.0-only
-"""PyInstaller entry. The frozen executable calls this, then the GUI."""
+"""PyInstaller entry. The frozen executable calls this, then the browser helper."""
 
 from __future__ import annotations
 

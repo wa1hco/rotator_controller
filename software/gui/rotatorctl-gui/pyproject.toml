@@ -5,17 +5,17 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "rotatorctl-gui"
 version = "0.1.0"
-description = "Desktop configuration app for the WA1HCO rotator controller."
+description = "Browser configuration app for the WA1HCO rotator controller."
 requires-python = ">=3.11"
 license = { text = "GPL-3.0-only" }
 authors = [{ name = "Jeff Millar", email = "wa1hco@users.noreply.github.com" }]
 dependencies = [
   "rotatorctl",
-  "PySide6>=6.6",
+  "aiohttp>=3.9",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "pytest-qt>=4.4"]
+dev = ["pytest>=8", "playwright>=1.49"]
 
 [project.scripts]
 rotatorctl-gui = "rotatorctl_gui.__main__:main"
@@ -24,4 +24,4 @@ rotatorctl-gui = "rotatorctl_gui.__main__:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-rotatorctl_gui = ["py.typed"]
+rotatorctl_gui = ["py.typed", "static/*"]

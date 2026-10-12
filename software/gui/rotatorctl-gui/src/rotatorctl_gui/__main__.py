@@ -1,30 +1,30 @@
 # Copyright (C) 2026 Jeff Millar, WA1HCO
 # SPDX-License-Identifier: GPL-3.0-only
-"""``python -m rotatorctl_gui``."""
+"""``rotatorctl-gui`` opens the configuration UI in the default browser.
+
+``--selftest`` starts the loopback server, fetches the page, and exits.
+``--stay`` keeps the helper running with no browser and no idle quit.
+"""
 
 from __future__ import annotations
 
-import os
+import secrets
 import sys
+
+from rotatorctl_gui.server import serve_until_stop
+from rotatorctl_gui.state import AppState
 
 
 def main(argv: list[str] | None = None) -> int:
-    args = list(sys.argv if argv is None else argv)
+    args = list(sys.argv[1:] if argv is None else argv)
     if "--selftest" in args:
-        os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
         from rotatorctl_gui.selftest import run_selftest
 
         return run_selftest()
-    from PySide6.QtWidgets import QApplication
-
-    from rotatorctl_gui.main_window import MainWindow
-
-    app = QApplication(args)
-    window = MainWindow()
-    window.resize(1280, 800)
-    window.show()
-    window.refresh()
-    return app.exec()
+    stay = "--stay" in args
+    state = AppState(idle_seconds=0 if stay else 20)
+    state.token = secrets.token_urlsafe(18)
+    return serve_until_stop(state, open_browser=not stay)
 
 
 if __name__ == "__main__":

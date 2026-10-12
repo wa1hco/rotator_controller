@@ -50,6 +50,16 @@ def test_ham_iv_and_g450_mapping(presets) -> None:
     assert "motor.volts [?]" in labels
 
 
+def test_ham_v_equal_brake_pair_is_one_delay(presets) -> None:
+    ham = settings_from_preset(_one(presets, "hygain-ham-v"))
+    assert ham["az.brake_delay_s"] == "8"
+
+
+def test_every_preset_maps_without_error(presets) -> None:
+    for preset in presets:
+        settings_from_preset(preset)
+
+
 def test_two_axis_elevation_travel(presets) -> None:
     both = settings_from_preset(_one(presets, "yaesu-g-5500"))
     assert both["az.travel_max_deg"] == "450"

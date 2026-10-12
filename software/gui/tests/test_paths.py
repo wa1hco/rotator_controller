@@ -6,11 +6,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from PySide6.QtWidgets import QFileDialog
-
 from rotatorctl.paths import ensure_user_config_dir, user_config_dir
 from rotatorctl.presets import default_preset_path, preset_path_is_bundled
-from rotatorctl_gui.main_window import MainWindow
 from rotatorctl_gui.selftest import run_selftest
 
 
@@ -131,48 +128,6 @@ def test_exe_directory_catalog_counts_as_bundled(tmp_path: Path, monkeypatch) ->
     monkeypatch.setattr(sys, "executable", str(exe_dir / "RotatorController"), raising=False)
     assert default_preset_path() == bundled
     assert preset_path_is_bundled(bundled)
-
-
-def test_file_dialogs_start_in_the_config_dir(qtbot, tmp_path: Path, monkeypatch) -> None:
-    target = tmp_path / "cfg"
-    monkeypatch.setenv("ROTATOR_CONFIG_DIR", str(target))
-    seen: dict[str, str] = {}
-
-    def fake_open(_parent, title, directory, _filter):
-        seen[title] = directory
-        return "", ""
-
-    def fake_save(_parent, title, directory, _filter):
-        seen[title] = directory
-        return "", ""
-
-    monkeypatch.setattr(QFileDialog, "getOpenFileName", fake_open)
-    monkeypatch.setattr(QFileDialog, "getSaveFileName", fake_save)
-    window = MainWindow(presets=[])
-    qtbot.addWidget(window)
-    window.on_open_rotcfg()
-    window.on_save_rotcfg_as()
-    class _Client:
-        def close(self) -> None:
-            return None
-
-    window.client = _Client()
-    window.schema = object()
-    window.on_restore()
-
-    class _Form:
-        def errors(self) -> dict[str, str]:
-            return {}
-
-    window.form = _Form()
-    window.on_compare()
-    window.on_backup()
-    assert seen["Open configuration"] == str(target)
-    assert seen["Save configuration"] == str(target / "station.rotcfg")
-    assert seen["Restore settings"] == str(target)
-    assert seen["Compare with file"] == str(target)
-    assert seen["Backup settings"] == str(target / "rotator-settings.txt")
-    assert target.is_dir()
 
 
 def test_selftest_exits_zero(tmp_path: Path, monkeypatch) -> None:

@@ -57,7 +57,6 @@ def pyinstaller_cmd(root: Path, work: Path, onefile: bool) -> list[str]:
         "PyInstaller",
         "--noconfirm",
         "--clean",
-        "--windowed",
         "--name",
         "RotatorController",
         "--distpath",
@@ -72,6 +71,8 @@ def pyinstaller_cmd(root: Path, work: Path, onefile: bool) -> list[str]:
         str(root / "software" / "gui" / "rotatorctl-gui" / "src"),
         "--add-data",
         f"{preset}{os.pathsep}rotatorctl/data",
+        "--add-data",
+        f"{root / 'software' / 'gui' / 'rotatorctl-gui' / 'src' / 'rotatorctl_gui' / 'static'}{os.pathsep}rotatorctl_gui/static",
         "--hidden-import",
         "yaml",
         "--hidden-import",
@@ -82,10 +83,24 @@ def pyinstaller_cmd(root: Path, work: Path, onefile: bool) -> list[str]:
         "zeroconf",
         "--hidden-import",
         "pydantic",
+        "--hidden-import",
+        "aiohttp",
+        "--hidden-import",
+        "yarl",
+        "--hidden-import",
+        "multidict",
         "--collect-submodules",
         "rotatorctl",
         "--collect-submodules",
         "rotatorctl_gui",
+        "--collect-submodules",
+        "aiohttp",
+        "--exclude-module",
+        "aiohttp.pytest_plugin",
+        "--exclude-module",
+        "aiohttp.test_utils",
+        "--exclude-module",
+        "pydantic.v1.mypy",
         "--collect-submodules",
         "zeroconf",
     ]
@@ -180,7 +195,7 @@ def main(argv: list[str]) -> int:
     if work.exists():
         shutil.rmtree(work)
     work.mkdir(parents=True)
-    out.mkdir(parents=True)
+    out.mkdir(parents=True, exist_ok=True)
     if target == "windows":
         build_windows(root, work, out)
     elif target == "macos":

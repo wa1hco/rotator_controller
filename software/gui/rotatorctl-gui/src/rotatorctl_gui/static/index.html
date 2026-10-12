@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rotator Controller</title>
+  <base href="./">
+  <link rel="stylesheet" href="static/app.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <p class="wordmark">Rotator Controller</p>
+      <p id="subtitle">Offline configuration</p>
+    </div>
+    <div class="top-actions">
+      <div class="text-size" role="group" aria-label="Text size">
+        <button type="button" id="fontDown" aria-label="Smaller text">A−</button>
+        <button type="button" id="fontUp" aria-label="Larger text">A+</button>
+      </div>
+      <button type="button" id="stop" class="stop" disabled title="Phase 2 sends GS-232 S on the shared port">STOP</button>
+    </div>
+  </header>
+  <div class="filebar">
+    <span id="modePill" class="pill">OFFLINE</span>
+    <span id="fileName">Untitled.rotcfg</span>
+    <button type="button" id="newBtn">New</button>
+    <button type="button" id="openBtn">Open</button>
+    <button type="button" id="folderBtn">Config folder</button>
+    <button type="button" id="saveBtn">Save</button>
+    <button type="button" id="downloadBtn">Download</button>
+    <button type="button" id="pushBtn" disabled>Push</button>
+    <button type="button" id="quitBtn">Quit</button>
+  </div>
+  <p id="dirty" class="dirty" hidden>Unsaved configuration. Save writes a .rotcfg file. Push sends it to a controller later.</p>
+  <p id="notice" class="notice" hidden></p>
+  <div class="shell">
+    <nav id="pageNav" aria-label="Pages"></nav>
+    <main id="main"></main>
+  </div>
+  <footer id="footnote"></footer>
+  <dialog id="diff">
+    <form method="dialog">
+      <h2 id="diffTitle">Review changes</h2>
+      <p id="diffIntro"></p>
+      <div id="diffTable"></div>
+      <p id="diffNote" class="diff-note" hidden></p>
+      <div class="dialog-actions">
+        <button type="submit" value="cancel">Cancel</button>
+        <button type="submit" id="diffAccept" value="save">Save</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="folderDialog">
+    <form method="dialog">
+      <h2>Config folder</h2>
+      <p id="folderPath"></p>
+      <ul id="folderList"></ul>
+      <div class="dialog-actions">
+        <button type="submit" value="cancel">Close</button>
+      </div>
+    </form>
+  </dialog>
+  <input id="filePick" type="file" accept=".rotcfg,.yaml,.yml,.json,.txt" hidden>
+  <script src="static/app.js"></script>
+</body>
+</html>

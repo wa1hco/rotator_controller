@@ -260,7 +260,7 @@ onto settings, so the preview and `preset apply` match.
 - `motor.current_a`, when the catalog has a number, becomes `safety.stall_a`.
 - `*.present` is left alone. It is a board fact.
 - Calibration, `net.*`, and `ports.*` are left alone.
-- A wedge brake with no `engage_after_stop_s` uses 3 seconds, the DCU-3 default in the sequencing text. Any other brake with no engage time uses 0.
+- A wedge brake with no `engage_after_stop_s` uses 3 seconds, the DCU-3 default in the sequencing text. Any other brake with no engage time uses 0. A pair of equal numbers is that delay (HAM-V is 8 and 8, so 8 seconds). A pair of different numbers is not collapsed into one setting.
 
 The offline rotator page lists every catalog row, including `support: no`, `later`, `check`, and `alias`. `Use this rotator` loads a row only when support is `v1`, `v1-2axis`, or `v2-dc`. An alias is shown and points at the rows it names. Fields listed under `unverified` are marked `[?]`. A custom override replaces one mapped value in the `.rotcfg` file and is shown next to the preset value.
 
@@ -297,3 +297,73 @@ mDNS/DNS-SD service type is `_rotatorctl._tcp`. Hamlib's `_rotctl._tcp` is a dif
 The port is `ports.tcp` (default 4533), the shared console and GS-232 listener. A network that does not pass multicast can still be opened by typing host and port.
 
 The same serial on USB and on mDNS is one controller. The user-assigned name is `net.hostname`. When both discoveries are present, the mDNS name fills an empty USB name.
+
+## Web API
+
+The PC helper and the controller's built-in web server speak one JSON API, version 1. The browser pages are static files (`index.html`, `app.css`, `app.js`) with relative URLs and no build step. On the PC they are served under `/s/<token>/`. On the controller they are served at the site root. `GET /api/boot` tells the page which extras exist, so the same JavaScript hides file buttons, discovery, and Quit when `role` is `device`.
+
+The PC helper binds `127.0.0.1` only. The token in the path is a random session key, new every launch. A request to any other path, including `/`, is 404. Each HTTP call and each WebSocket message refreshes a presence timer. The page also `POST`s `/api/heartbeat` about every 8 seconds. The helper quits 20 seconds after the last tab is gone (`socket_count` is 0 and the last touch is older than `idle_seconds`). Quit calls `POST /api/shutdown`. `--stay` sets `idle_seconds` to 0, which turns that timer off, and does not open a browser.
+
+Errors are JSON `{ "error", "message" }` with an HTTP 4xx or 502. A settings problem is 400. A console or transport failure is 502. Connecting while the open controller form is dirty is 409 `dirty` unless the body sets `discard` true.
+
+`GET /api/boot` returns:
+
+| Field | Meaning |
+|---|---|
+| `api` | `1` |
+| `role` | `pc` on the helper, `device` on firmware |
+| `idle_seconds` | `20` on a normal PC launch, `0` when idle quit is off. Firmware may send `0`. |
+| `features.offline` | The page can edit a `.rotcfg` document |
+| `features.discovery` | Show the Controllers page |
+| `features.files` | Show Open, Config folder, and Download |
+| `features.shutdown` | Show Quit |
+| `features.multi` | More than one controller can be open |
+| `operate`, `upgrade` | Milestone labels. The buttons stay disabled in phase 1 |
+| `dfu` | Argument list from `dfu_argv`, shown as the Upgrade tooltip |
+| `stop` | The STOP line. Phase 1 leaves the button disabled. The line is GS-232 `S` |
+
+Shared routes, which firmware implements. On a device, `GET /api/document` is the live settings. On the PC it is the offline `.rotcfg` document.
+
+| Method and path | Body | Result |
+|---|---|---|
+| `GET /api/schema` | | `{ version, settings }`. Each setting includes `label`, `advanced`, `reboot`, `readonly`, and the schema fields |
+| `GET /api/pages` | | `{ pages: [{ id, title, intro, fields }] }`. The static page does not hard-code the inventory |
+| `GET /api/catalog` | | `{ presets }`. Every catalog row, including `no`, `later`, `check`, and `alias`. `can_apply` is true for `v1`, `v1-2axis`, and `v2-dc`. `facts` carry `unverified`. `settings` is the mapped writable values, with labels |
+| `GET /api/document` | | `{ source, preset, name, filename, overrides, settings, dirty, axes, connected }`. `axes` is `{ azimuth, elevation }`. Offline, that follows the applied preset's axes. On a device it follows `az.present` and `el.present` |
+| `POST /api/document/new` | | Replace the offline document with a blank station |
+| `POST /api/document/edit` | `{ name, value }` | Validate and store one offline value. Matching the preset value clears that override |
+| `POST /api/document/preview` | | `{ changes, errors, blocked, note }` before a save |
+| `POST /api/document/save` | `{ name? }` | Write the config file. The name is a bare filename ending in `.rotcfg`, `.yaml`, `.yml`, or `.json` |
+| `POST /api/document/upload` | `{ text }` | Load a `.rotcfg` body. YAML, or JSON when the text starts with `{` |
+| `GET /api/document/download` | | The file body as text |
+| `POST /api/document/push` | | Send writable lines to the connected controller. Readonly names are omitted |
+| `POST /api/preset/apply` | `{ id }` | Load an applyable preset into the document and drop overrides that the preset wrote |
+| `POST /api/override` | `{ name, value }` | Set a custom override. `value` null or `""` clears it |
+| `GET /api/device` | | The connected form: `connected`, `dirty`, `settings`, `errors`, `axes`, `schema`. `connected` is false when nothing is open |
+| `POST /api/device/edit` | `{ name, value }` | Edit the connected controller's working form. Invalid text is kept and reported in `errors` |
+| `POST /api/device/preview` | | Same preview object as the document. `blocked` is true while any field is invalid |
+| `POST /api/device/save` | | `set` the changes, then `save`. Does not reboot. `note` says when a change such as `net.hostname` takes effect after reboot |
+| `POST /api/device/backup` | | Text backup of the controller |
+| `POST /api/device/restore` | `{ text, apply }` | `apply` false previews. `apply` true writes |
+| `POST /api/device/compare` | `{ text }` | Read-only preview against a backup |
+| `GET /api/ws` | | WebSocket presence. A text frame `quit` asks the PC helper to stop |
+
+A preview `changes` entry is `{ name, label, before, after, reboot }`. `note` is empty, or it names the reboot settings and says the app does not reboot the controller.
+
+PC-only routes. Firmware omits them and sets the matching `features` flags false.
+
+| Method and path | Body | Result |
+|---|---|---|
+| `GET /api/files` | | `{ directory, files }` in the station config folder |
+| `POST /api/files/open` | `{ name }` | Load one file from that folder |
+| `GET /api/controllers` | | `{ controllers }`. Each has `serial`, `name`, `firmware`, `axes`, `text`, and `endpoints` |
+| `POST /api/controllers/scan` | `{ timeout? }` | USB scan plus `_rotatorctl._tcp` browse |
+| `POST /api/controllers/add` | `{ kind, host, port, path }` | `kind` is `tcp` or `serial` |
+| `POST /api/controllers/connect` | `{ target, discard? }` | Open a console session and load its settings |
+| `POST /api/controllers/disconnect` | | Close that session |
+| `POST /api/device/copy` | `{ target }` | Copy writable settings from another controller into the form. They stay dirty until save |
+| `POST /api/heartbeat` | | `{ ok: true }`. Refreshes the idle timer |
+| `POST /api/shutdown` | | Ask the PC helper to exit |
+
+`text` on a controller is the list line: the name and serial, then `USB 1209:f407` plus the serial path, or `network` plus `host:port`.
+

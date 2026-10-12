@@ -2,18 +2,23 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Launch check for a packaged build.
 
-``RotatorController --selftest`` loads the catalog, writes the config
-directory, shows the window offscreen, and returns 0. A frozen build
-must read the catalog from inside the bundle. CI checks out the
-repository, so a parent-directory walk would otherwise hide a missing
-``--add-data``.
+Starts the loopback server, fetches the page and the catalog, and exits.
+The catalog has to come from the frozen bundle when PyInstaller is running.
 """
 
 from __future__ import annotations
 
+import json
 import os
 import sys
 import traceback
+import urllib.error
+import urllib.request
+
+from rotatorctl.presets import default_preset_path, load_presets, preset_path_is_bundled
+from rotatorctl.paths import ensure_user_config_dir
+from rotatorctl_gui.server import start_server
+from rotatorctl_gui.state import AppState
 
 
 def _say(message: str) -> None:
@@ -27,14 +32,8 @@ def _say(message: str) -> None:
 
 
 def run_selftest() -> int:
-    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    running = None
     try:
-        from PySide6.QtWidgets import QApplication
-
-        from rotatorctl.paths import ensure_user_config_dir
-        from rotatorctl.presets import default_preset_path, load_presets, preset_path_is_bundled
-        from rotatorctl_gui.main_window import MainWindow
-
         path = default_preset_path()
         presets = load_presets(path)
         if len(presets) < 39:
@@ -47,23 +46,39 @@ def run_selftest() -> int:
         probe = config / ".selftest-probe"
         probe.write_text("ok", encoding="utf-8")
         probe.unlink()
-
-        app = QApplication.instance()
-        if app is None:
-            app = QApplication(["RotatorController", "--selftest"])
-        window = MainWindow()
-        window.resize(1280, 800)
-        window.show()
-        app.processEvents()
-        shown = window.browser.list.count()
-        window.close()
-        app.processEvents()
-        if shown < 39:
-            _say(f"selftest: catalog list showed {shown} rows")
+        state = AppState(presets=presets, idle_seconds=0)
+        state.token = "selftest"
+        running = start_server(state, idle_seconds=0)
+        if "127.0.0.1" not in running.url:
+            _say(f"selftest: server is not loopback: {running.url}")
             return 1
-        _say(f"selftest: ok presets={len(presets)} path={path} config={config}")
+        root = running.url.split("/s/")[0]
+        try:
+            urllib.request.urlopen(root + "/", timeout=5)
+        except urllib.error.HTTPError as exc:
+            if exc.code != 404:
+                _say(f"selftest: bare URL returned {exc.code}")
+                return 1
+        else:
+            _say("selftest: bare URL should be rejected")
+            return 1
+        page = urllib.request.urlopen(running.url, timeout=5)
+        html = page.read().decode("utf-8")
+        if page.status != 200 or "Rotator Controller" not in html or "app.js" not in html:
+            _say("selftest: index page did not load")
+            return 1
+        catalog = urllib.request.urlopen(running.url + "api/catalog", timeout=5)
+        payload = json.loads(catalog.read().decode("utf-8"))
+        count = len(payload.get("presets") or [])
+        if count < 39:
+            _say(f"selftest: catalog API returned {count}")
+            return 1
+        _say(f"selftest: ok presets={count} path={path} url={running.url} config={config}")
         return 0
     except Exception:
         _say("selftest: failed")
         _say(traceback.format_exc())
         return 1
+    finally:
+        if running is not None:
+            running.stop()

@@ -359,6 +359,16 @@ def _block(raw: Mapping[str, Any], key: str) -> Mapping[str, Any]:
 def _num(value: object) -> str:
     if isinstance(value, bool) or value is None:
         raise ValueError(value)
+    # A few catalog cells publish a min/max pair that is the same number
+    # (HAM-V brake delay is 8 and 8). Copy that number. A real range stays
+    # an error so a span is not silently collapsed.
+    if isinstance(value, (list, tuple)):
+        present = [item for item in value if item is not None]
+        if not present or any(item != present[0] for item in present):
+            raise ValueError(value)
+        value = present[0]
+        if isinstance(value, bool):
+            raise ValueError(value)
     if isinstance(value, int):
         return str(value)
     number = float(value)  # type: ignore[arg-type]

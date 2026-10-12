@@ -16,7 +16,11 @@ macOS: the disk image is unsigned and built for Apple silicon. Open the `.dmg` a
 
 Linux: `chmod +x RotatorController-Linux.AppImage`, then double-click it or run it from a terminal. The image is x86_64, built on Ubuntu 22.04. It needs FUSE (`libfuse2`). If FUSE is unavailable, `APPIMAGE_EXTRACT_AND_RUN=1 ./RotatorController-Linux.AppImage` still starts.
 
-Open and Save start in the station config directory, which the app creates on first use:
+Double-click starts a small helper, not a separate window toolkit. The helper listens on `127.0.0.1` only, picks a free port, and opens the default browser at `http://127.0.0.1:<port>/s/<token>/`. The token is a new random session key each launch. Anything else, including a bare `/`, is refused.
+
+Windows shows a console window with that URL, because a double-clicked `.exe` has no other place to print it. macOS and Linux double-click launches have no terminal. The page footer is the notice there. Quit in the page stops the helper. Closing the last tab does too: the page holds a WebSocket and sends a heartbeat about every 8 seconds, and the helper exits 20 seconds after both have stopped. `--stay` keeps the helper up, skips the browser, and turns the idle quit off. Ctrl+C stops a helper that was started from a terminal.
+
+Open, Save, and Config folder use the station config directory, which the app creates on first use. Download and the Open file picker also move a `.rotcfg` through the browser.
 
 | System | Directory |
 |---|---|
@@ -28,7 +32,9 @@ The app opens offline. No controller is required. The first screen is the rotato
 
 Controllers stay in the app, on the last page: USB and network discovery, the schema form, confirm-before-write, backup, restore, compare, and copy. That work is not the start screen, because there is no controller to connect yet.
 
-Phases 2 and 3 are planned below. The window already reserves their places: STOP stays on screen, and the Operate and Upgrade menus are present and disabled.
+Phases 2 and 3 are planned below. The page already reserves their places: STOP stays in the header on every page and at phone width, and the Operate and Upgrade menus are present and disabled.
+
+Text size follows the browser zoom and an in-app A− / A+ control. That choice is stored in the browser as `rotatorctl.textScale`. The layout works on a phone. Dark mode follows the system setting (`prefers-color-scheme`). The static pages are plain HTML, CSS, and JavaScript, 10,214 bytes gzipped (`index.html` + `app.css` + `app.js`), so the same files can sit in the controller's web server later.
 
 ## For developers
 
@@ -38,12 +44,12 @@ Phases 2 and 3 are planned below. The window already reserves their places: STOP
 
 | Package | Role |
 |---|---|
-| `rotatorctl` | Settings model, console client, discovery, presets, CLI, simulator. No Qt. WIMS can import this package alone. |
-| `rotatorctl-gui` | PySide6 desktop app. Builds its forms from the controller's `schema` command. |
+| `rotatorctl` | Settings model, console client, discovery, presets, CLI, simulator. No GUI toolkit. WIMS can import this package alone. |
+| `rotatorctl-gui` | Loopback server and the static pages. Forms come from `GET /api/pages` and the schema. |
 
-Python 3.11 or newer. The toolkit decision is [ADR 0019](../../docs/decisions/0019-pc-gui-toolkit.md). PySide6 is the GUI because one codebase covers Windows, Linux, and macOS, the widgets fit a laptop, and pytest-qt can drive the window headless. pydantic holds the schema, pyserial opens the USB serial port, and zeroconf browses DNS-SD.
+Python 3.11 or newer. The UI decision is [ADR 0019](../../docs/decisions/0019-pc-gui-toolkit.md). The first cut used PySide6. That is superseded: browser font scaling is reliable, and one set of pages can be served later by the controller itself. aiohttp serves the pages and the JSON API. pydantic holds the schema, pyserial opens the USB serial port, and zeroconf browses DNS-SD.
 
-The downloadable apps are built by [`.github/workflows/package.yml`](../../.github/workflows/package.yml). Pull requests upload the three files as workflow artifacts. A `v*` tag attaches those same names to a GitHub Release. The build script is `software/gui/packaging/pyinstaller_build.py`. It bundles `software/firmware/presets/rotor-presets.yaml` and checks the result with `--selftest` under `QT_QPA_PLATFORM=offscreen`.
+The downloadable apps are built by [`.github/workflows/package.yml`](../../.github/workflows/package.yml). Pull requests upload the three files as workflow artifacts. A `v*` tag attaches those same names to a GitHub Release. The build script is `software/gui/packaging/pyinstaller_build.py`. It bundles `software/firmware/presets/rotor-presets.yaml` and the static pages, and checks the result with `--selftest` (start the server, fetch the page and the catalog, exit).
 
 ### Run from a checkout
 
@@ -52,7 +58,7 @@ From the repository root, with the firmware preset file where it already lives:
 ```bash
 python -m pip install -e software/gui/rotatorctl
 python -m pip install -e software/gui/rotatorctl-gui --no-deps
-python -m pip install "PySide6>=6.6"
+python -m pip install "aiohttp>=3.9"
 rotatorctl-gui
 ```
 
@@ -71,7 +77,7 @@ rotatorctl restore --target tcp://127.0.0.1:4533 rotator-settings.txt
 rotatorctl save --target tcp://127.0.0.1:4533
 ```
 
-`set` changes the working record. `save` stores it. `restore` stores it as part of the command. The GUI save button does `set` for each changed field and then `save`, and only after the confirm dialog.
+`set` changes the working record. `save` stores it. `restore` stores it as part of the command. The page's save button does `set` for each changed field and then `save`, and only after the confirm dialog.
 
 ### Simulator
 
@@ -87,22 +93,26 @@ rotatorctl-sim -n 2 --pty --mdns
 
 ```bash
 cd software/gui
-QT_QPA_PLATFORM=offscreen pytest
+python -m pip install "pytest>=8" "playwright>=1.49"
+python -m playwright install --with-deps chromium
+pytest
 ```
 
-Library tests talk to the simulator over TCP and over a pty, including mDNS. pytest-qt builds the window offscreen. CI is `.github/workflows/gui.yml`.
+Library tests talk to the simulator over TCP and over a pty, including mDNS. API tests drive the loopback server. Playwright runs a headless Chromium smoke test. CI is `.github/workflows/gui.yml`.
 
 Regenerate the review images (they are committed):
 
 ```bash
-QT_QPA_PLATFORM=offscreen python software/gui/scripts/capture_screenshots.py
+python software/gui/scripts/capture_screenshots.py
 ```
 
 Offline pages, the ones to review first:
 
 | Image | What it shows |
 |---|---|
-| [docs/rotator-selection.png](docs/rotator-selection.png) | All 39 rotators. Yaesu G-450A selected, specs and settings with `[?]`, and a custom overlap override |
+| [docs/rotator-selection.png](docs/rotator-selection.png) | Desktop width. All 39 rotators. Yaesu G-450A selected, specs and settings with `[?]`, and a custom overlap override |
+| [docs/rotator-phone.png](docs/rotator-phone.png) | The same picker at phone width (390×844). STOP stays on screen |
+| [docs/rotator-large-text.png](docs/rotator-large-text.png) | The picker after two A+ steps (125%) |
 | [docs/axes.png](docs/axes.png) | Sensor and brake for azimuth and elevation |
 | [docs/limits.png](docs/limits.png) | Travel, overlap, speed, and the safety stops |
 | [docs/park.png](docs/park.png) | Park headings and whether the brake sets on arrival |
@@ -118,12 +128,15 @@ Connected-controller pages, from the simulator:
 | [docs/screenshots/controllers.png](docs/screenshots/controllers.png) | Bench on USB `1209:f407` and Tower on the network |
 | [docs/screenshots/settings.png](docs/screenshots/settings.png) | Schema form, unsaved banner, and a field error |
 | [docs/screenshots/confirm-save.png](docs/screenshots/confirm-save.png) | Diff before the write, including a reboot note |
-| [docs/screenshots/presets.png](docs/screenshots/presets.png) | Preset dialog used from the Controllers page |
+| [docs/screenshots/presets.png](docs/screenshots/presets.png) | The settings a preset writes, and the custom overlap override |
 
 ### Architecture
 
 ```
-rotatorctl-gui  MainWindow
+browser         static HTML / CSS / JS
+    |  relative /api and /api/ws
+    v
+rotatorctl-gui  aiohttp on 127.0.0.1, session token in the path
     |  schema form, confirm diff, presets, compare, copy
     v
 rotatorctl      ConsoleClient  -->  TCP or serial lines
@@ -133,9 +146,9 @@ rotatorctl      ConsoleClient  -->  TCP or serial lines
                 sim.Engine  (the stand-in controller)
 ```
 
-The form walks `schema.settings` and groups rows by the name prefix. A firmware setting of a known type (`bool`, `int`, `float`, `enum`, `string`) appears on the next connect. Readonly rows stay disabled. A row marked `reboot` is called out in the confirm dialog. The app does not reboot the controller.
+The form walks the page list from `GET /api/pages` and groups rows by the name prefix. A firmware setting of a known type (`bool`, `int`, `float`, `enum`, `string`) appears on the next connect. Readonly rows stay disabled. A row marked `reboot` is called out in the confirm dialog. The app does not reboot the controller. The route table is the Web API section of [configuration.md](../../docs/design/configuration.md).
 
-Dirty state is the open form against the last loaded record. The window title grows a `*` and a banner sits above the form. Save, restore, and preset apply each show what will change before the write. Copy from another controller loads writable values into the form and leaves them dirty, so the same confirm step still runs. Compare is read-only.
+Dirty state is the open form against the last loaded record. The page title grows a `*` and a banner sits above the form. Save, restore, and preset apply each show what will change before the write. Copy from another controller loads writable values into the form and leaves them dirty, so the same confirm step still runs. Compare is read-only.
 
 Preset preview and `preset apply` both use `settings_from_preset`, so the dialog matches the simulator. The catalog is `software/firmware/presets/rotor-presets.yaml`.
 
@@ -192,7 +205,7 @@ GS-232 and the console still share the port by whole-token grammar. `S` is stop.
 - USB VID `0x1209` and PID `0xF407` are a placeholder until a pid.codes assignment (or another VID) exists. The GUI matches those numbers.
 - An `az+el` catalog row has one travel block. Elevation is filled as 180 degrees and no overlap when the azimuth block is an overlap rotation. The catalog may grow a separate elevation travel block.
 - `motor.current_a` is copied to `safety.stall_a`. Nameplate current may be too low for a stall threshold once the sense path is measured.
-- A wedge brake with a null engage time uses the 3 second DCU-3 default. Rows that should use another delay need `engage_after_stop_s` filled in.
+- A wedge brake with a null engage time uses the 3 second DCU-3 default. A pair of equal numbers is copied as that delay (HAM-V is 8 seconds). A real min/max range is not collapsed. Rows that should use another delay need `engage_after_stop_s` filled in.
 - The C++ settings blob is still schema, azimuth travel, dead time, and maximum run. The `schema` command is the larger contract that blob grows into.
 - Cross-field checks such as `speed_min_s` <= `speed_max_s` are not applied yet. Each field is checked against its own limits.
 - The simulator advertises `127.0.0.1`. A controller on the LAN will advertise its Ethernet address.

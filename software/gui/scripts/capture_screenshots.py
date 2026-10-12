@@ -1,142 +1,151 @@
 # Copyright (C) 2026 Jeff Millar, WA1HCO
 # SPDX-License-Identifier: GPL-3.0-only
-"""Render the offline preference pages, then the connected-controller windows.
+"""Render the browser UI with Playwright and write the review PNGs.
 
 Offline shots are written first, before the simulator starts.
 
 Run from anywhere:
 
-    QT_QPA_PLATFORM=offscreen python software/gui/scripts/capture_screenshots.py
+    python software/gui/scripts/capture_screenshots.py
 """
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
-
-os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "rotatorctl" / "src"))
 sys.path.insert(0, str(ROOT / "rotatorctl-gui" / "src"))
 
-from PySide6.QtGui import QPixmap  # noqa: E402
-from PySide6.QtWidgets import QApplication  # noqa: E402
+from playwright.sync_api import expect, sync_playwright  # noqa: E402
 
-from rotatorctl.discovery import USB_PID, USB_VID, ControllerInfo, Endpoint  # noqa: E402
-from rotatorctl.sim import demo_pair  # noqa: E402
-from rotatorctl_gui.main_window import MainWindow  # noqa: E402
+from rotatorctl.sim import SimInstance  # noqa: E402
+from rotatorctl_gui.server import start_server  # noqa: E402
+from rotatorctl_gui.state import AppState  # noqa: E402
 
 DOCS = ROOT / "docs"
 OUT = DOCS / "screenshots"
 PAGES = ("axes", "limits", "park", "calibration", "display", "network", "console")
 
 
-def save_widget(widget, path: Path, width: int, height: int) -> None:
-    widget.resize(width, height)
-    widget.show()
-    app.processEvents()
-    widget.grab().save(str(path))
-    if path.stat().st_size < 8000:
-        pixmap = QPixmap(widget.size())
-        widget.render(pixmap)
-        pixmap.save(str(path))
+def save(page, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    page.screenshot(path=str(path))
     if path.stat().st_size < 8000:
         raise SystemExit(f"screenshot looks empty: {path} ({path.stat().st_size} bytes)")
+    print(path)
 
 
-def capture_offline() -> None:
-    """Rotator catalog and each preference page, with no controller running."""
-    window = MainWindow()
-    window.resize(1280, 900)
-    window.show()
-    app.processEvents()
-    window.use_preset("yaesu-g-450a")
-    window.set_custom_override("az.overlap_deg", "100")
-    window.show_page("rotator")
-    app.processEvents()
-    detail = window.browser.detail
-    detail.widget().adjustSize()
-    app.processEvents()
-    bar = detail.verticalScrollBar()
-    content_h = max(detail.widget().sizeHint().height(), detail.widget().height(), bar.maximum() + detail.viewport().height())
-    shortfall = content_h - detail.viewport().height()
-    height = window.height() + max(0, shortfall) + 48
-    detail.verticalScrollBar().setValue(0)
-    app.processEvents()
-    save_widget(window, DOCS / "rotator-selection.png", 1280, height)
+def edit_device(page, name: str, value: str) -> None:
+    field = page.locator(f"[id='field-{name}']")
+    field.scroll_into_view_if_needed()
+    field.fill(value)
+    with page.expect_response("**/api/device/edit"):
+        field.dispatch_event("change")
+
+
+def capture_offline(browser, url: str) -> None:
+    page = browser.new_page(viewport={"width": 1280, "height": 900})
+    page.goto(url)
+    page.wait_for_selector("#presetCount")
+    page.locator("[data-id='yaesu-g-450a']").click()
+    with page.expect_response("**/api/preset/apply"):
+        page.locator("#usePreset").click()
+    page.locator("#overrideName").select_option("az.overlap_deg")
+    page.fill("#overrideValue", "100")
+    with page.expect_response("**/api/override"):
+        page.locator("#setOverride").click()
+    expect(page.locator("#overrideList")).to_contain_text("100")
+    expect(page.locator("#dirty")).to_be_visible()
+    save(page, DOCS / "rotator-selection.png")
+
+    page.set_viewport_size({"width": 1280, "height": 1040})
     for key in PAGES:
-        window.show_page(key)
-        app.processEvents()
-        save_widget(window, DOCS / f"{key}.png", 1280, 1040)
-    window.close()
-    print(f"wrote offline pages under {DOCS}")
+        page.locator(f"[data-page='{key}']").click()
+        expect(page.locator("main h2")).to_be_visible()
+        save(page, DOCS / f"{key}.png")
+
+    page.locator("[data-page='rotator']").click()
+    expect(page.locator("#presetDetail")).to_contain_text("Settings this preset writes")
+    page.locator("h3", has_text="Settings this preset writes").scroll_into_view_if_needed()
+    save(page, OUT / "presets.png")
+    page.close()
+
+    phone = browser.new_page(viewport={"width": 390, "height": 844})
+    phone.goto(url)
+    phone.wait_for_selector("#presetCount")
+    phone.locator("[data-id='yaesu-g-450a']").click()
+    expect(phone.locator("#presetDetail")).to_contain_text("Yaesu-AC-pot")
+    save(phone, DOCS / "rotator-phone.png")
+    phone.close()
+
+    large = browser.new_page(viewport={"width": 1280, "height": 900})
+    large.goto(url)
+    large.wait_for_selector("#presetCount")
+    large.locator("#fontUp").click()
+    large.locator("#fontUp").click()
+    large.locator("[data-id='yaesu-g-450a']").click()
+    expect(large.locator("#presetDetail")).to_contain_text("sensor.ohms [?]")
+    save(large, DOCS / "rotator-large-text.png")
+    large.close()
+
+
+def capture_connected(browser, url: str) -> None:
+    inst = SimInstance(serial="RC-SHOT", name="Alpha", tcp=True, pty=False, mdns=False)
+    inst.start()
+    try:
+        page = browser.new_page(viewport={"width": 1280, "height": 900})
+        page.goto(url)
+        page.wait_for_selector("#presetCount")
+        page.locator("[data-page='controllers']").click()
+        page.fill("#addHost", "127.0.0.1")
+        page.fill("#addPort", str(inst.port))
+        with page.expect_response("**/api/controllers/add"):
+            page.locator("#addNetwork").click()
+        row = page.locator("#controllerList button").first
+        expect(row).to_contain_text("127.0.0.1")
+        row.click()
+        save(page, OUT / "controllers.png")
+        with page.expect_response("**/api/controllers/connect"):
+            page.locator("#connectBtn").click()
+        expect(page.locator("#modePill")).to_have_text("CONNECTED")
+        page.fill("#deviceSearch", "address")
+        edit_device(page, "net.address", "not-an-ip")
+        expect(page.locator(".field[data-name='net.address'] .field-error")).to_contain_text("IPv4")
+        expect(page.locator("#dirty")).to_be_visible()
+        save(page, OUT / "settings.png")
+        page.fill("#deviceSearch", "")
+        edit_device(page, "net.address", "10.1.1.20")
+        edit_device(page, "net.hostname", "alpha-2")
+        edit_device(page, "safety.dead_time_ms", "750")
+        page.locator("#deviceSave").click()
+        expect(page.locator("#diff")).to_be_visible()
+        expect(page.locator("#diffNote")).to_contain_text("reboot")
+        save(page, OUT / "confirm-save.png")
+        page.locator("#diff button[value='cancel']").click()
+        page.close()
+    finally:
+        inst.stop()
 
 
 def main() -> None:
     DOCS.mkdir(parents=True, exist_ok=True)
     OUT.mkdir(parents=True, exist_ok=True)
-    capture_offline()
-    usb, net = demo_pair()
-    usb.start()
-    net.start()
+    state = AppState(idle_seconds=0)
+    state.token = "shots"
+    running = start_server(state, idle_seconds=0)
     try:
-        window = MainWindow()
-        window.set_controllers(
-            [
-                ControllerInfo(
-                    serial="RC-SIM-USB",
-                    name="Bench",
-                    firmware="0.1.0-sim",
-                    axes="az",
-                    vid=USB_VID,
-                    pid=USB_PID,
-                    endpoints=[Endpoint("usb", usb.serial_target(), "USB CDC")],
-                ),
-                ControllerInfo(
-                    serial="RC-SIM-NET",
-                    name="Tower",
-                    firmware="0.1.0-sim",
-                    axes="az+el",
-                    name_from_mdns=True,
-                    endpoints=[Endpoint("tcp", net.tcp_target(), "mDNS")],
-                ),
-            ]
-        )
-        window.resize(1280, 800)
-        window.show()
-        window.show_page("controllers")
-        app.processEvents()
-        window.list.setCurrentRow(0)
-        window.list.setFocus()
-        app.processEvents()
-        window.grab().save(str(OUT / "controllers.png"))
-
-        window.connect_to(1)
-        assert window.form is not None
-        window.form.set_value("net.hostname", "tower-east")
-        window.form.set_value("net.address", "not-an-ip")
-        app.processEvents()
-        save_widget(window, OUT / "settings.png", 1280, 800)
-
-        window.form.set_value("net.address", "10.1.1.20")
-        window.form.set_value("safety.dead_time_ms", "750")
-        dialog = window.make_save_dialog()
-        if dialog is None:
-            raise SystemExit("save dialog did not open")
-        save_widget(dialog, OUT / "confirm-save.png", 760, 520)
-
-        presets = window.make_preset_dialog()
-        presets.select("yaesu-g-450a")
-        save_widget(presets, OUT / "presets.png", 980, 680)
-        print(f"wrote {OUT}")
+        with sync_playwright() as factory:
+            browser = factory.chromium.launch()
+            try:
+                capture_offline(browser, running.url)
+                capture_connected(browser, running.url)
+            finally:
+                browser.close()
     finally:
-        usb.stop()
-        net.stop()
+        running.stop()
 
-
-app = QApplication([])
 
 if __name__ == "__main__":
     main()
