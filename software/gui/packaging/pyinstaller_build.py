@@ -48,7 +48,7 @@ def _run(cmd: list[str], **kwargs: object) -> None:
     subprocess.check_call(cmd, **kwargs)
 
 
-def pyinstaller_cmd(root: Path, work: Path, onefile: bool) -> list[str]:
+def pyinstaller_cmd(root: Path, work: Path, onefile: bool, *, windowed: bool = False) -> list[str]:
     preset = root / "software" / "firmware" / "presets" / "rotor-presets.yaml"
     entry = root / "software" / "gui" / "packaging" / "entry.py"
     cmd = [
@@ -106,6 +106,10 @@ def pyinstaller_cmd(root: Path, work: Path, onefile: bool) -> list[str]:
     ]
     if onefile:
         cmd.append("--onefile")
+    # macOS needs a windowed build to emit a .app. Windows stays a console
+    # app so the session URL has somewhere to print.
+    if windowed:
+        cmd.append("--windowed")
     cmd.append(str(entry))
     return cmd
 
@@ -116,7 +120,7 @@ def build_windows(root: Path, work: Path, out: Path) -> None:
 
 
 def build_macos(root: Path, work: Path, out: Path) -> None:
-    _run(pyinstaller_cmd(root, work, onefile=False))
+    _run(pyinstaller_cmd(root, work, onefile=False, windowed=True))
     app = work / "dist" / "RotatorController.app"
     stage = work / "dmg-root"
     if stage.exists():
