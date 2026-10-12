@@ -132,6 +132,6 @@ The schematic has many known ERC violations (unconnected MCU pins and
 similar). CI runs ERC and DRC to produce reports and does not fail the
 build on those violations. See the root README.
 
-Mechanical drawings for the Hammond 1455N1601 enclosure and the triac
-heatsink bar belong in [`mechanical/`](mechanical/README.md). They are
-not drawn yet.
+The Hammond 1455N1601 board outline and the end-plate drawings are in
+[`mechanical/`](mechanical/README.md). That KiCad project is not the V4
+board. Leave `Rotator-Controller-V4.kicad_*` alone when opening it.

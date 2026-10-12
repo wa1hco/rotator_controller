@@ -407,7 +407,7 @@ The next seven items come from the rotator catalog's hardware implications (`rot
 12. **Three pot modes, selected per axis.** CDE dual-end grounded wiper (500 Ω, wiper on the motor/brake common, with 60 Hz ripple). Single-ended, 150 Ω–10 kΩ. Rheostat (G-400RC, G-450XL, G-450ADC), which needs a known current source or a reference resistor. A 75 Ω pot (Alliance HD-73) needs current-limited excitation, about 20–30 mA at most, and must not sit straight across 5 V (67 mA). Leave a series-resistor footprint; the RT-21 uses 75–100 Ω.
 13. **Pot excitation above 3.3 V, and a way to use a narrow span.** The HDR-300 uses only a third of its 3-turn pot (0.83–2.5 V of a 5 V excitation). Prosistel D spans about 0.78 V around 5.4 V. Provide a programmable offset/gain stage, or an external 16–24-bit ADC, and allow pot REF above 3.3 V (5 V, and possibly 8–13 V). Old Prosistel pots are specified at ±12 V. A unipolar REF still works on that passive pot, so a −12 V rail is not required.
 14. **Two pulse channels per axis, with a selectable pull-up.** SPID HR has two Hall sensors, and Prosistel PRO has an encoder. Pull-up selectable between 5 V and 12 V, about 5 mA wetting (M2 runs about 11.3 V / 5 mA). RC filter, hysteresis, and ESD/RF protection, because SPID reports RF-induced false pulses. Rates stay under 1 kHz (about 72 Hz for M2).
-15. **Run-cap placement has to be configurable.** CDE: the cap is across terminals 4–8, and the drive is on 5 and 6 through the rotor limit switches. Yaesu and the HD-73: the cap is across the two drive ends. G-5500 and HDR-300: the cap is in the rotor, so the board cap must be left off. A jumper or relay, with the cap terminals separate from the drive terminals. Sizes in the catalog run from 100 to 156 µF, at 50–60 VAC at least, 100 VAC for margin.
+15. **Run-cap placement has to be configurable.** The CDE value is chosen (ADR 0016): 100 µF plus 33 µF, 133 µF, across terminals 4–8. Yaesu and the HD-73 put the cap across the two drive ends. G-5500 and HDR-300 keep the cap in the rotor, so the board caps stay off. A jumper or relay, with the cap terminals separate from the drive terminals. Other catalog sizes run from 100 to 156 µF, at 50–60 VAC at least, 100 VAC for margin.
 16. **Brake output defaults to engaged on a fault.** The CDE family needs it (24–30 VAC, 3.5–5 A steady, 0.75 Ω coil on the DCU-3 measurement, plus inrush). The HDR-300 needs one too; its voltage is not in the catalog. Its own triac or relay, and the unpowered or faulted state is brake engaged.
 17. **DC module, 12–48 V.** That span covers SPID at 12–24 V, Yaesu at 11–24 V, Prosistel up to 42 V, and M2 at 28–42 V (about 45 V open circuit). 5 A covers most of the catalog. BIG-RAS/HR needs up to 12 A, and the SPID MD's 20 A outputs are beyond a 5 A module. Record that limit, or plan a 10–15 A option.
 18. **48 VAC Prosistel is unsupported.** Older PST-51 / PST-61 / PST-71 boxes are 48 VAC. Peak line voltage plus the cap winding can exceed the SMAJ90CA 90 V standoff. Do not drive them with this board's AC stage.
@@ -457,9 +457,9 @@ Design implication: no panel-mount female exists in shell 13, so the controller 
 ## Addendum (Oct 11, 2026): Packaging
 
 - **Enclosure:** Hammond 1455-series extruded aluminum box, e.g. 1455N1601: 160 × 103 × 53 mm, 6063 Al, 1.5 mm minimum wall, designed for a 100 mm wide PCB in internal slots (comb of 2.0 mm slots on a 3.5 mm pitch). Internal height 49.62 mm. Removable belly plate. [V Hammond drawing]
-  - **The board slides into the side-wall slots: 99.3 mm wide, 3.5 mm edge keepout on both faces.**
-- **Front end plate:** buttons and LEDs only (PCB-mounted, actuators and light pipes through the plate).
-- **Rear end plate:** all cables. Rotor CPC pigtail / pluggable block, 13.8 V, 26 VAC, USB-C, RJ45.
+  - **The board slides into the side-wall slots.** The outline drawing uses Hammond's maximums: 159 × 99 mm, slot 6. Copper keep-out is 2.5 mm on the long edges, and component bodies stay 3.5 mm off those edges. See the Oct 12 addendum.
+- **Front end plate:** CCW, STOP, and CW, plus six Dialight 551 right-angle LED holes. No light pipes.
+- **Rear end plate:** all cables. Power inlet, M16 rotor gland, USB-C, RJ45, ground stud.
   - The rear plate and the PCB connectors form one subassembly.
   - No connectors on other faces and no internal wiring.
 - **Triacs (CW, CCW, Brake), CHOSEN mounting:**
@@ -549,3 +549,16 @@ The ROM DFU bootloader does not drive this LED. While the chip is in system memo
 Tag-Connect **TC2050-IDC-NL**. Signals are SWDIO (PA13), SWCLK (PA14), SWO, NRST, VTREF, and ground, on Tag-Connect's published Cortex pad layout. Nothing is populated.
 
 A 10-pin 1.27 mm Cortex header would be a part on every board (an LCSC line if SMT, a Mouser line if through-hole) and would need a shroud in a box that has no panel space for it. The NL footprint avoids both. The cable is bought once. It has no alignment holes, so it has to be held square; that is fine for occasional debug. If it is not, the legged TC2050-IDC adds two holes and still needs no connector.
+
+## Addendum (Oct 12, 2026): Board outline, end plates, and the motor run cap
+
+The drawings are in `hardware/controller/mechanical/`. The V4 KiCad project is not modified.
+
+- **Board:** 159.00 × 99.00 mm, 1.6 mm, square corners, slot 6 of the 1455N1601. Inner top to board top 23.91 mm, so parts on top stay within 22.9 mm. Board bottom to the floor is 24.11 mm. Long-edge copper keep-out 2.5 mm; component bodies stay 3.5 mm off those edges.
+- **Triac bar:** 10 × 50 mm at board x 21.9–31.9, y 24.5–74.5. Top-wall drills Ø3.4 at enclosure x = 29 from the rear-plate inner face, y = ±20.
+- **Motor run cap (ADR 0016):** KEMET R60EW61005000K, 100 µF, lying flat (height 20.3 mm), in parallel with TDK B32526T1336K000, 33 µF, upright (height 15.0 mm). Total 133 µF nominal, inside the CDE 130–156 µF range. Both are 100 VDC / 63 VAC and are through-hole. The zone is board x 47.25–122.5, y 4.5–47.3.
+- **Front plate:** CCW, STOP, CW (Ø6.5) and six Dialight 551-xx07F holes (Ø4.0). No light pipes. LED functions are TBD.
+- **Rear plate:** power inlet, M16 gland (Ø16.3), USB-C, ground stud, Pulse J0011D01BNL cutout. Power, the gland, USB-C, and the stud are TBD on the drawing.
+- **Tolerance:** slot heights are chained from Hammond typical dimensions and are about ±0.6 mm unverified. Test-fit one board in a box before drilling a batch.
+
+Detail, sources, and the unverified list are in `hardware/controller/mechanical/outline-1455N1601/README.md`.

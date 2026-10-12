@@ -21,3 +21,4 @@ They are short on purpose. The reasoning and the numbers live in
 | [0013](0013-assembly-sourcing.md) | JLCPCB assembles SMT from LCSC; owner hand-solders through-hole from Mouser |
 | [0014](0014-stm32f407-lan8720.md) | STM32F407VGT6 + LAN8720A; Ethernet standard; W5500 dropped |
 | [0015](0015-configuration-and-ui.md) | Board file, no feature `#ifdef`s, versioned settings; web UI and a shared console |
+| [0016](0016-motor-run-capacitor.md) | CDE run cap: 100 µF flat plus 33 µF upright, 133 µF |
