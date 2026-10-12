@@ -8,6 +8,7 @@ is a schema change, not a GUI change.
 
 from __future__ import annotations
 
+import re
 from enum import Enum
 
 from pydantic import BaseModel, Field
@@ -30,6 +31,7 @@ class SettingSpec(BaseModel):
     enum: list[str] = Field(default_factory=list)
     default: str
     help: str = ""
+    label: str = ""
     reboot: bool = False
     readonly: bool = False
     advanced: bool = False
@@ -60,7 +62,56 @@ _LEVELS = ["error", "warn", "info", "debug"]
 _DRIVES = ["triac", "relay", "dc_hbridge"]
 
 
+_LABELS = {
+    "net.dhcp": "DHCP",
+    "net.mdns": "mDNS",
+    "ports.tcp": "TCP port",
+    "ports.gs232_query": "GS-232 query",
+    "ports.rotctld": "rotctld port",
+    "ports.easycom": "Easycom port",
+    "ports.dcu1": "DCU-1 port",
+    "safety.stall_a": "Stall current",
+    "safety.stall_deg": "Stall window",
+    "az.pulse_deg": "Pulse size",
+    "el.pulse_deg": "Pulse size",
+    "ui.cardinal_labels": "Cardinal labels",
+}
+_WORD = {
+    "cw": "CW",
+    "ccw": "CCW",
+    "adc": "ADC",
+    "ac": "AC",
+    "dc": "DC",
+}
+_PRESET_MEMORY = re.compile(r"^preset\.(\d+)\.(az|el)$")
+
+
+def human_label(name: str) -> str:
+    """Short label for a setting. The dotted key stays available beside it."""
+    special = _LABELS.get(name)
+    if special:
+        return special
+    memory = _PRESET_MEMORY.match(name)
+    if memory:
+        axis = "azimuth" if memory.group(2) == "az" else "elevation"
+        return f"Memory {memory.group(1)} {axis}"
+    rest = name.split(".", 1)[-1]
+    if rest.startswith("cal."):
+        rest = rest[4:]
+    for suffix in ("_deg", "_ms", "_min", "_s", "_a"):
+        if rest.endswith(suffix):
+            rest = rest[: -len(suffix)]
+            break
+    words = [_WORD.get(word, word) for word in rest.split("_") if word]
+    if not words:
+        return name
+    head = words[0] if words[0] in _WORD.values() else words[0].capitalize()
+    return " ".join([head, *words[1:]])
+
+
 def _spec(name: str, kind: SettingType, default: str, **kwargs: object) -> SettingSpec:
+    if "label" not in kwargs:
+        kwargs["label"] = human_label(name)
     return SettingSpec(name=name, type=kind, default=default, **kwargs)  # type: ignore[arg-type]
 
 

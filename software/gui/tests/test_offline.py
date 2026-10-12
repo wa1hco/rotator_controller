@@ -5,9 +5,10 @@ from __future__ import annotations
 
 import json
 
-from PySide6.QtWidgets import QLabel, QListWidget, QPushButton, QWidget
+from PySide6.QtWidgets import QGroupBox, QLabel, QListWidget, QPushButton, QWidget
 
 from rotatorctl.presets import settings_from_preset
+from rotatorctl.schema import default_schema, human_label
 from rotatorctl.rotcfg import dumps, loads, new_config
 from rotatorctl_gui.main_window import MainWindow
 
@@ -89,6 +90,50 @@ def test_preference_pages_list_the_review_fields(qtbot, presets) -> None:
     nav = window.findChild(QListWidget, "pageNav")
     assert nav is not None
     assert nav.item(nav.count() - 1).text() == "Controllers"
+
+
+def test_detail_pane_keeps_one_copy(qtbot, presets) -> None:
+    window = MainWindow(presets=presets)
+    qtbot.addWidget(window)
+    window.use_preset("yaesu-g-450a")
+    window.set_custom_override("az.overlap_deg", "100")
+    window.show()
+    qtbot.wait(10)
+    body = window.browser.detail.widget()
+    texts = [label.text() for label in body.findChildren(QLabel)]
+    assert texts.count("Custom overrides") == 1
+    assert texts.count("Settings this preset writes") == 1
+    assert len(body.findChildren(QPushButton, "usePreset")) == 1
+    assert any(text.startswith("Overlap:") and "100" in text for text in texts)
+
+
+def test_az_only_rotor_hides_elevation_and_uses_labels(qtbot, presets) -> None:
+    window = MainWindow(presets=presets)
+    qtbot.addWidget(window)
+    window.use_preset("yaesu-g-450a")
+    window.show_page("limits")
+    form = window.page_forms["limits"]
+    elevation = form.findChild(QGroupBox, "group-el")
+    azimuth = form.findChild(QGroupBox, "group-az")
+    assert elevation is not None and elevation.isHidden()
+    assert azimuth is not None and not azimuth.isHidden()
+    visible = [
+        label
+        for label in form.findChildren(QLabel)
+        if label.text() == "Travel min" and "az.travel_min_deg" in label.toolTip()
+    ]
+    assert len(visible) == 1
+    assert form._rows["az.travel_min_deg"].isHidden() is False
+    assert form._rows["el.travel_min_deg"].isHidden() is True
+    assert any(label.text() == "az.creep_deg" and label.objectName() == "fieldKey" for label in form.findChildren(QLabel))
+    window.use_preset("yaesu-g-5500")
+    assert not form.findChild(QGroupBox, "group-el").isHidden()
+
+
+def test_human_label_matches_the_travel_example() -> None:
+    assert human_label("az.travel_min_deg") == "Travel min"
+    assert default_schema().get("az.travel_min_deg").label == "Travel min"
+    assert human_label("az.cal.cw_end") == "CW end"
 
 
 def test_catalog_count_matches_the_file(presets) -> None:

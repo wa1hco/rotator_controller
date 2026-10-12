@@ -42,7 +42,7 @@ from rotatorctl.discovery import (
 from rotatorctl.document import Change, SettingsDocument, SettingsError, format_value, parse_ini_lines
 from rotatorctl.operate import stop_line
 from rotatorctl.phases import OPERATE_MILESTONES, UPGRADE_MILESTONES
-from rotatorctl.presets import Preset, can_apply, load_presets, settings_from_preset
+from rotatorctl.presets import Preset, axis_prefixes, can_apply, load_presets, settings_from_preset
 from rotatorctl.rotcfg import RotConfig, dumps, loads, new_config, push_lines
 from rotatorctl.protocol import CommandError, ConsoleClient
 from rotatorctl.schema import Schema
@@ -590,8 +590,10 @@ class MainWindow(QMainWindow):
         self._syncing = True
         try:
             snapshot = self.config.document.snapshot()
+            azimuth, elevation = self._visible_axes()
             for form in self.page_forms.values():
                 form.load(snapshot)
+                form.set_axes(azimuth=azimuth, elevation=elevation)
             self.browser.set_values(snapshot)
             self.browser.set_overrides(self.overrides, self.preset_id)
             if self.preset_id:
@@ -605,6 +607,13 @@ class MainWindow(QMainWindow):
         file_name = self.rotcfg_path.name if self.rotcfg_path else "Untitled.rotcfg"
         self.file_label.setText(f"{file_name}  ·  {name}")
         self._mark_file_dirty()
+
+    def _visible_axes(self) -> tuple[bool, bool]:
+        preset = next((item for item in self.presets if item.id == self.preset_id), None)
+        if preset is None:
+            return True, True
+        prefixes = axis_prefixes(preset.axes)
+        return "az" in prefixes, "el" in prefixes
 
     def _rebuild_pages(self) -> None:
         """Pages keep their widgets; values are reloaded from the new document."""
@@ -952,6 +961,10 @@ class MainWindow(QMainWindow):
 
     def _show_form(self, schema: Schema, values: dict[str, str]) -> None:
         self.form = SettingsForm(schema, values)
+        self.form.set_axes(
+            azimuth=values.get("az.present", "true") == "true",
+            elevation=values.get("el.present", "false") == "true",
+        )
         self.form.changed.connect(self._on_form_changed)
         self.scroll.setWidget(self.form)
         if self.search.text():

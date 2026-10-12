@@ -30,6 +30,7 @@ from rotatorctl.presets import (
     unverified_labels,
     unverified_setting_names,
 )
+from rotatorctl.schema import human_label
 
 _SUPPORT = {
     "v1": "Ready for the AC board",
@@ -180,11 +181,19 @@ class RotatorBrowser(QWidget):
             self._show_current()
 
     def _show_current(self) -> None:
-        while self.detail_layout.count():
-            item = self.detail_layout.takeAt(0)
-            widget = item.widget()
-            if widget is not None:
-                widget.deleteLater()
+        # Replace the whole pane. Clearing layout items left nested layouts
+        # and their widgets parented to the old body, so each refresh painted
+        # another copy on top of the last one.
+        old = self.detail.takeWidget()
+        body = QWidget()
+        layout = QVBoxLayout(body)
+        layout.setContentsMargins(12, 8, 12, 12)
+        self.detail_body = body
+        self.detail_layout = layout
+        self.detail.setWidget(body)
+        if old is not None:
+            old.hide()
+            old.deleteLater()
         preset_id = self.current_id()
         preset = self._by_id.get(preset_id)
         if preset is None:
@@ -286,7 +295,8 @@ class RotatorBrowser(QWidget):
             shown = value if custom is None or self._active_preset != preset.id else f"{value}  →  {custom}"
             if name in flagged:
                 shown += "  [?]"
-            label = QLabel(f"{name} = {shown}")
+            label = QLabel(f"{human_label(name)} = {shown}")
+            label.setToolTip(name)
             label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
             grid.addWidget(label, index // 2, index % 2)
         layout.addLayout(grid)
@@ -307,7 +317,8 @@ class RotatorBrowser(QWidget):
             for name, value in relevant.items():
                 row = QHBoxLayout()
                 preset_value = settings_from_preset(preset).get(name, "—")
-                label = QLabel(f"{name}:  preset {preset_value}  →  custom {value}")
+                label = QLabel(f"{human_label(name)}:  preset {preset_value}  →  custom {value}")
+                label.setToolTip(name)
                 label.setObjectName("overrideRow")
                 clear = QPushButton("Reset")
                 clear.clicked.connect(lambda checked=False, key=name: self.override_cleared.emit(key))
@@ -319,7 +330,8 @@ class RotatorBrowser(QWidget):
             self._override_name = QComboBox()
             self._override_name.setObjectName("overrideName")
             names = list(settings_from_preset(preset)) or ["az.overlap_deg"]
-            self._override_name.addItems(names)
+            for setting_name in names:
+                self._override_name.addItem(human_label(setting_name), setting_name)
             self._override_value = QLineEdit()
             self._override_value.setObjectName("overrideValue")
             self._override_value.setPlaceholderText("custom value")
@@ -333,7 +345,9 @@ class RotatorBrowser(QWidget):
         return wrap
 
     def _emit_override(self) -> None:
-        name = self._override_name.currentText()
+        name = self._override_name.currentData()
+        if not name:
+            name = self._override_name.currentText()
         value = self._override_value.text().strip()
         if name and value:
-            self.override_set.emit(name, value)
+            self.override_set.emit(str(name), value)

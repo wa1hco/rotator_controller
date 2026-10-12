@@ -50,6 +50,9 @@ class SettingsForm(QWidget):
         self._groups: dict[str, QGroupBox] = {}
         self._advanced_groups: dict[str, QGroupBox] = {}
         self._advanced_body: QWidget | None = None
+        self._show_az = True
+        self._show_el = True
+        self._filter = ""
         layout = QVBoxLayout(self)
         layout.setContentsMargins(8, 8, 8, 8)
         shown = {spec.name: values.get(spec.name, spec.default) for spec in schema.settings}
@@ -153,24 +156,41 @@ class SettingsForm(QWidget):
         label = self._errors.get(name)
         return "" if label is None else label.text()
 
+    def set_axes(self, *, azimuth: bool, elevation: bool) -> None:
+        """Hide an axis the current rotator does not have."""
+        self._show_az = azimuth
+        self._show_el = elevation
+        self.set_filter(self._filter)
+
     def set_filter(self, text: str) -> None:
+        self._filter = text
         query = text.strip().lower()
         for spec in self.schema.settings:
-            hay = f"{spec.name} {spec.help}".lower()
-            self._rows[spec.name].setVisible(not query or query in hay)
+            hay = f"{spec.name} {spec.label} {spec.help}".lower()
+            allowed = self._axis_allowed(spec.name)
+            self._rows[spec.name].setVisible(allowed and (not query or query in hay))
         self._hide_empty(self._groups, False)
         self._hide_empty(self._advanced_groups, True)
         if self._advanced_body is not None and query:
-            matched = any(spec.advanced and self._rows[spec.name].isVisible() for spec in self.schema.settings)
+            matched = any(
+                spec.advanced and not self._rows[spec.name].isHidden() for spec in self.schema.settings
+            )
             if matched:
                 toggle = self.findChild(QPushButton, "advancedToggle")
                 if toggle is not None:
                     toggle.setChecked(True)
 
+    def _axis_allowed(self, name: str) -> bool:
+        if name.startswith("az.") or name.endswith(".az"):
+            return self._show_az
+        if name.startswith("el.") or name.endswith(".el"):
+            return self._show_el
+        return True
+
     def _hide_empty(self, groups: dict[str, QGroupBox], advanced: bool) -> None:
         for prefix, group in groups.items():
             visible = any(
-                self._rows[spec.name].isVisible()
+                not self._rows[spec.name].isHidden()
                 for spec in self.schema.settings
                 if spec.advanced is advanced and spec.name.split(".", 1)[0] == prefix
             )
@@ -182,12 +202,22 @@ class SettingsForm(QWidget):
         outer.setContentsMargins(0, 2, 0, 2)
         outer.setSpacing(2)
         line = QHBoxLayout()
-        name = QLabel(spec.name)
-        name.setMinimumWidth(210)
-        name.setToolTip(spec.help)
+        title = spec.label or spec.name
+        name = QLabel(title)
+        name.setObjectName(f"label-{spec.name}")
+        name.setMinimumWidth(160)
+        tip = spec.name if not spec.help else f"{spec.name}\n{spec.help}"
+        name.setToolTip(tip)
         editor = self._editor(spec, value)
+        editor.setToolTip(tip)
         self._editors[spec.name] = editor
         line.addWidget(name)
+        if spec.advanced:
+            key = QLabel(spec.name)
+            key.setObjectName("fieldKey")
+            key.setStyleSheet("color: #78716c;")
+            key.setToolTip(tip)
+            line.addWidget(key)
         line.addWidget(editor, 1)
         if spec.unit:
             line.addWidget(QLabel(spec.unit))
