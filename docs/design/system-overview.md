@@ -28,7 +28,7 @@ The reference points are K3NG (very broad features, compile-time `#define` confi
 |---|---|---|---|
 | A. Monolith (K3NG style) | One firmware, features chosen with `#define` | Simple to flash | Hard to test; configuration needs a rebuild; this is the problem we are leaving |
 | B. Layered single box | One shack box; firmware split into modules with fixed interfaces; configuration is runtime data | Testable; matches the stock-cable baseline | Display and network options add to the box's BOM |
-| C. Box + separate bridge | Shack box is the real-time controller (USB serial plus an optional Ethernet/Wi-Fi module); a PC or Pi service adds web, MQTT, and many-client handling | Keeps safety-critical code small; PC-side features can change fast | Two things to deploy |
+| C. Box + separate bridge | Shack box is the real-time controller (USB and Ethernet); a PC or Pi service adds web, MQTT, and many-client handling | Keeps safety-critical code small; PC-side features can change fast | Two things to deploy |
 | D. Distributed (*new idea*) | Driver/sensor unit on the tower, control head in the shack, linked by RS-485, CAN, or Ethernet | Short motor/sensor runs; digital link is immune to cable resistance and hum; one cable for many rotators | **Needs new cable and tower electronics** (lightning, weather, power at the tower); breaks the baseline |
 
 ### Recommendation: B inside the box, with C as an optional add-on
@@ -41,7 +41,7 @@ The firmware runs in five layers. Each layer talks to the next through a small i
 4. **Command bus.** Every input (front panel, protocol parsers, network, interlocks) becomes one internal command set: `point(az[,el])`, `jog(dir,speed)`, `stop`, `park`, `set_config`, `get_state`. Every output (display, telemetry) subscribes to one `AxisState` record. That record is a superset of WIMS `RotatorState`: az, el, target, moving, direction, speed, health, fault, soft limits, owner.
 5. **Front ends.** Protocol plugins (section 4), UI (sections 2 and 3), and integration (section 7).
 
-**Configuration** is a versioned, checksummed settings record stored on the box. Each rotator profile starts from a preset ("HAM-IV", "G-1000DXC", "SPID RAS"...), and you then adjust it. You can edit it from the front panel, over serial (text commands), or as JSON from the web/PC. It can be exported and imported so one file describes a station. No rebuild is needed to change rotator type or protocol. Optional features that don't fit the board (for example a TFT driver on a small MCU) are left out of the build. That is a build-variant choice, not user configuration.
+**Configuration** is three layers (ADR 0015). A compile-time board file names pins and stuffed chips only. Every feature is compiled in; there are no feature `#ifdef`s. Typed, versioned settings live in flash and are checked against limits on entry. A preset ("HAM-IV", "G-1000DXC", "SPID RAS"...) loads defaults, then a calibration sweep records the ends. The operator edits settings from the Ethernet web UI or from the text console (USB CDC and TCP). Dump and restore are one text file. The draft namespaces are `docs/design/configuration.md`. No rebuild is needed to change rotator type.
 
 **Multi-axis and multi-rotator.** The core handles N axes. The baseline box is one azimuth axis, or one az + el pair (G-5500/SPID az-el). Stacks are handled one level up (section 7).
 
@@ -119,7 +119,7 @@ Each serial or TCP port is configured to one protocol. One box can expose USB-se
 
 ### Transport
 
-**USB CDC serial** is the baseline. It works with everything and needs no drivers. Isolated USB is already in the V4 design, and it keeps ground loops out of the shack PC. **Ethernet** is preferred over Wi-Fi in a contest station: it is deterministic, keeps RF out of the 2.4 GHz band, and is easy to configure with a static IP. Wi-Fi is fine for a portable box. If the box has no network hardware, the **bridge service** can run on the shack PC or a Pi. It holds the USB port and offers rotctld, JSON, and MQTT. This is the same pattern as the WIMS host agent that owns a serial port.
+**USB CDC serial** is required. It works with everything and needs no drivers. Isolated USB is already in the V4 design, and it keeps ground loops out of the shack PC. **Ethernet is also required** (STM32F407VGT6 MAC + LAN8720A; the W5500 path is dropped — see `mcu-ethernet-lcsc.md`). It is preferred over Wi-Fi in a contest station: it is deterministic, keeps RF out of the 2.4 GHz band, and is easy to configure with a static IP. A **bridge service** on the shack PC or a Pi can still hold the USB port and offer rotctld, JSON, and MQTT for clients that do not speak to the box directly. This is the same pattern as the WIMS host agent that owns a serial port.
 
 ### Multi-client arbitration
 

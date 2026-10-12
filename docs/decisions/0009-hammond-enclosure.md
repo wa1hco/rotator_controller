@@ -2,6 +2,9 @@
 
 - Status: Accepted
 - Date: 2026-10-11
+- Revised: 2026-10-12. The end-plate drawings and the slot-6 board
+  outline are in the repository. The motor run cap that fits this
+  height is ADR 0016.
 
 ## Context
 
@@ -14,15 +17,22 @@ thermal path and the end plates a custom job.
 Use a Hammond 1455N1601 extruded aluminum enclosure, 160 × 103 × 53 mm.
 The board slides into the side-wall card slots.
 
-- Front end plate: buttons and LEDs only.
-- Rear end plate: every cable (rotor pigtail, 13.8 V, 26 VAC, USB-C,
-  optional Ethernet).
+- Board: 159 × 99 mm, in slot 6.
+- Front end plate: CCW, STOP, and CW, plus six Dialight 551 right-angle
+  LED holes. No light pipes and no preset pot.
+- Rear end plate: every cable (power inlet, M16 rotor gland, USB-C,
+  RJ45 MagJack, ground stud). Ethernet is standard (ADR 0014). Power,
+  the gland, USB-C, and the stud are still TBD on the drawing.
 - No connectors on the other faces, and no internal wiring harness.
   The rear plate and the PCB connectors are one subassembly.
+- Motor run capacitor: KEMET 100 µF flat plus TDK 33 µF upright,
+  133 µF, inside the 22.9 mm height limit (ADR 0016).
 
 ## Consequences
 
-Drill templates for the two end plates belong in
-`hardware/controller/mechanical/` and are not drawn yet. The top wall is
-the heat-sink surface (ADR 0010), because the side walls are the slot
-comb and the belly plate is a sliding joint.
+The drawings are in `hardware/controller/mechanical/`:
+`outline-1455N1601/` for the board, `panels/` for the end plates.
+Slot heights chained from Hammond typical dimensions are about
+±0.6 mm. Test-fit one board in a box before drilling a batch.
+The top wall is the heat-sink surface (ADR 0010), because the side
+walls are the slot comb and the belly plate is a sliding joint.

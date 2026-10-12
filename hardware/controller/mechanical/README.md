@@ -1,44 +1,54 @@
-# Enclosure and heatsink drawings
+# Enclosure drawings
 
-Placeholder for fabrication drawings that are not in the repository yet.
+Hammond 1455N1601, 160 × 103 × 53 mm. The board is 159 × 99 mm and
+sits in slot 6. Decisions: [ADR 0009](../../../docs/decisions/0009-hammond-enclosure.md),
+[ADR 0010](../../../docs/decisions/0010-triac-heatsink-bar.md),
+[ADR 0016](../../../docs/decisions/0016-motor-run-capacitor.md).
+The dimension notes are
+[outline-1455N1601/README.md](outline-1455N1601/README.md).
 
-Decisions these drawings have to match are in
-`docs/decisions/0009-hammond-enclosure.md`,
-`docs/decisions/0010-triac-heatsink-bar.md`, and
-`docs/design/triac-thermal-packaging.md`.
+Heights taken from Hammond typical dimensions are about ±0.6 mm.
+Test-fit one board in a box before drilling a batch.
 
-## Hammond 1455N1601 drill templates
+## Board outline
 
-Enclosure: Hammond 1455N1601, 160 × 103 × 53 mm extruded aluminum.
-The PCB slides into the side-wall slots. Only the belly plate and the
-two end plates are removable.
+[outline-1455N1601/](outline-1455N1601/)
 
-- **Front end plate:** buttons and LEDs only. PCB-mounted actuators and
-  light pipes pass through the plate. No connectors.
-- **Rear end plate:** every cable. Rotor pigtail, 13.8 V, 26 VAC, USB-C,
-  and optional Ethernet. No connectors on the other faces, and no
-  internal wiring harness.
+| File | What |
+|---|---|
+| [RotatorController-1455N1601-outline.kicad_pcb](outline-1455N1601/RotatorController-1455N1601-outline.kicad_pcb) | Edge.Cuts, slot keep-outs, triac-bar zone, motor-cap zone, end-panel marks. Not the V4 board. |
+| [`.kicad_pro`](outline-1455N1601/RotatorController-1455N1601-outline.kicad_pro) / [`.kicad_dru`](outline-1455N1601/RotatorController-1455N1601-outline.kicad_dru) | KiCad 9 project and JLCPCB rule file |
+| [outline.png](outline-1455N1601/outline.png) | Top view and end view |
+| [README](outline-1455N1601/README.md) | Dimensions, sources, and what is still unverified |
 
-Needed here later:
+The long edges have a 2.5 mm copper keep-out and a 3.5 mm component-body
+line. The triac bar is 10 × 50 mm at board x 21.9–31.9. Two top-wall
+holes, Ø3.4, sit at enclosure x = 29 from the rear-plate inner face,
+y = ±20 from the centerline.
 
-- Front-plate hole template (STOP, CW, CCW, LED light pipes) with the
-  end-plate screw pattern (4 × #6 on 95.02 × 45.00 mm).
-- Rear-plate hole template for the cable entries and the chassis ground lug.
-- Edge keepout: 3.5 mm on both long edges of a board about 99.3 mm wide.
+## End panels
 
-## Triac heatsink bar
+[panels/](panels/). Print the PDF or SVG at 100 %. Each sheet has a
+50 mm check bar.
 
-Three insulated-tab BTA16-600SW triacs (CW, CCW, brake) soldered to the
-PCB and bolted to one 6061 aluminum bar, 10 mm thick × 50 mm long × H
-tall. The bar is screwed to the PCB from below (2 × M3). Two M3 button-head
-screws through the top wall clamp the bar up through a 1.0 mm gap pad.
+| File | What |
+|---|---|
+| [front-panel-1455N1601.pdf](panels/front-panel-1455N1601.pdf) | Front plate, 1:1 |
+| [front-panel-1455N1601.svg](panels/front-panel-1455N1601.svg) | Same drawing |
+| [front-panel-1455N1601.png](panels/front-panel-1455N1601.png) | Screen copy |
+| [rear-panel-1455N1601.pdf](panels/rear-panel-1455N1601.pdf) | Rear plate, 1:1 |
+| [rear-panel-1455N1601.svg](panels/rear-panel-1455N1601.svg) | Same drawing |
+| [rear-panel-1455N1601.png](panels/rear-panel-1455N1601.png) | Screen copy |
 
-Needed here later:
+Front plate: CCW, STOP, and CW (Ø6.5) and six Dialight 551 right-angle
+LED holes (Ø4.0). No light pipes. LED functions are still TBD.
 
-- Bar drawing: stock size, H, tap depths, triac-tab holes at 12.7 mm
-  pitch, and the two PCB screws.
-- Top-wall hole pattern: x = 29 mm from the rear plate's inner face,
-  y = ±20 mm from the board centerline, Ø3.4 mm.
-- Note that H is cut from one measurement of the actual box
-  (`H = D_k − 0.65 mm`) and then reused. Do not treat an example H as
-  final until `D_k` is measured.
+Rear plate: power inlet, M16 rotor gland, USB-C, RJ45, and a ground
+stud. Power, the gland, USB-C, and the stud are still marked TBD on
+the drawing.
+
+Open the outline, not the V4 project, when checking these drawings:
+
+```bash
+kicad hardware/controller/mechanical/outline-1455N1601/RotatorController-1455N1601-outline.kicad_pro
+```

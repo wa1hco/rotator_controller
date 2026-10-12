@@ -12,9 +12,13 @@ They are short on purpose. The reasoning and the numbers live in
 | [0004](0004-discrete-triacs.md) | MOC3023M + BTA16-600SW and snubbers, not CPC1966 |
 | [0005](0005-direction-interlock.md) | Hardware CW/CCW exclusion, ARM relay, firmware dead time |
 | [0006](0006-headless-panel.md) | Headless, with STOP / CW / CCW and LEDs |
-| [0007](0007-usb-and-ethernet.md) | USB required, Ethernet optional |
+| [0007](0007-usb-and-ethernet.md) | USB and Ethernet both required |
 | [0008](0008-two-axes.md) | Two axes at the sensor and MCU |
 | [0009](0009-hammond-enclosure.md) | Hammond 1455N1601, controls on the front, cables on the rear |
 | [0010](0010-triac-heatsink-bar.md) | Triacs on an aluminum bar clamped to the top wall |
 | [0011](0011-rotor-connector.md) | TE CPC Series 1 shell 13, 9-pin, controller end female |
 | [0012](0012-one-repository.md) | One repository for hardware and software |
+| [0013](0013-assembly-sourcing.md) | JLCPCB assembles SMT from LCSC; owner hand-solders through-hole from Mouser |
+| [0014](0014-stm32f407-lan8720.md) | STM32F407VGT6 + LAN8720A; Ethernet standard; W5500 dropped |
+| [0015](0015-configuration-and-ui.md) | Board file, no feature `#ifdef`s, versioned settings; web UI and a shared console |
+| [0016](0016-motor-run-capacitor.md) | CDE run cap: 100 µF flat plus 33 µF upright, 133 µF |

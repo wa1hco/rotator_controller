@@ -2,6 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-10-11
+- Revised: 2026-10-12. The host interface named below is ADR 0015.
 
 ## Context
 
@@ -13,7 +14,9 @@ choice is narrower: the box is operated from a PC or over Ethernet.
 
 The controller is headless. There is no LCD, OLED, or knob. The front
 panel has STOP, CW, and CCW, plus status LEDs. Heading, calibration, and
-setup are done from the host.
+setup are done from the host: the Ethernet web UI first, and the same
+commands on the USB and TCP console (ADR 0015). BOOT and RESET are not
+front-panel controls.
 
 ## Consequences
 

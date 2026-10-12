@@ -1,14 +1,59 @@
 # V4 controller board
 
-KiCad 9 project for the shack-side antenna rotator controller. The board
-as imported is the CPC1966 design: STM32F405RG, ADuM4160 isolated USB,
-and three CPC1966 AC solid-state relays (CW, CCW, brake).
+KiCad 9 project for the shack-side antenna rotator controller. The files
+in this directory are the imported CPC1966 design: STM32F405RGT6 in
+LQFP-64, ADuM4160 isolated USB, and three CPC1966 AC solid-state relays
+(CW, CCW, brake).
+
+That MCU is not the build target. The accepted part is an STM32F407VGT6
+(LQFP-100, LCSC C12345) with a LAN8720A RMII PHY, and Ethernet is
+standard. See `docs/decisions/0014-stm32f407-lan8720.md` and
+`docs/design/mcu-ethernet-lcsc.md`. The schematic and PCB are
+intentionally not edited for that change. The MCU area was barely
+routed, so the next layout pass replaces the 64-pin footprint.
 
 Newer edits that exist only on the owner's laptop are **not** in this
 import. Those are the discrete-triac swap (MOC3023M + BTA16-600SW and
 snubbers) and the annotated design notes. They will be added later.
 Until then, `docs/design/v4-discrete-triac-change.md` is the change plan,
 and the schematic still shows CPC1966 parts.
+
+## Assembly and part fields
+
+JLCPCB assembles every SMT part, and those parts come from the LCSC
+catalog. The owner hand-solders every through-hole part, and those parts
+are bought from Mouser. The record is
+`docs/decisions/0013-assembly-sourcing.md`.
+
+When symbols are updated (not done in the imported project):
+
+- An SMT part gets an `LCSC` field whose value is the LCSC C-number
+  (for example `C12345` on the STM32F407VGT6).
+- A through-hole part gets a `Mouser` field with the Mouser order number.
+The RJ45 candidate is the Pulse J0011D01BNL; that order number is not
+confirmed yet, so the field waits until it is.
+
+## Programming and debug (not in the schematic yet)
+
+The next layout adds these. Details and the reasons are in
+`docs/decisions/0015-configuration-and-ui.md` and the programming
+addendum of `docs/design/hardware-requirements.md`. Do not put them on
+the front plate.
+
+| Function | Part | Source field |
+|---|---|---|
+| BOOT0 tactile, pull-down to ground, button to 3.3 V | SMT tactile. C-number TBD | `LCSC` when known |
+| RESET tactile, to NRST | SMT tactile. C-number TBD | `LCSC` when known |
+| PB2 (BOOT1) pull-down | SMT resistor. C-number TBD | `LCSC` when known |
+| MCU HSE | 8 MHz crystal and load caps. C-numbers TBD. Not the PHY's 25 MHz C9006 | `LCSC` when known |
+| USB-C CC1 and CC2 | 5.1 kΩ each to ground. C-number TBD | `LCSC` when known |
+| Debug | Tag-Connect TC2050-IDC-NL pads (SWDIO, SWCLK, SWO, NRST). No part | none |
+| Boot LED | SMT LED and resistor. C-numbers TBD | `LCSC` when known |
+
+USB-C D+ does not get its own 1.5 kΩ. The ADuM4160's PIN pin is tied to
+VDD2 so the isolator's upstream pull-up is present for ROM DFU and for
+the application. SPU and SPD are tied high (full speed). The drawing
+still straps them low.
 
 ## Source
 
@@ -87,6 +132,6 @@ The schematic has many known ERC violations (unconnected MCU pins and
 similar). CI runs ERC and DRC to produce reports and does not fail the
 build on those violations. See the root README.
 
-Mechanical drawings for the Hammond 1455N1601 enclosure and the triac
-heatsink bar belong in [`mechanical/`](mechanical/README.md). They are
-not drawn yet.
+The Hammond 1455N1601 board outline and the end-plate drawings are in
+[`mechanical/`](mechanical/README.md). That KiCad project is not the V4
+board. Leave `Rotator-Controller-V4.kicad_*` alone when opening it.

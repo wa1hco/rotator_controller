@@ -1,6 +1,6 @@
 # V4 Board: Replace CPC1966 SSRs with Discrete Opto-Triac + Power-Triac Channels
 
-Change plan for the user's V4 board: KiCad "CDE Rotor Controller V4.1, WA1HCO (c) 2025", STM32F405 + ADuM3160.
+Change plan for the user's V4 board: KiCad "CDE Rotor Controller V4.1, WA1HCO (c) 2025". The drawing this note was written against uses an STM32F405 and an ADuM3160. The accepted MCU is now an STM32F407VGT6 with a LAN8720A (`mcu-ethernet-lcsc.md`); this note does not redraw that MCU.
 Written 2026-10-10. No user files were modified; all work was done on copies in `/workspace/v4x/` and `/workspace/v2tools/`.
 
 Legend:

@@ -8,7 +8,7 @@
 2. **Full replacement** of the stock controller.
 3. **All sensor inputs:** dual-end pot, single-ended pot with excitation, pulse/reed counters.
 4. **Two axes** at the sensor and MCU level. The motor drive is modular or a conditional assembly.
-5. **USB serial is required**, plus whatever else makes sense. An Ethernet footprint is optional.
+5. **USB and Ethernet are both required.** The MCU is an STM32F407VGT6 with a LAN8720A RMII PHY. The W5500-on-SPI option is dropped. See the evening addendum below and `mcu-ethernet-lcsc.md`.
 
 Markers used below:
 - **[V]** verified against a datasheet or manual (sources in section 13).
@@ -35,7 +35,7 @@ flowchart LR
   end
 
   subgraph LB["Logic board"]
-    MCU["MCU (TBD)"]
+    MCU["STM32F407VGT6"]
     AFE["Sensor AFE x2:<br/>dual-end / single-end pot,<br/>notch + anti-alias,<br/>clamps + TVS"]
     PUL["Pulse inputs x2:<br/>pull-up, RC, Schmitt, TVS"]
     ADC["Optional ext. ADC<br/>(simultaneous sampling)"]
@@ -44,7 +44,7 @@ flowchart LR
     SAF["Safety chain:<br/>E-stop loop, ext. watchdog,<br/>CW/CCW interlock + dead time"]
     ZX["AC sync / zero-cross sense"]
     USB["Isolated USB-UART"]
-    ETH["W5500 Ethernet (optional)"]
+    ETH["LAN8720A RMII PHY + MagJack"]
     SER["RS-232 / RS-485 (optional)"]
     SIO["Station I/O:<br/>3 opto in, 3 OC out"]
     EXP["Expansion header<br/>I2C/SPI/UART"]
@@ -85,7 +85,7 @@ flowchart LR
 
 | Board | Contents | Notes |
 |---|---|---|
-| **Logic board** (one) | MCU, 2 sensor front ends, pulse inputs, optional external ADC, FRAM, power-fail detect, safety chain, zero-cross sense, isolated USB, optional Ethernet/RS-232/RS-485, station I/O, drive-module connectors (x2), front-panel connector, expansion header, logic power | No mains and no motor current. Processor-independent interface to the drive modules |
+| **Logic board** (one) | STM32F407VGT6, 2 sensor front ends, pulse inputs, optional external ADC, FRAM, power-fail detect, safety chain, zero-cross sense, isolated USB, Ethernet (LAN8720A + MagJack), optional RS-232/RS-485, station I/O, drive-module connectors (x2), front-panel connector, expansion header, logic power | No mains and no motor current. The drive-module connector stays the same if the MCU changes |
 | **Drive module, AC variant** (one per AC axis) | Master-enable switch, CW/CCW/BRAKE switches, RC snubbers, MOV, run-capacitor terminals, Hall current sensor, output-presence opto sense, rotor-power terminal block | v1 build for HAM-IV/T2X |
 | **Drive module, DC variant** (one per DC axis) | Reverse-polarity + fuse, bulk caps, H-bridge, gate driver, shunt amp, TVS, output-presence/voltage sense, terminal block | v2 (Yaesu DC, Prosistel, SPID, M2) |
 | **Front panel board** | Display, encoder + push, CW/CCW/STOP + 2–4 buttons, status LEDs, I2C GPIO expander | Ribbon to the logic board; STOP also wired into the safety chain |
@@ -287,11 +287,11 @@ Order matters: you moved the overvoltage diodes after the notch so 60 Hz doesn't
 
 | Port | v1 status | Implementation options | Recommendation |
 |---|---|---|---|
-| **USB serial (control)** | **Required** | (a) USB-UART bridge (FT230X class, as on your SO4R board, with custom product strings) powered from VBUS + a **2–4 channel digital isolator** to the MCU UART. (b) MCU native USB + USB isolator (ADuM4160 class, as on V4 [V part on V4]) | **(a)** is processor-agnostic, gives stable port names ("FTDI WA1HCO / Rotator Az") and RTS/CTS, and allows a ROM-UART bootloader for updates. (b) allows composite CDC (multiple ports) but ties the design to an MCU with USB |
-| **Ethernet** | **Optional footprint** | (a) **W5500** SPI hardware TCP/IP (8 sockets) + magjack. (b) MCU MAC + RMII PHY (LAN8742 class) + lwIP | **(a) W5500**: MCU-agnostic, 6 pins, offloads TCP; 8 sockets cover GS-232-over-TCP, rotctld, HTTP, WebSocket, MQTT [U: confirm socket budget]. Magnetics give galvanic isolation. **PoE not needed** |
+| **USB serial (control)** | **Required** | MCU native USB full-speed (PA11/PA12) through an ADuM4160 isolator to USB-C. The same socket is the CDC console and the ROM DFU port | Native USB, not an FT230X bridge. The STM32F407 system-memory bootloader speaks USB DFU, not a UART. Wiring is the programming addendum below |
+| **Ethernet** | **Required** | STM32F407 MAC + LAN8720A-CP-TR RMII PHY + 25 MHz crystal (PHY supplies 50 MHz REF_CLK) + through-hole MagJack. LAN8742A-CZ-TR is the same-footprint fallback | Magnetics give galvanic isolation. **PoE is not used.** The earlier W5500-on-SPI option is dropped (evening addendum) |
 | **RS-232** | Optional (populate) | MAX3232-class + DB-9 | Legacy loggers/hardware; not isolated (document it) |
 | **RS-485** | Optional (populate) | Half-duplex transceiver + terminal block, shares a UART with RS-232 by population | For future tower units / daisy-chain ("new idea") |
-| **Debug** | Required | SWD/JTAG header + console UART on the expansion header | — |
+| **Debug** | Required | Tag-Connect TC2050-IDC-NL pads: SWDIO, SWCLK, SWO, NRST, VTREF, GND. No header is placed | Chosen over a 10-pin 1.27 mm Cortex header because the footprint needs no part. See the programming addendum |
 
 ---
 
@@ -362,22 +362,20 @@ It drives the master-enable switch on each drive module. Direction interlock and
 | MCU_enable (safety chain), watchdog kick | GPIO | 2 | External watchdog |
 | Power-fail detect | GPIO/IRQ (or comparator) | 1 | Highest-priority IRQ |
 | AFE mode select (×2), pulse pull-up select (×2) | GPIO | 4 | Can move to the I2C expander |
-| USB-UART bridge | UART (+RTS/CTS) | 2–4 | |
+| USB FS (CDC and ROM DFU) | USB OTG FS, through the ADuM4160 | 2 (PA11/PA12) plus VBUS sense if used | Full speed. PIN tied to VDD2. See the programming addendum |
 | RS-232 / RS-485 | UART (+DE) | 2–3 | Shared by population |
-| Ethernet W5500 | SPI + CS + INT + RST | 3 (shared SPI) + 3 | |
+| Ethernet RMII (LAN8720A) | RMII + MDIO/MDC + nRST | about 11 | REF_CLK from the PHY. Not a W5500 |
 | FRAM | I2C (shared) or SPI CS | 0–1 | |
 | Front panel | I2C (shared), SPI (shared) + CS, DC, enc A/B/SW, INT, backlight PWM, STOP | ~8 | |
 | Station I/O | GPIO | 6 | 3 in, 3 out (or via expander) |
 | Status LEDs | GPIO | 2 | |
 | Expansion header | I2C, SPI, UART, 2 GPIO | 2 GPIO + shared buses + 2 UART | |
-| Debug | SWD + reset + boot | 3–4 | |
-| **Total direct GPIO** | | **≈ 70 pins** all direct; **≈ 50** with an I2C expander for slow signals (sense, mode selects, station I/O) | → a 64-pin MCU works with an expander; 100-pin gives headroom |
+| Debug | SWDIO, SWCLK, SWO on the TC2050-IDC-NL pads; NRST shared with the RESET button | 3 plus NRST | No populated header |
+| **Total direct GPIO** | | **≈ 70 pins** all direct; **≈ 50** with an I2C expander for slow signals (sense, mode selects, station I/O) | The chosen MCU is the 100-pin STM32F407VGT6. A 64-pin F405 has no Ethernet MAC, and ST does not make a 64-pin F407 |
 
-**Peripheral counts:** UART ×3 (USB bridge, RS-232/485, expansion/console); SPI ×1–2 (Ethernet, display, external ADC); I2C ×1–2; timers for 4 PWM + 3 capture + system tick; ADC 11–13 channels with DMA; hardware watchdog; FPU helpful (dual-end solve, FIR).
+**Peripheral counts:** UART ×2 (RS-232/485 and expansion); USB OTG FS for CDC and ROM DFU (not a UART bridge); SPI ×1 (display, external ADC); Ethernet is the MCU MAC, not a SPI controller; I2C ×1–2; timers for 4 PWM + 3 capture + system tick; ADC 11–13 channels with DMA; hardware watchdog; FPU helpful (dual-end solve, FIR).
 
-**Memory:**
-- **With W5500 offloading TCP:** flash ≥ 512 KB (firmware + web assets, or put assets in external SPI flash [U]); RAM ≥ 64–128 KB [U estimate].
-- **With MCU MAC + lwIP:** budget several hundred KB of RAM [U].
+**Memory:** the chosen part, STM32F407VGT6, has 1 MB flash and 192 KB RAM. The stack is the MCU MAC plus a host network stack (lwIP or equivalent), not a W5500 offload. 192 KB is the RAM the design has to live in [U: measure the stack].
 
 ---
 
@@ -393,7 +391,7 @@ It drives the master-enable switch on each drive module. Direction interlock and
    - vs. MOSFET + Si875x (low heat, AC/DC universal, but needs kick handling).
    - A bench comparison of both on one HAM-IV would settle it.
 3. **Master-enable element:** mechanical relay (true air gap) or SSR.
-4. **USB approach:** isolated FT230X-class bridge (recommended, MCU-agnostic) vs. native USB + ADuM4160.
+4. ~~**USB approach**~~ **Resolved (Oct 12, 2026):** native full-speed USB through the ADuM4160, so ROM DFU and CDC share USB-C. An FT230X bridge cannot enter the STM32 system-memory DFU bootloader. See the programming addendum.
 5. **Ground strategy:** logic/rotor-common tied to the chassis directly, through RC, or floating; test RF and hum behavior.
 6. **Supply box:**
    - Reuse a stock HAM-IV transformer (10 % duty) or a new continuous-rated one?
@@ -403,6 +401,16 @@ It drives the master-enable switch on each drive module. Direction interlock and
 9. **Front-panel display** for v1 (MAX7221 vs. LCD vs. TFT); this decides the panel board and the enclosure cutout.
 10. **Yaesu, SPID, and M2 connector pinouts and pot values** for the v2 DC module (not yet verified).
 11. ~~Enclosure and heatsinking~~ **Resolved (Oct 11, 2026):** Hammond 1455N1601. Triacs go on a PCB-mounted bar clamped to the top wall through a 1.0 mm gap pad (Packaging addendum).
+
+The next seven items come from the rotator catalog's hardware implications (`rotator-catalog.md`, "Hardware implications for the V4/F407 board"). They are not decided. Numbers below are the catalog's figures, not new measurements.
+
+12. **Three pot modes, selected per axis.** CDE dual-end grounded wiper (500 Ω, wiper on the motor/brake common, with 60 Hz ripple). Single-ended, 150 Ω–10 kΩ. Rheostat (G-400RC, G-450XL, G-450ADC), which needs a known current source or a reference resistor. A 75 Ω pot (Alliance HD-73) needs current-limited excitation, about 20–30 mA at most, and must not sit straight across 5 V (67 mA). Leave a series-resistor footprint; the RT-21 uses 75–100 Ω.
+13. **Pot excitation above 3.3 V, and a way to use a narrow span.** The HDR-300 uses only a third of its 3-turn pot (0.83–2.5 V of a 5 V excitation). Prosistel D spans about 0.78 V around 5.4 V. Provide a programmable offset/gain stage, or an external 16–24-bit ADC, and allow pot REF above 3.3 V (5 V, and possibly 8–13 V). Old Prosistel pots are specified at ±12 V. A unipolar REF still works on that passive pot, so a −12 V rail is not required.
+14. **Two pulse channels per axis, with a selectable pull-up.** SPID HR has two Hall sensors, and Prosistel PRO has an encoder. Pull-up selectable between 5 V and 12 V, about 5 mA wetting (M2 runs about 11.3 V / 5 mA). RC filter, hysteresis, and ESD/RF protection, because SPID reports RF-induced false pulses. Rates stay under 1 kHz (about 72 Hz for M2).
+15. **Run-cap placement has to be configurable.** The CDE value is chosen (ADR 0016): 100 µF plus 33 µF, 133 µF, across terminals 4–8. Yaesu and the HD-73 put the cap across the two drive ends. G-5500 and HDR-300 keep the cap in the rotor, so the board caps stay off. A jumper or relay, with the cap terminals separate from the drive terminals. Other catalog sizes run from 100 to 156 µF, at 50–60 VAC at least, 100 VAC for margin.
+16. **Brake output defaults to engaged on a fault.** The CDE family needs it (24–30 VAC, 3.5–5 A steady, 0.75 Ω coil on the DCU-3 measurement, plus inrush). The HDR-300 needs one too; its voltage is not in the catalog. Its own triac or relay, and the unpowered or faulted state is brake engaged.
+17. **DC module, 12–48 V.** That span covers SPID at 12–24 V, Yaesu at 11–24 V, Prosistel up to 42 V, and M2 at 28–42 V (about 45 V open circuit). 5 A covers most of the catalog. BIG-RAS/HR needs up to 12 A, and the SPID MD's 20 A outputs are beyond a 5 A module. Record that limit, or plan a 10–15 A option.
+18. **48 VAC Prosistel is unsupported.** Older PST-51 / PST-61 / PST-71 boxes are 48 VAC. Peak line voltage plus the cap winding can exceed the SMAJ90CA 90 V standoff. Do not drive them with this board's AC stage.
 
 ---
 
@@ -421,7 +429,7 @@ It drives the master-enable switch on each drive module. Direction interlock and
 - M2 RC2800PX manual (27 VDC 3.2 A, reed ~11.3 VDC, 3960 divisor): https://www.m2inc.com/content/PDF%20MANUALS/RC2800%20SERIES/RC2800PXB-AZMAN04-W.pdf
 - Prosistel PST-61/71 manual (24 VDC, 10 kΩ pot, 5 V excitation): https://www.arraysolutions.com/pdfs/Prosistel%20PST-61%20-%20PST-71%20and%20PST-110%20User%20Manual.pdf
 - SPID RAS / Rot2Prog: http://spid.net.pl/en/ras-2/ ; https://www.wimo.com/media/manuals/SPID/25082_Satelliten-Rotor-Satellite-Rotator_Manual.pdf
-- Your repos: Rotator_Controller `src/ReadAzimuthCDE.cpp` (RBIAS 330 Ω, RPOT 500 Ω, 3.3 V, 2 ms ISR, 31-tap FIR); Rotator_Controller_Board (60 Hz notch, OVP after notch); Rotator-Controller-V2 V4 branch (STM32F405, CPC1966 ×3, ADuM4160, SMAJ90CA); SO4R_Interlock README (FT230X custom strings, 60 V/300 mA OC outputs).
+- Your repos: Rotator_Controller `src/ReadAzimuthCDE.cpp` (RBIAS 330 Ω, RPOT 500 Ω, 3.3 V, 2 ms ISR, 31-tap FIR); Rotator_Controller_Board (60 Hz notch, OVP after notch); Rotator-Controller-V2 V4 branch as imported (drawing still shows STM32F405RGT6, CPC1966 ×3, ADuM4160, SMAJ90CA; the chosen MCU is the STM32F407VGT6, evening addendum); SO4R_Interlock README (FT230X custom strings, 60 V/300 mA OC outputs).
 
 ## Addendum (Oct 11, 2026): Rotor cable connector standard
 
@@ -449,9 +457,9 @@ Design implication: no panel-mount female exists in shell 13, so the controller 
 ## Addendum (Oct 11, 2026): Packaging
 
 - **Enclosure:** Hammond 1455-series extruded aluminum box, e.g. 1455N1601: 160 × 103 × 53 mm, 6063 Al, 1.5 mm minimum wall, designed for a 100 mm wide PCB in internal slots (comb of 2.0 mm slots on a 3.5 mm pitch). Internal height 49.62 mm. Removable belly plate. [V Hammond drawing]
-  - **The board slides into the side-wall slots: 99.3 mm wide, 3.5 mm edge keepout on both faces.**
-- **Front end plate:** buttons and LEDs only (PCB-mounted, actuators and light pipes through the plate).
-- **Rear end plate:** all cables. Rotor CPC pigtail / pluggable block, 13.8 V, 26 VAC, USB-C, RJ45.
+  - **The board slides into the side-wall slots.** The outline drawing uses Hammond's maximums: 159 × 99 mm, slot 6. Copper keep-out is 2.5 mm on the long edges, and component bodies stay 3.5 mm off those edges. See the Oct 12 addendum.
+- **Front end plate:** CCW, STOP, and CW, plus six Dialight 551 right-angle LED holes. No light pipes.
+- **Rear end plate:** all cables. Power inlet, M16 rotor gland, USB-C, RJ45, ground stud.
   - The rear plate and the PCB connectors form one subassembly.
   - No connectors on other faces and no internal wiring.
 - **Triacs (CW, CCW, Brake), CHOSEN mounting:**
@@ -475,3 +483,82 @@ Design implication: no panel-mount female exists in shell 13, so the controller 
   - Height is fixed at 25.4 mm, so pick the slot (or pad thickness/shim) to suit.
 - **Rejected:** side-wall mounting (comb contact, lateral stack, side screws), no-screw interference fit (contact not guaranteed), bar on the lid with the board floating (lead stress), D²PAK to the belly plate (weak path, hot copper island, obsolete part). See `triac-thermal-packaging.md` §5.
 - §4.4 has been updated to match. The old "chassis wall through an insulator" wording is gone. Bond the box to chassis/GND at the rear plate.
+
+## Addendum (Oct 11, 2026, evening): MCU, Ethernet, and who solders what
+
+Locked the same day. The KiCad schematic and PCB in this repository are **not** updated here. They still show the STM32F405RGT6. The parts check is `mcu-ethernet-lcsc.md`. Decision records: `docs/decisions/0013-assembly-sourcing.md` and `docs/decisions/0014-stm32f407-lan8720.md`.
+
+**Assembly.** JLCPCB places every SMT part, and that part must be an LCSC catalog part. The owner hand-solders every through-hole part, bought from Mouser. Symbols get an `LCSC` field (the C-number) on SMT parts and a `Mouser` field on through-hole parts.
+
+**MCU and Ethernet.** Replace the STM32F405RGT6 (LQFP-64, no Ethernet MAC, zero JLCPCB/LCSC stock on the day of the check) with:
+
+| Function | Part | Catalog |
+|---|---|---|
+| MCU | STM32F407VGT6, LQFP-100 | LCSC C12345 |
+| PHY | LAN8720A-CP-TR. LAN8742A-CZ-TR (C621424) is the same footprint | LCSC C45223 |
+| Clock | 25 MHz crystal X322525MOB4SI (JLCPCB Basic). The PHY drives 50 MHz REF_CLK | LCSC C9006 |
+| USB ESD | USBLC6-2SC6 on D+/D- | LCSC C7519 |
+| Ethernet ESD | SRV05-4 on the PHY side of the jack | LCSC C13612 |
+| RJ45 | Through-hole MagJack, hand-soldered. Candidate Pulse J0011D01BNL, not confirmed on Mouser | Mouser |
+
+Ethernet is on every board. The W5500 path in the earlier draft of section 6 is not the design. LQFP-64 to LQFP-100 is a re-layout; the MCU area of the imported board was barely started, so that re-layout is accepted. Recheck stock before ordering.
+
+## Addendum (Oct 12, 2026): Programming, reset, and debug
+
+Locked with ADR 0015. The KiCad schematic and PCB are not updated here. SMT parts are JLCPCB/LCSC parts; through-hole parts are Mouser. C-numbers below are TBD where a part was not looked up. Do not invent one at layout time.
+
+The front plate stays STOP, CW, and CCW. None of the controls in this addendum go on that plate.
+
+### BOOT0 and RESET
+
+- **BOOT0 tactile**, SMT, board-internal or recessed (a hole in the belly plate is enough). Not on the front plate. A pull-down holds BOOT0 low so a normal reset boots flash. The button ties BOOT0 to 3.3 V while it is held.
+- **RESET tactile**, SMT, next to BOOT0, also off the front plate. It ties NRST to ground. The STM32F4 NRST pin already has a pull-up.
+- **BOOT1 is PB2.** System-memory boot is BOOT0 high and BOOT1 low, latched at reset (AN2606, STM32F405/407 section). Pull PB2 down so a BOOT0 press cannot land in SRAM.
+- **DFU detection pins sit at a known level.** AN2606 says that if PA10 (USART1 RX), PB11 and PC11 (USART3 RX), or PB5 (CAN2 RX) float during the ROM's detection phase, the bootloader can lock onto noise instead of USB. Give each a pull-down or pull-up. PB11 is RMII TX_EN, so a pull-down is the one that also holds the PHY idle.
+- Part numbers for the two tactiles and the pull resistors are **TBD**. They are SMT, so they are LCSC parts once chosen.
+
+Procedure: the station logic supply is on (USB VBUS feeds only the upstream side of the isolator), hold BOOT0, press and release RESET, then release BOOT0. `dfu-util` or STM32CubeProgrammer sees the DFU device.
+
+### MCU crystal for DFU
+
+AN2606 requires an HSE crystal for USB DFU on this part: an integer number of MHz, from 4 to 26. The ROM measures it against HSI and can get a high frequency wrong; ST's note on that measurement prefers a low frequency, and names 8 MHz rather than 25 MHz. The LAN8720A's 25 MHz crystal (LCSC C9006) stays on the PHY and still drives the 50 MHz REF_CLK. It does not connect to `OSC_IN`. Add a separate **8 MHz crystal on the MCU HSE pins**. Crystal and load capacitors are **TBD** (LCSC, SMT). Do not reuse C9006 for this socket.
+
+### USB-C through the ADuM4160
+
+The ADuM4160 is a low-speed or full-speed isolator. It has no high-speed mode. Full speed (12 Mbps) is what STM32 USB DFU and the CDC console use. Strap it for full speed: SPU to VDD1 and SPD to VDD2. The imported drawing ties both pins low (low speed). That strap will not enumerate DFU or CDC. The datasheet says the two speed pins must match.
+
+D+ pull-up, checked against the ADuM4160 datasheet (Rev. E) and against the ROM bootloader:
+
+- The isolator has its own upstream 1.5 kΩ. Pin PIN (pin 12) connects it. The datasheet's typical application needs series resistors and bypass capacitors, not an extra 1.5 kΩ on the connector.
+- Tie PIN to VDD2. The ROM bootloader cannot drive PIN. A GPIO that rests low would hide the pull-up during DFU, and the host would never see a device. Tied to VDD2, the pull-up is present for DFU and for the application.
+- The STM32 still uses its internal DP pull-up on PA12. The ROM DFU bootloader enables it, and the application USB stack enables it. That is the downstream side of the isolator. No external 1.5 kΩ on PA12 either.
+- Do not add a 1.5 kΩ from USB-C D+ to 3.3 V. It would sit in parallel with the isolator's upstream pull-up.
+- USB-C CC1 and CC2 each get 5.1 kΩ to ground so a host provides VBUS. Those resistors are not the D+ pull-up. Their C-numbers are **TBD**.
+- USBLC6-2SC6 (LCSC C7519, already chosen) goes on the cable side of the isolator, on UD+ and UD−.
+
+The upstream side of the isolator runs from USB VBUS. The downstream side runs from the board 3.3 V. DFU therefore needs the station supply, not bus power alone.
+
+### Boot status LED
+
+One SMT LED and its series resistor, on a GPIO that is not a triac drive. C-numbers **TBD**. The field-upgrade bootloader blinks it (waiting, checking an image, rollback). The application can use it as a heartbeat.
+
+The ROM DFU bootloader does not drive this LED. While the chip is in system memory, progress is what `dfu-util` or STM32CubeProgrammer prints.
+
+### Debug footprint
+
+Tag-Connect **TC2050-IDC-NL**. Signals are SWDIO (PA13), SWCLK (PA14), SWO, NRST, VTREF, and ground, on Tag-Connect's published Cortex pad layout. Nothing is populated.
+
+A 10-pin 1.27 mm Cortex header would be a part on every board (an LCSC line if SMT, a Mouser line if through-hole) and would need a shroud in a box that has no panel space for it. The NL footprint avoids both. The cable is bought once. It has no alignment holes, so it has to be held square; that is fine for occasional debug. If it is not, the legged TC2050-IDC adds two holes and still needs no connector.
+
+## Addendum (Oct 12, 2026): Board outline, end plates, and the motor run cap
+
+The drawings are in `hardware/controller/mechanical/`. The V4 KiCad project is not modified.
+
+- **Board:** 159.00 × 99.00 mm, 1.6 mm, square corners, slot 6 of the 1455N1601. Inner top to board top 23.91 mm, so parts on top stay within 22.9 mm. Board bottom to the floor is 24.11 mm. Long-edge copper keep-out 2.5 mm; component bodies stay 3.5 mm off those edges.
+- **Triac bar:** 10 × 50 mm at board x 21.9–31.9, y 24.5–74.5. Top-wall drills Ø3.4 at enclosure x = 29 from the rear-plate inner face, y = ±20.
+- **Motor run cap (ADR 0016):** KEMET R60EW61005000K, 100 µF, lying flat (height 20.3 mm), in parallel with TDK B32526T1336K000, 33 µF, upright (height 15.0 mm). Total 133 µF nominal, inside the CDE 130–156 µF range. Both are 100 VDC / 63 VAC and are through-hole. The zone is board x 47.25–122.5, y 4.5–47.3.
+- **Front plate:** CCW, STOP, CW (Ø6.5) and six Dialight 551-xx07F holes (Ø4.0). No light pipes. LED functions are TBD.
+- **Rear plate:** power inlet, M16 gland (Ø16.3), USB-C, ground stud, Pulse J0011D01BNL cutout. Power, the gland, USB-C, and the stud are TBD on the drawing.
+- **Tolerance:** slot heights are chained from Hammond typical dimensions and are about ±0.6 mm unverified. Test-fit one board in a box before drilling a batch.
+
+Detail, sources, and the unverified list are in `hardware/controller/mechanical/outline-1455N1601/README.md`.

@@ -1,0 +1,2384 @@
+# WA1HCO open rotator controller - rotor presets (generated from /workspace/rotcat/*.py)
+schema_version: 1
+generated: '2026-10-11'
+conventions:
+  'null': unknown / not found in an opened source
+  unverified: list of field paths whose values came from search summaries, inference or conflicting sources ([?] in catalog)
+  units: volts V (AC rms for ac_* motors), current A, cap uF, time s, angles deg
+  support: v1 = AC triac board; v1-2axis = needs both axes; v2-dc = needs DC H-bridge module; later = needs data/hardware; alias = maps to other
+    presets; no = out of scope
+sources:
+  HAM4:
+    title: Hy-Gain HAM-IV / HAM-IVX instruction manual (spec table, troubleshooting)
+    url: http://www.radiomanual.info/schemi/ACC_rotator/Hy-gain_HAM-IV_HAM-IVx_user.pdf
+  DCU3:
+    title: Hy-Gain DCU-3 manual v2 (brake/coast delays, pin voltages, resistance table)
+    url: https://www.wimo.com/media/akeneo_connector/media_files/D/C/DCU_3_Manual_v2_00f1.pdf
+  RT21:
+    title: Green Heron RT-21 manual v3.5, Appendix A.1-A.15 and B (per-rotor hookup tables)
+    url: https://www.greenheronengineering.com/wp-content/uploads/2019/08/RT-21_Manual_current.pdf
+  RT21P:
+    title: Green Heron RT-21 product page (supported rotor list, feedback ranges)
+    url: https://www.greenheronengineering.com/product/rotator-controller-rt-21/
+  T2X:
+    title: Hy-Gain T-2X/T-2XX Tailtwister instruction manual
+    url: https://www.qsl.net/4/4x6on/RADIO%20MANUALS/HY-%20GAIN/HY-GAIN--T-2XX-Tailtwister-Rotator.pdf
+  T2XS:
+    title: Norm's Rotor Service T2X spec page
+    url: http://rotorservice.com/T2X%20specs.htm
+  CD45:
+    title: Hy-Gain CD-45-II instruction manual
+    url: https://qrzcq.com/pub/RADIO_MANUALS/ROTATORS/HY-GAIN-CD-45-II-ROTATOR-Op-Manual+sch.pdf
+  HAM5:
+    title: Hy-Gain HAM-V / HAM-VX with DCU-1 Pathfinder manual
+    url: https://static.dxengineering.com/global/images/instructions/hgn-ham-vii.pdf
+  HAMM:
+    title: CDE HAM-M owner's manual (Issue E 2/72), spec table p.2 (read from scan)
+    url: https://pestingers.net/pdfs/other-radios/rotors/cdr-ham-m_man.pdf
+  NORM:
+    title: Norm's Rotor Service FAQ (Ham-series history, interchangeability, Ham-M S1/S2 wiring warning, cap range)
+    url: http://rotorservice.com/faqs.htm
+  N0AX:
+    title: N0AX, How to Check Rotators from the Ground (terminal 1 common, 120-140 uF)
+    url: https://www.onallbands.com/how-to-check-rotators-from-the-ground/
+  HDR:
+    title: Hy-Gain HDR-300A/AX instruction manual
+    url: https://www.qsl.net/4/4x6on/RADIO%20MANUALS/HY-%20GAIN/HY-GAIN--HDR-300AX-ROTATOR.pdf
+  AR40:
+    title: Hy-Gain AR-40/AR-40X instruction manual
+    url: https://qrzcq.com/pub/RADIO_MANUALS/HY_GAIN/HY-GAIN--AR-40X-ROTATOR.pdf
+  G450A:
+    title: Yaesu G-450A/G-650A user manual
+    url: https://radiomanual.info/schemi/ACC_rotator/Yaesu_G-450A_G-650A_user.pdf
+  G450XL:
+    title: Yaesu G-450XL user manual (24 VAC motor; seen via search excerpt only)
+    url: http://www.radiomanual.info/schemi/ACC_rotator/Yaesu_G-450XL_user.pdf
+  G450SM:
+    title: Yaesu G-450A service manual parts list (100 uF 60 VAC cap; search excerpt only)
+    url: https://manualmachine.com/yaesu/g450a/7758382-service-manual/
+  DXA:
+    title: Yaesu G-800DXA/G-1000DXA/G-2800DXA user manual
+    url: https://www.yaesu.com/Files/4CB6273C-1018-01AF-FA4D504B591F641A/G-800DXA_1000DXA_2800DXA_OM_ENG_EAA67X101_2102B-BS.pdf
+  K9YC:
+    title: K9YC, TowerTalk 'Yaesu G-1000DXA Rotator Measurements' (pinout, 8.75 ohm motor, 500 ohm pot)
+    url: http://lists.contesting.com/pipermail/towertalk/2010-June/118053.html
+  DXC:
+    title: Yaesu G-1000DXC/G-2800DXC manual
+    url: https://www.rigpix.com/rotators/yaesu_g1000dxc-2800dxc_manual.pdf
+  G450ADC:
+    title: Yaesu G-450ADC/CDC user manual
+    url: https://yaesu.com/Files/4CB6273C-1018-01AF-FA4D504B591F641A/G-450ADC_CDC_OM_ENG_EBB86X200_1907V-AS.pdf
+  G5500:
+    title: Yaesu G-5500 instruction manual
+    url: https://qsl.net/4/4x6on/RADIO%20MANUALS/YAESU/YAESU--G-5500-ROTATOR-User-Manual.pdf
+  G5500DC:
+    title: Yaesu G-5500DC user manual (Japanese)
+    url: https://connect.yaesu.com/indivisual/wp-content/uploads/2024/11/G-5500DC_OM_JPN_EBB70X001_2405A-ES.pdf
+  G550:
+    title: Yaesu G-550 manual (search excerpt only)
+    url: http://alex-ua.com/images/upload/YAESU/yaesu_g550_eng.pdf
+  AMSATC:
+    title: WA4SCA, AMSAT-BB 'Yaesu G5500 rotor trouble' (100 uF cap in motor housing)
+    url: https://mail.amsat.org/archives/pipermail/amsat-bb/2009-May/018821.html
+  AMSATP:
+    title: AMSAT-BB 'G-5500 azimuth and elevation resistor pots' (500 ohm, 360 deg)
+    url: https://mail.amsat.org/archives/pipermail/amsat-bb/2009-October/023347.html
+  WRC:
+    title: G-series Wi-Fi Rotor Controller manual (G-450ADC/G-1000A pot wired as rheostat)
+    url: https://device.report/manual/18025534
+  SPIDMD:
+    title: SPID MD-01/02/03 manual 2022-10-27 (gear ratios, sensor types, motor supply)
+    url: https://www.wimo.com/media/akeneo_connector/media_files/S/P/SPID_MD_0x_MANUAL__Version2022_10_27_ENG_76ad.pdf
+  RAS:
+    title: AlfaSpid RAS + Rot2Prog manual 2008 (wiring, speed, current, overtravel)
+    url: https://www.wimo.com/media/manuals/SPID/25082_Satelliten-Rotor-Satellite-Rotator_Manual.pdf
+  ALFA:
+    title: Alfa Radio RAK/BIG-RAK/RAS/BIG-RAS specification sheet 2008
+    url: https://www.wimo.com/media/akeneo_connector/media_files/2/5/25080_25082_RAK_RAS_specifications_b1fe.pdf
+  BIGRAK:
+    title: RF HAMDESIGN / SPID BIG-RAK specification sheet
+    url: https://www.rfhamdesign.com/downloads/spid-bigrak-specifications.pdf
+  M2RC:
+    title: M2 RC2800PX-AZ controller manual (27 VDC 3.2 A, terminal strip, divide ratios)
+    url: https://www.m2inc.com/content/PDF%20MANUALS/RC2800%20SERIES/RC2800PXB-AZMAN04-W.pdf
+  M2OR:
+    title: M2 OR2800PX positioner manual (specs, reed test voltages)
+    url: https://www.m2inc.com/content/PDF%20MANUALS/OR2800%20SERIES/OR2800PXMAN02-W.pdf
+  PST01:
+    title: 'Prosistel manual rev 2001-12A (Array Solutions): 48 VAC models, +/-12 V 10 k pot, pinout'
+    url: https://www.arraysolutions.com/pdfs/Prosistel%20Manual%20rev%202001_12A.pdf
+  PST71:
+    title: Prosistel PST-71D product page
+    url: https://www.prosistel.biz/public/home-e/pst71/71e.html
+  PST61S:
+    title: Prosistel PST-61/71/110 user manual (PST-61D 12 VDC, ~90 s; search excerpt only)
+    url: https://www.arraysolutions.com/pdfs/Prosistel%20PST-61%20-%20PST-71%20and%20PST-110%20User%20Manual.pdf
+  CREATE:
+    title: Create (CD Corp) RC5-x series specification sheet
+    url: https://www.cd-corp.com/eng/ama/rtt/rc5_eng.pdf
+  KUR02C:
+    title: DUORO/kur02 Create rotator page (28 VAC motor; search excerpt only)
+    url: https://www.kur02.com.au/index.php?id=35&Itemid=112&option=com_content&view=article
+  HD73P:
+    title: WC1M, TowerTalk 'HD-73 rotator' (pinout, 75 ohm pot from manual schematic)
+    url: http://lists.contesting.com/_towertalk/1999-06/msg00055.html
+  HD73M:
+    title: Alliance HD-73 owner's manual (20 VAC, 155 uF 50 VAC; search excerpt only, page blocked)
+    url: https://manualzz.com/doc/8212742/alliance-hd-73-antenna-rotator-owner-s-manual
+  U110:
+    title: Alliance U-110 manual (search excerpt only)
+    url: http://n3ujj.com/manuals/U-110%20Manual.pdf
+  KR600:
+    title: GM3WOJ, Kenpro KR-600RC notes (500 ohm VR5, measured 41-650 ohm)
+    url: https://www.qsl.net/gm3woj/kr600rc.htm
+  KRMUS:
+    title: Radiomuseum Kenpro KR-600RC (24 VAC split-phase, 53/63 s; search excerpt only)
+    url: https://www.radiomuseum.org/r/kenpro_antenna_rotator_kr_600rc.html
+  REZ:
+    title: Idiom Press Rotor-EZ install (new-style CD-45II/HAM-IV/T-2X boxes); Ham Supply product page (fixed 5 s brake delay)
+    url: https://www.hamsupply.com/wp-content/uploads/2015/11/26-rotor-ez-telex-install.pdf
+  EMO:
+    title: DUORO/kur02 EMOTATOR specification and comparison table (2020)
+    url: https://kur02.com.au/index.php?option=com_content&view=article&id=33&Itemid=130
+  K3NG:
+    title: 'K3NG wiki: 250 Basic Rotation Control Pins / 270 Rotation Speed Control'
+    url: https://github.com/k3ng/k3ng_rotator_controller/wiki/250-Basic-Rotation-Control-Pins
+  WA1HCO:
+    title: WA1HCO, 'Rotor and Controller Schematics.docx' (Rotator-Controller-V2 repo, V4 branch)
+    url: https://github.com/wa1hco/Rotator-Controller-V2
+  SRCH:
+    title: Search-engine summaries of manualzz copies of CDE Ham-II / Ham-III / CD-44 manuals (not opened directly)
+    url: https://manualzz.com/doc/6343459/cornell-dubilier-ham-iii-antenna-system-user-manual
+presets:
+- schema_version: 1
+  id: cde-ham-m-s3-5
+  maker: CDE (Cornell-Dubilier)
+  model: HAM-M (Series 3, 4, 5)
+  aliases:
+  - Ham-M
+  - TR-44 Series 3 (box-compatible)
+  axes: az
+  family: CDE-AC-brake-pot
+  support: v1
+  motor:
+    type: ac_split_phase_cap_run
+    volts: 24
+    current_a: 2.25
+    cap_uf:
+    - 130
+    - 130
+    cap_vac: null
+    cap_location: controller
+    cap_note: 130 MFD electrolytic (non-polar), 10 % duty
+  brake:
+    type: electric_positive_lock
+    volts: 24
+    current_a: 3.5
+    engage_after_stop_s: null
+    note: Positive lock into one of 96 segments (3.75 deg spacing); continuous-duty solenoid; stock box has no delay (lever)
+  sensor:
+    type: pot_dual_end_grounded_wiper
+    ohms: 500
+    wiring: ends on 3 and 7, wiper = terminal 1 common
+    excitation: stock ~13 VDC
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: in rotor, in CW/CCW motor feeds
+  speed:
+    min_s: 50
+    max_s: 50
+    note: approx. 50 s per 360 deg
+  duty: motor 10 % duty (transformer thermal cutout)
+  cable:
+    conductors: 8
+    connector: screw terminal strip
+    gauge: '2 x #18 (1, 2) + 6 x #22 to ~120 ft'
+    pinout: &id001
+      1: 'common: motor windings, brake, pot wiper (heavy wire)'
+      2: brake solenoid (heavy wire)
+      3: pot end (+, ~13 VDC in stock box)
+      4: motor winding end / run cap
+      5: CW drive (via right limit sw. to 8)
+      6: CCW drive (via left limit sw. to 4)
+      7: pot end (-)
+      8: motor winding end / run cap
+  sequencing: 'Release brake, wait, run; on stop remove motor drive, keep brake released for coast-down (stock DCU-1 8 s fixed, DCU-3 0-8 s default
+    3 s, Rotor-EZ 5 s), then engage brake. Never reverse while turning (DCU-1 manual: reversing hangs the system with brake released); stop, coast,
+    then reverse. Run cap is across terminals 4-8 in the control box.'
+  speed_control: Not recommended. RT-21 found HAMx/T2X the least responsive to its low-frequency AC PWM and ships AC rotors at MIN SPEED=10 (no
+    PWM). DCU-1 uses half-cycle motor pulses over the last 5 deg as a creep mode; triac half-cycle/cycle skipping can mimic this.
+  gotchas:
+  - Ham-M SERIES 1 and 2 (and TR-44 S1/S2) are wired differently; a later control on them 'will destroy the rotor pot instantly' (NORM). Preset
+    must warn; check 500 ohm across 3-7 and cap across 4-8 first.
+  - Open, non-sealed wirewound pot gets noisy (RT-21 note).
+  sources:
+  - HAMM
+  - NORM
+  - WA1HCO
+  unverified:
+  - cable.pinout
+  notes: Pinout assumed identical to later 8-wire CDE family for Series 3-5, per NORM interchangeability statement.
+- schema_version: 1
+  id: cde-ham-ii
+  maker: CDE
+  model: HAM-II (CD-44/Ham-2 box)
+  aliases:
+  - Ham-2
+  axes: az
+  family: CDE-AC-brake-pot
+  support: v1
+  motor:
+    type: ac_split_phase_cap_run
+    volts: 24
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: controller
+    cap_note: 'NORM: most CDE run caps are 108-155 uF bipolar'
+  brake:
+    type: wedge_solenoid
+    volts: 24
+    current_a: null
+    engage_after_stop_s: null
+    note: Same rotor as Ham-M; new 3-lever control box (1973)
+  sensor:
+    type: pot_dual_end_grounded_wiper
+    ohms: 500
+    wiring: ends 3 and 7, wiper 1
+    excitation: stock ~13 VDC
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: in rotor motor feeds
+  speed:
+    min_s: 45
+    max_s: 50
+    note: 45-50 s at 60 Hz
+  duty: null
+  cable:
+    conductors: 8
+    connector: screw terminal strip
+    gauge: null
+    pinout: *id001
+  sequencing: 'Release brake, wait, run; on stop remove motor drive, keep brake released for coast-down (stock DCU-1 8 s fixed, DCU-3 0-8 s default
+    3 s, Rotor-EZ 5 s), then engage brake. Never reverse while turning (DCU-1 manual: reversing hangs the system with brake released); stop, coast,
+    then reverse. Run cap is across terminals 4-8 in the control box.'
+  speed_control: Not recommended. RT-21 found HAMx/T2X the least responsive to its low-frequency AC PWM and ships AC rotors at MIN SPEED=10 (no
+    PWM). DCU-1 uses half-cycle motor pulses over the last 5 deg as a creep mode; triac half-cycle/cycle skipping can mimic this.
+  gotchas:
+  - Same rotor as Ham-M Series 5 (NORM).
+  sources:
+  - NORM
+  - SRCH
+  unverified:
+  - motor.current_a
+  - speed
+  - brake.type
+  notes: null
+- schema_version: 1
+  id: cde-ham-iii
+  maker: CDE
+  model: HAM-III
+  aliases:
+  - Ham-3
+  - CD-44/Ham-3
+  axes: az
+  family: CDE-AC-brake-pot
+  support: v1
+  motor:
+    type: ac_split_phase_cap_run
+    volts: 24
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: controller
+    cap_note: null
+  brake:
+    type: wedge_solenoid
+    volts: 24
+    current_a: null
+    engage_after_stop_s: null
+    note: '1977: new motor with internal brake, redesigned wedge and housing (NORM)'
+  sensor:
+    type: pot_dual_end_grounded_wiper
+    ohms: 500
+    wiring: ends 3 and 7, wiper 1
+    excitation: stock ~13 VDC
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: in rotor motor feeds
+  speed:
+    min_s: 45
+    max_s: 60
+    note: 45-60 s at 60 Hz
+  duty: null
+  cable:
+    conductors: 8
+    connector: screw terminal strip
+    gauge: null
+    pinout: *id001
+  sequencing: 'Release brake, wait, run; on stop remove motor drive, keep brake released for coast-down (stock DCU-1 8 s fixed, DCU-3 0-8 s default
+    3 s, Rotor-EZ 5 s), then engage brake. Never reverse while turning (DCU-1 manual: reversing hangs the system with brake released); stop, coast,
+    then reverse. Run cap is across terminals 4-8 in the control box.'
+  speed_control: Not recommended. RT-21 found HAMx/T2X the least responsive to its low-frequency AC PWM and ships AC rotors at MIN SPEED=10 (no
+    PWM). DCU-1 uses half-cycle motor pulses over the last 5 deg as a creep mode; triac half-cycle/cycle skipping can mimic this.
+  gotchas: []
+  sources:
+  - NORM
+  - SRCH
+  unverified:
+  - speed
+  - brake.volts
+  notes: null
+- schema_version: 1
+  id: hygain-ham-iv
+  maker: CDE / Telex / Hy-Gain (MFJ)
+  model: HAM-IV
+  aliases:
+  - Ham-4
+  - HAM-IVX (220 V box)
+  axes: az
+  family: CDE-AC-brake-pot
+  support: v1
+  motor:
+    type: ac_split_phase_cap_run
+    volts: 24
+    current_a: 2.25
+    cap_uf:
+    - 130
+    - 156
+    cap_vac: null
+    cap_location: controller
+    cap_note: '130-156 MFD motor-start cap (P/N 5151500/5151501); power transformer 120/26 VAC 10 % duty, thermal switch. Manual: move cap to
+      tower for runs >300 ft. N0AX: 120-140 uF. WA1HCO doc: 130-156 uF 50 VAC'
+  brake:
+    type: wedge_solenoid
+    volts: 24
+    current_a: 5.0
+    coil_ohms: 0.75
+    engage_after_stop_s: null
+    note: 'Wedge brake; RT-21: brake sets in 6-degree increments'
+  sensor:
+    type: pot_dual_end_grounded_wiper
+    ohms: 500
+    wiring: ends 3 (+) and 7 (-), wiper = 1 (common); wiper-to-3 is 0 ohm at full CCW
+    excitation: 'stock ~13 VDC across 3-7; DCU-3: 8-9 VDC open, 0-4.5 VDC on 3-1'
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: 'in rotor: terminal 5 -> right limit -> 8; terminal 6 -> left limit -> 4'
+  speed:
+    min_s: 45
+    max_s: 60
+    note: 45-60 s at 60 Hz
+  duty: transformer 10 % duty; thermal switch trips after 4-5 min continuous, resets in ~10 min (T2X manual, same box design)
+  cable:
+    conductors: 8
+    connector: terminal strip (older); 8-pin Cinch-Jones on box; AMP pigtail at rotor.
+    gauge: 'max cable R: 1-2 <= 0.8 ohm, others <= 2.0 ohm'
+    pinout: *id001
+  sequencing: 'Release brake, wait, run; on stop remove motor drive, keep brake released for coast-down (stock DCU-1 8 s fixed, DCU-3 0-8 s default
+    3 s, Rotor-EZ 5 s), then engage brake. Never reverse while turning (DCU-1 manual: reversing hangs the system with brake released); stop, coast,
+    then reverse. Run cap is across terminals 4-8 in the control box.'
+  speed_control: Not recommended. RT-21 found HAMx/T2X the least responsive to its low-frequency AC PWM and ships AC rotors at MIN SPEED=10 (no
+    PWM). DCU-1 uses half-cycle motor pulses over the last 5 deg as a creep mode; triac half-cycle/cycle skipping can mimic this.
+  gotchas:
+  - 'Terminal 1 carries motor + brake return AND is the pot wiper reference: 60 Hz ripple on the pot reading (why the dual-end + notch design
+    exists).'
+  - An open limit switch at end of travel looks like 'no current'; not a fault at the end stop.
+  - 'RT-21: open pot gets noisy; some users add 30-100 uF from POS to GND at the controller.'
+  sources:
+  - HAM4
+  - DCU3
+  - RT21
+  - N0AX
+  - WA1HCO
+  - T2X
+  unverified: []
+  notes: 'DCU-3 resistance table: brake 1-2 0.75 ohm; half winding 1-8 and 1-4 2.5 ohm; whole motor 4-8 4.5 ohm; pot 3-7 500 ohm (+ cable).'
+- schema_version: 1
+  id: hygain-ham-v
+  maker: Telex / Hy-Gain
+  model: HAM-V (with DCU-1)
+  aliases:
+  - HAM-VX
+  axes: az
+  family: CDE-AC-brake-pot
+  support: v1
+  motor:
+    type: ac_split_phase_cap_run
+    volts: 26
+    current_a: null
+    cap_uf:
+    - 130
+    - 156
+    cap_vac: null
+    cap_location: controller
+    cap_note: 130-156 MFD (P/N 5151501); may be moved to tower for >300 ft so only 6 wires run
+  brake:
+    type: wedge_solenoid
+    volts: null
+    current_a: null
+    engage_after_stop_s:
+    - 8
+    - 8
+    note: 'DCU-1: brake engages 8 s after motor power is removed, even on STOP; immediately on AC loss'
+  sensor:
+    type: pot_dual_end_grounded_wiper
+    ohms: 500
+    wiring: same 8-wire scheme as HAM-IV (DCU-1/3 interchangeable)
+    excitation: null
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: in rotor; DCU-1 EPC calibration finds both limit switches
+  speed:
+    min_s: null
+    max_s: null
+    note: null
+  duty: null
+  cable:
+    conductors: 8
+    connector: weatherproof 8-pin AMP at rotor, gold contacts; RF beads on pot lines
+    gauge: null
+    pinout: *id001
+  sequencing: 'DCU-1: release brake, momentary reverse a few degrees, then run to target; half speed (half-cycle pulses) for the last 5 deg; brake
+    held 8 s after stop. No-motion stop after 8 s. Do not reverse during rotation.'
+  speed_control: Not recommended. RT-21 found HAMx/T2X the least responsive to its low-frequency AC PWM and ships AC rotors at MIN SPEED=10 (no
+    PWM). DCU-1 uses half-cycle motor pulses over the last 5 deg as a creep mode; triac half-cycle/cycle skipping can mimic this.
+  gotchas:
+  - Ships with the digital DCU-1; DCU-1, DCU-2 and DCU-3 share one serial command set (DCU-3 manual).
+  sources:
+  - HAM5
+  - DCU3
+  unverified:
+  - motor.volts
+  - sensor.ohms
+  notes: Manual describes '26 volt operation'; motor current not given.
+- schema_version: 1
+  id: hygain-t2x
+  maker: CDE / Telex / Hy-Gain (MFJ)
+  model: T-2X Tailtwister
+  aliases:
+  - T2X
+  - T-2XX (220 V)
+  - T-2XD3 (with DCU-3)
+  axes: az
+  family: CDE-AC-brake-pot
+  support: v1
+  motor:
+    type: ac_split_phase_cap_run
+    volts: 24
+    current_a: null
+    cap_uf:
+    - 130
+    - 156
+    cap_vac: null
+    cap_location: controller
+    cap_note: C-2, 130-156 MFD motor start (P/N 5151500)
+  brake:
+    type: wedge_solenoid
+    volts: 24
+    current_a: null
+    engage_after_stop_s: null
+    note: 'Heavier wedge and housing than HAM-IV (NORM). Known ''brake stick''. Manual: ''allow a few seconds for the rotator to coast down''
+      before re-engaging'
+  sensor:
+    type: pot_dual_end_grounded_wiper
+    ohms: 500
+    wiring: ends 3 and 7, wiper 1; ~13 VDC across 3-7 in stock box
+    excitation: stock ~13 VDC
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: in rotor motor feeds; RT-21 T2X option keeps 5 deg away from them
+  speed:
+    min_s: 45
+    max_s: 60
+    note: 45-60 s
+  duty: thermal switch in transformer trips after 4-5 min continuous; auto reset ~10 min
+  cable:
+    conductors: 8
+    connector: 8-pin Cinch on control box, weatherproof AMP at rotor
+    gauge: see manual Table 1
+    pinout: *id001
+  sequencing: 'Release brake, wait, run; on stop remove motor drive, keep brake released for coast-down (stock DCU-1 8 s fixed, DCU-3 0-8 s default
+    3 s, Rotor-EZ 5 s), then engage brake. Never reverse while turning (DCU-1 manual: reversing hangs the system with brake released); stop, coast,
+    then reverse. Run cap is across terminals 4-8 in the control box. Brake-stick relief: before a motion, run briefly in the opposite direction
+    to unload the wedge (RT-21 T2X option; DCU-1/DCU-3 do the same).'
+  speed_control: Not recommended. RT-21 found HAMx/T2X the least responsive to its low-frequency AC PWM and ships AC rotors at MIN SPEED=10 (no
+    PWM). DCU-1 uses half-cycle motor pulses over the last 5 deg as a creep mode; triac half-cycle/cycle skipping can mimic this.
+  gotchas:
+  - 'Stock box test: ~30 VAC on 1-2 (brake), 1-5, 1-6; ~13 VDC on 3-7.'
+  - 'Brake stick: soft limits must leave room to back off before the limit switch.'
+  sources:
+  - T2X
+  - T2XS
+  - RT21
+  - NORM
+  - SRCH
+  unverified:
+  - motor.current_a
+  - brake.current_a
+  - speed
+  notes: A search summary claims motor 24 VAC 5.0 A and brake 24 VAC 5.0 A; not confirmed in an opened source.
+- schema_version: 1
+  id: hygain-cd-45ii
+  maker: Telex / Hy-Gain (MFJ)
+  model: CD-45-II
+  aliases:
+  - CD-45IIX
+  - CD-45
+  axes: az
+  family: CDE-AC-nobrake-pot
+  support: v1
+  motor:
+    type: ac_split_phase_cap_run
+    volts: 24
+    current_a: 2.25
+    cap_uf:
+    - 130
+    - 156
+    cap_vac: null
+    cap_location: controller
+    cap_note: Control box shares the HAM-IV/CD-45-II parts list; 120/26 VAC transformer, 10 % duty
+  brake:
+    type: disc_internal
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: '''Automatic disc type''; terminal 2 unused in rotor (7 wires suffice)'
+  sensor:
+    type: pot_dual_end_grounded_wiper
+    ohms: 500
+    wiring: CDE 8-wire scheme, terminal 2 unused
+    excitation: stock ~13 VDC
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: in rotor
+  speed:
+    min_s: 45
+    max_s: 60
+    note: 45-60 s at 60 Hz
+  duty: transformer 10 % duty, thermal switch
+  cable:
+    conductors: 7
+    connector: terminal strip; Cinch 8-pin plug + AMP parts in kit
+    gauge: 'max: terminal 1 1.0 ohm; 3-8 2.5 ohm'
+    pinout:
+      1: 'common: motor windings, brake, pot wiper (heavy wire)'
+      2: not used (no solenoid brake)
+      3: pot end (+, ~13 VDC in stock box)
+      4: motor winding end / run cap
+      5: CW drive (via right limit sw. to 8)
+      6: CCW drive (via left limit sw. to 4)
+      7: pot end (-)
+      8: motor winding end / run cap
+  sequencing: 'As CDE without brake output: stop, wait for coast, then reverse.'
+  speed_control: Not recommended. RT-21 found HAMx/T2X the least responsive to its low-frequency AC PWM and ships AC rotors at MIN SPEED=10 (no
+    PWM). DCU-1 uses half-cycle motor pulses over the last 5 deg as a creep mode; triac half-cycle/cycle skipping can mimic this.
+  gotchas:
+  - Brake output disabled (terminal 2 open).
+  sources:
+  - CD45
+  - REZ
+  unverified:
+  - cable.pinout
+  - sensor.ohms
+  notes: null
+- schema_version: 1
+  id: cde-cd-44
+  maker: CDE
+  model: CD-44
+  aliases:
+  - TR-44 Series 3 (box-compatible)
+  axes: az
+  family: CDE-AC-brake-pot
+  support: v1
+  motor:
+    type: ac_split_phase_cap_run
+    volts: 24
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: controller
+    cap_note: null
+  brake:
+    type: null
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: Brake type not confirmed (wedge vs disc)
+  sensor:
+    type: pot_dual_end_grounded_wiper
+    ohms: 500
+    wiring: 8-wire, interchangeable with Ham-2/3/4/T2X boxes (NORM)
+    excitation: null
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: in rotor
+  speed:
+    min_s: null
+    max_s: null
+    note: null
+  duty: null
+  cable:
+    conductors: 8
+    connector: terminal strip
+    gauge: '2 x #18 + 6 x #22 to ~120 ft'
+    pinout: *id001
+  sequencing: 'Release brake, wait, run; on stop remove motor drive, keep brake released for coast-down (stock DCU-1 8 s fixed, DCU-3 0-8 s default
+    3 s, Rotor-EZ 5 s), then engage brake. Never reverse while turning (DCU-1 manual: reversing hangs the system with brake released); stop, coast,
+    then reverse. Run cap is across terminals 4-8 in the control box.'
+  speed_control: Not recommended. RT-21 found HAMx/T2X the least responsive to its low-frequency AC PWM and ships AC rotors at MIN SPEED=10 (no
+    PWM). DCU-1 uses half-cycle motor pulses over the last 5 deg as a creep mode; triac half-cycle/cycle skipping can mimic this.
+  gotchas:
+  - Verify 500 ohm across 3-7 and cap across 4-8 before connecting (NORM).
+  sources:
+  - NORM
+  - SRCH
+  unverified:
+  - brake.type
+  - cable.pinout
+  notes: Discontinued 1981; parts via Norm's Rotor Service.
+- schema_version: 1
+  id: hygain-ar-40
+  maker: Telex / Hy-Gain (MFJ)
+  model: AR-40 (TV/light-duty class; AR-500 not researched)
+  aliases:
+  - AR-40X
+  axes: az
+  family: unsupported
+  support: 'no'
+  motor:
+    type: null
+    volts: null
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: Control unit max output 18 VAC
+  brake:
+    type: null
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: null
+    ohms: null
+    wiring: 5-wire cable; knob + START button auto-seek box
+    excitation: null
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: CW/CCW end-of-rotation adjustments in control box
+  speed:
+    min_s: null
+    max_s: null
+    note: null
+  duty: null
+  cable:
+    conductors: 5
+    connector: screw terminals 1-5
+    gauge: '#22 to 75 ft'
+    pinout: null
+  sequencing: null
+  speed_control: null
+  gotchas:
+  - Auto-seek TV-class rotator; sensing scheme not in the manual text. Unsupported until a schematic is checked.
+  sources:
+  - AR40
+  unverified:
+  - motor
+  - sensor
+  notes: null
+- schema_version: 1
+  id: hygain-hdr-300a
+  maker: Telex / Hy-Gain
+  model: HDR-300 / HDR-300A
+  aliases:
+  - HDR-300AX
+  axes: az
+  family: AC-brake-multiturn-pot
+  support: v1
+  motor:
+    type: ac_pm_split_capacitor
+    volts: 24
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: rotor
+    cap_note: Motor, capacitor, limit switches and pot are inside the rotor; 1/10 HP; thermal breaker in motor
+  brake:
+    type: solenoid_brake_clutch
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: '''Low voltage'' solenoid brake/clutch on motor shaft, slips above 7500 in-lb. Stock: manual FREE/LOCK switch; coast before locking'
+  sensor:
+    type: pot_multiturn_single_ended
+    ohms: 1000
+    turns: 3
+    wiring: '3-turn wirewound pot: REF pin 8, wiper pin 9, ground pin 10'
+    excitation: 5 VDC; 0.833-2.500 VDC over 0-360 deg
+  travel:
+    range_deg: 400
+    overlap_deg: 40
+    limit_switches: ~20 deg overtravel each way, -20 to +380 deg
+  speed:
+    min_s: null
+    max_s: null
+    note: Not stated in manual
+  duty: Thermal breaker in motor
+  cable:
+    conductors: 7
+    connector: 8-pin at rotor, 10-pin at console
+    gauge: 3 large wires (pins 1,2,3) <= 0.5 ohm each; 4 small (4,8,9,10)
+    pinout:
+      1: motor CCW (RT-21 A.9)
+      2: motor CW
+      3: ground / motor common
+      4: brake
+      8: pot REF (+5 V)
+      9: pot wiper
+      10: pot ground
+  sequencing: Release brake (FREE), run, stop, coast, then LOCK. Delay value not specified by Hy-Gain.
+  speed_control: 'AC: RT-21 uses AC MOTOR mode, MIN SPEED 10 (no PWM).'
+  gotchas:
+  - Only 1/3 of the pot span is used (1.667 V of 5 V for 360 deg); calibrate span, consider ADC gain/offset.
+  - Brake/clutch slips if locked while still turning.
+  sources:
+  - HDR
+  - RT21
+  unverified:
+  - brake.volts
+  notes: null
+- schema_version: 1
+  id: yaesu-g-450a
+  maker: Yaesu
+  model: G-450A / G-650A
+  aliases:
+  - G-450XL (24 VAC, 5-cond)
+  - G-400 / G-400RC (same RT-21 table)
+  axes: az
+  family: Yaesu-AC-pot
+  support: v1
+  motor:
+    type: ac_split_phase_cap_run
+    volts: 24
+    current_a: null
+    cap_uf:
+    - 100
+    - 100
+    cap_vac: 60
+    cap_location: controller
+    cap_note: 'G-450A service-manual parts list: 100 uF 60 VAC (Q9000477); WA1HCO doc: G-400 100 uF 60 VAC. Controller draws 0.5 A from 100-120
+      VAC'
+  brake:
+    type: none_gear
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pot_single_ended
+    ohms: 500
+    wiring: '3-wire: 1 REF, 2 wiper, 3 ground'
+    excitation: null
+  travel:
+    range_deg: 450
+    overlap_deg: 90
+    limit_switches: end stops; OVERLAP LED past 360 deg; stops at ~90 deg (450 total)
+  speed:
+    min_s: 51
+    max_s: 63
+    note: 63 s at 50 Hz, 51 s at 60 Hz
+  duty: 3 min continuous (5 min absolute), then rest
+  cable:
+    conductors: 6
+    connector: 7-pin round at rotor (pin 7 unused) / 6-pin rectangular at controller
+    gauge: 6 x 0.5 mm2 (#20) minimum
+    pinout: &id002
+      1: pot REF (+)
+      2: pot wiper (POS)
+      3: pot ground
+      4: motor CCW / cap
+      5: motor CW / cap
+      6: motor common
+  sequencing: 'No brake. Manual: do not suddenly reverse rotation -> stop, dwell, reverse.'
+  speed_control: 'AC cap-run: none in stock. RT-21: AC MOTOR mode, MIN SPEED 10.'
+  gotchas:
+  - 'G-400RC / G-450XL: no REF on pin 1; pot used as variable resistor (RT-21 J6 2-3).'
+  - G-600, G-600RC, G-2000RC need RT-21 factory modifications - not covered here.
+  sources:
+  - G450A
+  - RT21
+  - G450SM
+  - G450XL
+  - WA1HCO
+  unverified:
+  - sensor.ohms
+  - motor.volts
+  notes: 24 VAC confirmed for G-450XL; RT-21 uses its 24 VAC tap for G-450A/650A.
+- schema_version: 1
+  id: yaesu-g-5500
+  maker: Yaesu
+  model: G-5500 (AC, az-el)
+  aliases: []
+  axes: az+el
+  family: Yaesu-AC-pot
+  support: v1-2axis
+  motor:
+    type: ac_split_phase_cap_run
+    volts: 24
+    current_a: null
+    cap_uf:
+    - 100
+    - 100
+    cap_vac: null
+    cap_location: rotor
+    cap_note: 100 uF phase cap inside the motor housing ('unlike other versions')
+  brake:
+    type: none_gear
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pot_single_ended
+    ohms: 500
+    wiring: 3-wire per axis; 500 ohm 360 deg pots
+    excitation: null
+  travel:
+    range_deg: 450
+    overlap_deg: 90
+    limit_switches: 'az: end stops; el: 0-180 deg'
+  speed:
+    min_s: 58
+    max_s: 58
+    note: az 58 s/360 deg, el 67 s/180 deg (approx., 60 Hz)
+  duty: 5 min intermittent, then >= 15 min rest
+  cable:
+    conductors: 6
+    connector: 7-pin metal connector per rotator; 8-pin DIN external control
+    gauge: null
+    pinout: *id002
+  sequencing: No brake. Stock box turns right/up if both buttons pressed; our interlock forbids both.
+  speed_control: 'AC: none.'
+  gotchas:
+  - 'Cap is in the rotor: do NOT add a second run cap in the controller.'
+  - 'Ext. control DIN: pin 6 az 2-4.5 VDC (0-450 deg), pin 1 el 2-4.5 VDC (0-180 deg), pins 2/4/3/5 to pin 8 = R/L/D/U (alongside-mode option).'
+  sources:
+  - G5500
+  - AMSATC
+  - AMSATP
+  unverified:
+  - cable.pinout
+  notes: Rotor pinout assumed same as G-450A family (cap across 4-5).
+- schema_version: 1
+  id: yaesu-g-550
+  maker: Yaesu
+  model: G-550 (elevation)
+  aliases: []
+  axes: el
+  family: Yaesu-AC-pot
+  support: v1-2axis
+  motor:
+    type: ac_split_phase_cap_run
+    volts: 24
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: 30 VA consumption
+  brake:
+    type: none_gear
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pot_single_ended
+    ohms: 500
+    wiring: 500 ohm, 360 deg continuous pot
+    excitation: null
+  travel:
+    range_deg: 180
+    overlap_deg: 0
+    limit_switches: 0-180 deg
+  speed:
+    min_s: null
+    max_s: null
+    note: ~67 s per 180 deg at 60 Hz
+  duty: null
+  cable:
+    conductors: 6
+    connector: null
+    gauge: '#20 or larger'
+    pinout: null
+  sequencing: No brake; stop before reverse.
+  speed_control: 'AC: none.'
+  gotchas: []
+  sources:
+  - G550
+  - AMSATP
+  unverified:
+  - sensor.ohms
+  - speed
+  notes: Manual seen only via search excerpt.
+- schema_version: 1
+  id: kenpro-kr-series
+  maker: Kenpro
+  model: KR-400 / KR-600(RC) / KR-1000 / KR-2000; KR-5400/5600 az-el
+  aliases:
+  - Kenpro (later Yaesu G-series)
+  axes: 'az (KR-5x00: az+el)'
+  family: Yaesu-AC-pot
+  support: v1
+  motor:
+    type: ac_split_phase_cap_run
+    volts: 24
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: null
+  brake:
+    type: none_gear
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pot_single_ended
+    ohms: 500
+    wiring: VR5 gear-driven pot in rotor; 500 ohm on schematic; one unit measured 41-650 ohm
+    excitation: null
+  travel:
+    range_deg: null
+    overlap_deg: null
+    limit_switches: null
+  speed:
+    min_s: 53
+    max_s: 63
+    note: 'KR-600RC: 53 s at 60 Hz, 63 s at 50 Hz'
+  duty: null
+  cable:
+    conductors: null
+    connector: null
+    gauge: null
+    pinout: null
+  sequencing: No brake; stop before reverse.
+  speed_control: 'AC: none.'
+  gotchas:
+  - Measured pot can exceed nominal 500 ohm; calibration must not assume 500.
+  sources:
+  - KR600
+  - KRMUS
+  unverified:
+  - motor.volts
+  - travel
+  - cable
+  notes: Assumed electrically similar to early Yaesu G-400/G-600; confirm pinout per model.
+- schema_version: 1
+  id: daiwa-mr-750
+  maker: Daiwa
+  model: MR-750 / MR-300
+  aliases:
+  - Diawa (RT-21 spelling)
+  axes: az
+  family: Yaesu-AC-pot
+  support: v1
+  motor:
+    type: ac_cap_run
+    volts: null
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: Stock box picked motor voltage with terminal 7/8/9 (higher taps for long runs); RT-21 uses its 24 VAC or 36 VAC tap
+  brake:
+    type: null
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pot_single_ended
+    ohms: null
+    wiring: 1 REF, 2 wiper, 3 ground
+    excitation: null
+  travel:
+    range_deg: null
+    overlap_deg: null
+    limit_switches: '''slight over-travel'' (RT-21)'
+  speed:
+    min_s: null
+    max_s: null
+    note: null
+  duty: null
+  cable:
+    conductors: null
+    connector: terminal strip
+    gauge: null
+    pinout:
+      1: pot REF
+      2: pot wiper
+      3: ground
+      5: motor CCW
+      6: motor CW
+      7/8/9: motor common, increasing voltage taps
+  sequencing: Stop before reverse.
+  speed_control: 'AC: RT-21 AC MOTOR mode, no PWM.'
+  gotchas:
+  - Motor tap selection maps to our transformer choice (24 vs 36 VAC).
+  sources:
+  - RT21
+  unverified:
+  - motor.volts
+  notes: null
+- schema_version: 1
+  id: create-rc5
+  maker: Create (CD Corp, Japan)
+  model: RC5-1 / RC5-3 / RC5A-2 / RC5A-3 / RC5B-3 / RC5B-4 (+P variants)
+  aliases:
+  - Create RC5 series
+  axes: az
+  family: Yaesu-AC-pot
+  support: v1
+  motor:
+    type: ac_cap_run
+    volts: 28
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: Power 90 VA (RC5-1/3), 150 VA (RC5A), 200 VA (RC5B); RT-21 uses its 24 VAC tap
+  brake:
+    type: null
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pot_single_ended
+    ohms: null
+    wiring: 4 REF, 5 wiper, 6 ground; 7 = stock indicator (unused by RT-21)
+    excitation: null
+  travel:
+    range_deg: null
+    overlap_deg: null
+    limit_switches: '''slight over-travel'' (RT-21)'
+  speed:
+    min_s: 60
+    max_s: 150
+    note: 'RC5-3/RC5A: 75-110 s (50 Hz) / 60-95 s (60 Hz); RC5B: 95-150 / 80-125 s; variable in stock box'
+  duty: null
+  cable:
+    conductors: 7
+    connector: null
+    gauge: null
+    pinout:
+      1: motor common (GND)
+      2: motor CW
+      3: motor CCW
+      4: pot REF
+      5: pot wiper
+      6: ground
+      7: stock indicator (not used)
+  sequencing: 'Create specifies a reversal time: 0 s (RC5-1), 1 s (RC5-3), 2 s (RC5A), 3 s (RC5B).'
+  speed_control: 'Stock boxes have ''speed control circuits'' on an AC motor (method not documented). RT-21: AC MOTOR mode, MIN SPEED 10.'
+  gotchas:
+  - 'Pot value unverified: a 5 kohm ''RC-Poti'' replacement is sold by UKW-Berichte; confirm before fixing excitation.'
+  - 'RC5-1DC variant: 12-15 VDC, 5-core (belongs in DC-pot).'
+  sources:
+  - CREATE
+  - RT21
+  - KUR02C
+  unverified:
+  - motor.volts
+  - sensor.ohms
+  notes: null
+- schema_version: 1
+  id: alliance-hd-73
+  maker: Alliance
+  model: HD-73
+  aliases:
+  - HD-73-1
+  axes: az
+  family: Yaesu-AC-pot
+  support: v1
+  motor:
+    type: ac_split_phase_cap_run
+    volts: 20
+    current_a: null
+    cap_uf:
+    - 155
+    - 155
+    cap_vac: 50
+    cap_location: controller
+    cap_note: Reversible capacitor split-phase motor with center-tapped winding
+  brake:
+    type: null
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pot_single_ended_low_ohm
+    ohms: 75
+    wiring: 2 wiper, 4 and 5 pot ends; RT-21 inserts 75-100 ohm in series with REF (terminal 5)
+    excitation: null
+  travel:
+    range_deg: null
+    overlap_deg: null
+    limit_switches: null
+  speed:
+    min_s: 60
+    max_s: null
+    note: 'Dual speed: 1 RPM (60 s/360) plus slower ''pinpoint'' speed'
+  duty: null
+  cable:
+    conductors: 6
+    connector: 6-screw terminal strip both ends
+    gauge: '#20 stranded to 125 ft'
+    pinout:
+      1: motor winding end (CW) + cap
+      2: pot wiper
+      3: winding center tap (common)
+      4: pot end (ground)
+      5: pot end (REF)
+      6: motor winding end (CCW) + cap
+  sequencing: Stop before reverse.
+  speed_control: 'AC: RT-21 AC MOTOR mode. Stock dual-speed method not documented.'
+  gotchas:
+  - '75 ohm pot: excitation must be current-limited (5 V across 75 ohm = 67 mA).'
+  - Cap goes across winding ends 1-6, the same nodes as the drive outputs.
+  sources:
+  - HD73P
+  - RT21
+  - HD73M
+  - NORM
+  unverified:
+  - motor.volts
+  - motor.cap_uf
+  - motor.cap_vac
+  - speed
+  notes: Alliance stopped production in 1994 (NORM).
+- schema_version: 1
+  id: alliance-u-110
+  maker: Alliance
+  model: U-110 / U-100 Tenna-Rotor
+  aliases: []
+  axes: az
+  family: unsupported
+  support: 'no'
+  motor:
+    type: ac
+    volts: 24
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: null
+  brake:
+    type: null
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: null
+    ohms: null
+    wiring: 4-conductor cable, fully automatic dial
+    excitation: null
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: null
+  speed:
+    min_s: 60
+    max_s: 60
+    note: 1 RPM
+  duty: null
+  cable:
+    conductors: 4
+    connector: screw terminals 1-4
+    gauge: null
+    pinout: null
+  sequencing: null
+  speed_control: null
+  gotchas:
+  - TV rotator; sensing scheme unknown with only 4 wires. Not a target.
+  sources:
+  - U110
+  unverified:
+  - sensor
+  - motor
+  notes: null
+- schema_version: 1
+  id: orion-or-2300
+  maker: Orion (pre-M2)
+  model: OR-2300 (original)
+  aliases: []
+  axes: az
+  family: Yaesu-AC-pot
+  support: v1
+  motor:
+    type: ac_cap_run
+    volts: null
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: null
+  brake:
+    type: null
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pot_single_ended
+    ohms: null
+    wiring: 4 REF, 5 wiper, 6 ground
+    excitation: null
+  travel:
+    range_deg: 360
+    overlap_deg: null
+    limit_switches: CCW mechanical limit at 180 deg from center
+  speed:
+    min_s: null
+    max_s: null
+    note: null
+  duty: null
+  cable:
+    conductors: 6
+    connector: null
+    gauge: null
+    pinout:
+      1: motor ground
+      2: motor CCW
+      3: motor CW
+      4: pot REF
+      5: pot wiper
+      6: ground
+  sequencing: null
+  speed_control: 'AC: RT-21 AC MOTOR mode.'
+  gotchas: []
+  sources:
+  - RT21
+  unverified:
+  - motor.volts
+  notes: null
+- schema_version: 1
+  id: prosistel-ac-48v
+  maker: Prosistel
+  model: PST-51 / PST-61 / PST-71 (older 48 VAC, Model A/B/C box)
+  aliases: []
+  axes: az
+  family: AC48-pot
+  support: check
+  motor:
+    type: ac_cap_run
+    volts: 48
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: controller
+    cap_note: '''High starting torque 48 VAC capacitance motor''; 110 W (51/61), 190 W (71); caps on control-box PCB; stock box switches each
+      line with opto-triacs'
+  brake:
+    type: null
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pot_single_ended
+    ohms: 10000
+    wiring: +12 V and -12 V across pot (pins 4/3), wiper P on pin 1
+    excitation: +/-12 VDC (bipolar)
+  travel:
+    range_deg: 440
+    overlap_deg: 80
+    limit_switches: none in rotor; electronic limits (comparator) in box
+  speed:
+    min_s: 70
+    max_s: 130
+    note: 'PST 51: 70 s, PST 61: 100 s, PST 71: 130 s'
+  duty: null
+  cable:
+    conductors: 7
+    connector: 8-pin, 7 used
+    gauge: 3 heavier wires for motor
+    pinout:
+      1: pot wiper (P)
+      2: motor CCW (F2)
+      3: -12 VDC to pot
+      4: +12 VDC to pot
+      5: motor common (F1)
+      6: n/c
+      7: motor CW (F3)
+      8: ground
+  sequencing: Stop before reverse.
+  speed_control: 'AC: none.'
+  gotchas:
+  - '48 VAC motor: needs a 48 VAC transformer; peak line plus cap voltage may exceed the SMAJ90CA 90 V standoff.'
+  - 'Bipolar pot excitation: a passive pot can be driven 0/+V instead, but calibration then differs from stock.'
+  sources:
+  - PST01
+  unverified:
+  - travel.overlap_deg
+  notes: Overlap inferred from 440 deg total range.
+- schema_version: 1
+  id: yaesu-g-dxa
+  maker: Yaesu
+  model: G-800DXA / G-1000DXA / G-2800DXA
+  aliases:
+  - G-800DXC/G-1000DXC/G-2800DXC (older, same rotor scheme)
+  - G-800SA (DC)
+  axes: az
+  family: DC-pot
+  support: v2-dc
+  motor:
+    type: dc_pm
+    volts: 24
+    volts_range:
+    - 11
+    - 24
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: Variable DC, ~11-24 V (K9YC). Motor 8.75 ohm -> ~2.7 A stall-limited at 24 V [estimate]
+  brake:
+    type: none_gear
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pot_single_ended
+    ohms: 500
+    wiring: 1 REF, 2 wiper, 3 cold end bonded to rotor chassis
+    excitation: null
+  travel:
+    range_deg: 450
+    overlap_deg: 90
+    limit_switches: in motor leads (pins 4-5); 450 +/-3 deg
+  speed:
+    min_s: 40
+    max_s: 120
+    note: '800/1000DXA: 100-40 s; 2800DXA: 120-50 s (variable)'
+  duty: 3 min continuous / 5 min absolute
+  cable:
+    conductors: 6
+    connector: 6-pin (rotor) / round at controller
+    gauge: null
+    pinout:
+      1: pot high end (REF)
+      2: pot wiper
+      3: pot cold end, bonded to rotor chassis
+      4: motor (through limit switch)
+      5: motor (through limit switch)
+      6: n/c
+  sequencing: No brake. 2800DXA stock does automatic slow start/stop. Ramp DC down before reversing.
+  speed_control: 'DC: PWM fully supported (RT-21 1.2 kHz, ramps). RT-21 sets CW limit +90 for overlap.'
+  gotchas:
+  - 'Pot cold end is chassis: rotor chassis/tower ground ties to the pot reference - grounding noise.'
+  - Do not apply AC drive (DC PM motor).
+  sources:
+  - DXA
+  - K9YC
+  - DXC
+  - RT21
+  unverified:
+  - motor.current_a
+  notes: null
+- schema_version: 1
+  id: yaesu-g-450adc
+  maker: Yaesu
+  model: G-450ADC / G-450CDC
+  aliases: []
+  axes: az
+  family: DC-pot
+  support: v2-dc
+  motor:
+    type: dc_pm
+    volts: 22
+    volts_range:
+    - 20
+    - 22
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: ~20 VDC (manual text) / 22 V (spec table); controller fuse 3 A
+  brake:
+    type: none_gear
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pot_rheostat
+    ohms: 500
+    wiring: 'Round connector pins 1, 6, 7 unused: pot used as 2-terminal variable resistor'
+    excitation: current source / pull-up
+  travel:
+    range_deg: 450
+    overlap_deg: 90
+    limit_switches: mechanical
+  speed:
+    min_s: 56
+    max_s: 56
+    note: ~56 s/360 deg
+  duty: null
+  cable:
+    conductors: 4
+    connector: round at rotor
+    gauge: null
+    pinout: null
+  sequencing: Ramp down before reversing.
+  speed_control: 'DC: PWM OK.'
+  gotchas:
+  - 'Rheostat sensor: measure resistance (current source or divider with known R), not a ratio.'
+  sources:
+  - G450ADC
+  - WRC
+  unverified:
+  - sensor.wiring
+  - sensor.ohms
+  - cable.conductors
+  notes: null
+- schema_version: 1
+  id: yaesu-g-5500dc
+  maker: Yaesu
+  model: G-5500DC (az-el)
+  aliases: []
+  axes: az+el
+  family: DC-pot
+  support: v2-dc
+  motor:
+    type: dc_pm
+    volts: 22
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: null
+  brake: &id003
+    type: none_gear
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pot_single_ended
+    ohms: null
+    wiring: Ext. control outputs 2-4.5 VDC az and el, 10 kohm
+    excitation: null
+  travel:
+    range_deg: 450
+    overlap_deg: 90
+    limit_switches: az 450 deg, el 180 deg
+  speed:
+    min_s: 60
+    max_s: 60
+    note: az ~60 s/360, el ~65 s/180
+  duty: null
+  cable:
+    conductors: null
+    connector: null
+    gauge: null
+    pinout: null
+  sequencing: Ramp down before reversing.
+  speed_control: 'DC: PWM OK.'
+  gotchas:
+  - Rotor-side pinout not confirmed (manual is Japanese).
+  sources:
+  - G5500DC
+  unverified:
+  - sensor.ohms
+  - cable
+  notes: null
+- schema_version: 1
+  id: yaesu-g-800sdx
+  maker: Yaesu
+  model: G-800S / G-800SDX / G-1000SDX
+  aliases: []
+  axes: az
+  family: DC-pot
+  support: later
+  motor:
+    type: null
+    volts: null
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: SDX = DC variable-speed (per name); no text manual found
+  brake: *id003
+  sensor:
+    type: pot_single_ended
+    ohms: null
+    wiring: null
+    excitation: null
+  travel:
+    range_deg: 450
+    overlap_deg: 90
+    limit_switches: null
+  speed:
+    min_s: null
+    max_s: null
+    note: null
+  duty: null
+  cable:
+    conductors: null
+    connector: null
+    gauge: null
+    pinout: null
+  sequencing: null
+  speed_control: null
+  gotchas:
+  - Manual found only as an image scan.
+  sources:
+  - DXC
+  unverified:
+  - motor
+  - sensor
+  - travel
+  notes: Use generic-dc-pot preset until verified.
+- schema_version: 1
+  id: prosistel-d
+  maker: Prosistel
+  model: PST-61D / PST-71D / PST-2051D / PST-110D (D series)
+  aliases:
+  - PST-71D Big Boy
+  axes: az
+  family: DC-pot
+  support: v2-dc
+  motor:
+    type: dc_pm
+    volts: 24
+    volts_range:
+    - 12
+    - 42
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: PST-71D 24 VDC; PST-61D 12 VDC [summary]; RT-21 taps 18 V (61D, 2051D), 28 V (newer 71D), 42 V (older 71D)
+  brake:
+    type: null
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pot_single_ended
+    ohms: null
+    wiring: 3 wiper, 4 REF, 5 ground
+    excitation: 'RT-21 table: wiper reads 5.01 V CCW limit / 5.40 V center / 5.79 V CW limit; must lie 4.7-6.3 V'
+  travel:
+    range_deg: 500
+    overlap_deg: 140
+    limit_switches: NONE - 70 + 360 + 70 deg, soft limits only (prosistel.biz)
+  speed:
+    min_s: 90
+    max_s: 100
+    note: ~90-100 s per 360 at nominal voltage
+  duty: null
+  cable:
+    conductors: 5
+    connector: null
+    gauge: 2 x 1 mm2 (motor) + 3 x 0.5 mm2
+    pinout:
+      1: motor CW
+      2: motor CCW
+      3: pot wiper
+      4: pot REF
+      5: ground
+  sequencing: Ramp up/down [proposed]. Soft limits mandatory.
+  speed_control: 'DC: PWM OK (RT-21 supports).'
+  gotchas:
+  - 'No limit switches: a calibration sweep must NOT drive to a mechanical stop; operator sets ends.'
+  - 'Narrow 0.78 V wiper window around ~5.4 V: needs offset/gain or a high-resolution ADC.'
+  - Wrong motor voltage tap overheats or underpowers (RT-21 table by model/age).
+  sources:
+  - RT21
+  - PST71
+  - PST61S
+  unverified:
+  - motor.volts_range
+  - sensor.excitation
+  notes: Excitation voltage used to produce the ~5.4 V reading is not stated in the table I read.
+- schema_version: 1
+  id: tic-ringrotor
+  maker: TIC General
+  model: Ring Rotor (1022/1032 etc.)
+  aliases: []
+  axes: az (around tower)
+  family: DC-pot
+  support: v2-dc
+  motor:
+    type: dc_pm
+    volts: 13.8
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: RT-21 uses 13.8 V tap
+  brake: *id003
+  sensor:
+    type: pot_single_ended
+    ohms: 500
+    wiring: 4 CW end, 5 wiper, 6 CCW end; 250 ohm at center
+    excitation: null
+  travel:
+    range_deg: null
+    overlap_deg: null
+    limit_switches: null
+  speed:
+    min_s: null
+    max_s: null
+    note: null
+  duty: null
+  cable:
+    conductors: null
+    connector: null
+    gauge: null
+    pinout:
+      2: motor
+      3: motor
+      4: pot CW end
+      5: pot wiper
+      6: pot CCW end
+  sequencing: null
+  speed_control: 'DC: PWM OK.'
+  gotchas: []
+  sources:
+  - RT21
+  unverified:
+  - travel
+  notes: null
+- schema_version: 1
+  id: rotordoctor-rd-1800
+  maker: Rotor Doctor
+  model: RD-1800
+  aliases: []
+  axes: az
+  family: DC-pot
+  support: v2-dc
+  motor:
+    type: dc_pm
+    volts: null
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: null
+  brake:
+    type: null
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pot_single_ended
+    ohms: null
+    wiring: 7 REF, 4 wiper, 3 ground
+    excitation: null
+  travel:
+    range_deg: null
+    overlap_deg: null
+    limit_switches: null
+  speed:
+    min_s: null
+    max_s: null
+    note: null
+  duty: null
+  cable:
+    conductors: null
+    connector: null
+    gauge: null
+    pinout:
+      1: motor CW
+      2: motor CCW
+      3: ground
+      4: pot wiper
+      7: pot REF
+  sequencing: null
+  speed_control: 'DC: PWM OK.'
+  gotchas: []
+  sources:
+  - RT21
+  unverified:
+  - motor
+  notes: null
+- schema_version: 1
+  id: spid-rak
+  maker: SPID / Alfa Radio (AlfaSpid)
+  model: RAK
+  aliases:
+  - Alfa Spid RAK
+  axes: az
+  family: DC-pulse
+  support: v2-dc
+  motor:
+    type: dc_pm
+    volts: 24
+    volts_range:
+    - 12
+    - 24
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: null
+  brake: &id004
+    type: none
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: No electrical brake; holding mechanism not verified in sources
+  sensor:
+    type: reed_pulse
+    pulses_per_deg: 1
+    wiring: 2-wire reed (impulse) pair
+    excitation: pull-up from controller
+  travel:
+    range_deg: 720
+    overlap_deg: 360
+    limit_switches: 'NONE (RT-21: no limit switches); soft limits only'
+  speed:
+    min_s: 60
+    max_s: 120
+    note: 120 / 90 / 60 s per 360 at 12 / 18 / 24 V
+  duty: null
+  cable:
+    conductors: 4
+    connector: screw terminals / 4-pin DIN (Rot2Prog)
+    gauge: null
+    pinout:
+      1: motor
+      2: motor
+      3: impulse
+      4: impulse
+  sequencing: 'Count pulses through coast; store count in FRAM; ramp down. No home: position is lost if count is lost -> recal against a mark.'
+  speed_control: 'DC: PWM OK.'
+  gotchas:
+  - 'Relative sensor: must persist count across power loss (FRAM + power-fail).'
+  - 'RF induces false pulses: shielded cable + debounce (SPID MD).'
+  - 'No limit switches: soft limits and stall (no-pulse) timeout mandatory.'
+  sources:
+  - ALFA
+  - RT21
+  - SPIDMD
+  unverified:
+  - travel.range_deg
+  notes: null
+- schema_version: 1
+  id: spid-big-rak
+  maker: SPID / Alfa Radio
+  model: BIG-RAK
+  aliases: []
+  axes: az
+  family: DC-pulse
+  support: v2-dc
+  motor:
+    type: dc_pm
+    volts: null
+    volts_range:
+    - 12
+    - 24
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: Controller 12-18 V, 3-5 A (RF Hamdesign)
+  brake: *id004
+  sensor:
+    type: reed_pulse
+    pulses_per_deg: 2
+    wiring: 2-wire reed
+    excitation: pull-up
+  travel:
+    range_deg: null
+    overlap_deg: null
+    limit_switches: NONE
+  speed:
+    min_s: 60
+    max_s: 210
+    note: 'Alfa sheet: 120/90/60 s; RF Hamdesign: 210/140/100 s (conflict)'
+  duty: null
+  cable:
+    conductors: 4
+    connector: 4-pin DIN
+    gauge: null
+    pinout: null
+  sequencing: As RAK.
+  speed_control: 'DC: PWM OK.'
+  gotchas:
+  - Specs conflict between sources (range 720 vs 360, speed); resolve on the bench.
+  sources:
+  - ALFA
+  - BIGRAK
+  - SPIDMD
+  unverified:
+  - sensor.pulses_per_deg
+  - travel.range_deg
+  - speed
+  notes: null
+- schema_version: 1
+  id: spid-ras
+  maker: SPID / Alfa Radio
+  model: RAS / BIG-RAS (az-el); HR variants
+  aliases:
+  - RAS/HR
+  - BIG-RAS/HR
+  axes: az+el
+  family: DC-pulse
+  support: v2-dc
+  motor:
+    type: dc_pm
+    volts: null
+    volts_range:
+    - 13.8
+    - 24
+    current_a: 3.0
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: '2-3 A, up to 3-5 A in wind (RAS manual). BIG-RAS/HR: 24-30 V up to 12 A (SPID MD)'
+  brake: *id004
+  sensor:
+    type: reed_pulse
+    pulses_per_deg: 1
+    wiring: 'per axis 2-wire impulse; HR versions: two Hall sensors (quadrature-like)'
+    excitation: pull-up; Hall needs supply
+  travel:
+    range_deg: null
+    overlap_deg: null
+    limit_switches: NONE; Rot2Prog allows 180 deg over-travel each side of 360
+  speed:
+    min_s: 60
+    max_s: 120
+    note: az 120/60 s, el 80/40 s (12/24 V)
+  duty: null
+  cable:
+    conductors: 8
+    connector: null
+    gauge: null
+    pinout:
+      1: az motor
+      2: az motor
+      3: az impulse
+      4: az impulse
+      5: el motor
+      6: el motor
+      7: el impulse
+      8: el impulse
+  sequencing: Stop if no pulses arrive (stall). Count through coast.
+  speed_control: 'DC: PWM OK.'
+  gotchas:
+  - 'HR gear constants (MD fw>=2.0): RAS/HR 0.031250, BIG-RAS/HR 0.023438 deg per count; non-HR 0.5 or 1.0 - exact semantics [?].'
+  - BIG-RAS current up to 12 A exceeds the planned 5 A DC module.
+  sources:
+  - RAS
+  - SPIDMD
+  - ALFA
+  unverified:
+  - sensor.pulses_per_deg
+  notes: null
+- schema_version: 1
+  id: m2-or2800px
+  maker: M2 Antenna Systems
+  model: OR2800PX (DC) with RC2800PX
+  aliases:
+  - Orion 2800 DC
+  axes: az
+  family: DC-pulse
+  support: v2-dc
+  motor:
+    type: dc_pm
+    volts: null
+    volts_range:
+    - 28
+    - 42
+    current_a: 3.2
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: Motor 28-42 VDC (OR2800 spec); RC2800 output 27 VDC 3.2 A; bench ~45 V open / 30-35 V loaded
+  brake:
+    type: none
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: No electrical brake [?]
+  sensor:
+    type: reed_pulse
+    pulses_per_deg: 11
+    wiring: reed on terminals 5 (+) and 6 (return); ~11.3 V open, ~5 mA closed
+    excitation: ~12 V wetting
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: CW/CCW limit switches; 0-360 +/-14 deg
+  speed:
+    min_s: 55
+    max_s: 270
+    note: variable with ramp
+  duty: null
+  cable:
+    conductors: 4
+    connector: terminal strip
+    gauge: null
+    pinout:
+      1: motor CCW
+      2: motor CW
+      5: reed +
+      6: reed return
+  sequencing: Ramp up/down (stock); count through coast.
+  speed_control: 'DC: PWM OK.'
+  gotchas:
+  - 3960 pulses per 360 deg typical (11/deg), some units 4015 - calibrate ppd.
+  - ~45 V open-circuit supply exceeds 42 V; check DC module rating.
+  sources:
+  - M2RC
+  - M2OR
+  unverified: []
+  notes: null
+- schema_version: 1
+  id: orion-or2800-ac
+  maker: Orion (pre-M2)
+  model: OR2800 (older AC)
+  aliases: []
+  axes: az
+  family: AC-pulse
+  support: v1
+  motor:
+    type: ac_cap_run
+    volts: null
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: null
+  brake:
+    type: null
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: reed_pulse
+    pulses_per_deg: null
+    wiring: 5 POS, 6 GND
+    excitation: pull-up
+  travel:
+    range_deg: null
+    overlap_deg: null
+    limit_switches: null
+  speed:
+    min_s: null
+    max_s: null
+    note: null
+  duty: null
+  cable:
+    conductors: 6
+    connector: null
+    gauge: null
+    pinout:
+      1: motor GND
+      2: motor CCW
+      3: motor CW
+      5: pulse POS
+      6: pulse GND
+  sequencing: Count through coast.
+  speed_control: 'AC: none.'
+  gotchas: []
+  sources:
+  - RT21
+  unverified:
+  - sensor.pulses_per_deg
+  notes: null
+- schema_version: 1
+  id: prosistel-pro
+  maker: Prosistel
+  model: PST-71D PRO / RR55D-PRO (encoder)
+  aliases: []
+  axes: az
+  family: DC-encoder
+  support: later
+  motor:
+    type: dc_pm
+    volts: null
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: null
+  brake:
+    type: none
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: No electrical brake [?]
+  sensor:
+    type: encoder_2bit
+    pulses_per_deg: null
+    wiring: 3 V+, 4 GND, 5 sensor out
+    excitation: powered
+  travel:
+    range_deg: null
+    overlap_deg: null
+    limit_switches: null
+  speed:
+    min_s: null
+    max_s: null
+    note: null
+  duty: null
+  cable:
+    conductors: 5
+    connector: null
+    gauge: null
+    pinout:
+      3: encoder V+
+      4: GND
+      5: sensor out
+  sequencing: null
+  speed_control: 'DC: PWM OK.'
+  gotchas:
+  - RT-21 divide ratio 23750 (71D PRO) / 16000 (RR55D-PRO); counts per degree derive from that.
+  sources:
+  - RT21
+  unverified:
+  - sensor
+  notes: null
+- schema_version: 1
+  id: alias-telex-dcu
+  maker: Telex / Hy-Gain
+  model: DCU-1 Pathfinder / DCU-2 / DCU-3 (controllers)
+  aliases:
+  - T-2XD3
+  - HAM-IVD3
+  axes: az
+  family: CDE-AC-brake-pot
+  support: alias
+  alias_of:
+  - hygain-ham-iv
+  - hygain-ham-v
+  - hygain-t2x
+  - hygain-cd-45ii
+  motor: &id005
+    type: null
+    volts: null
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: null
+  brake:
+    type: wedge_solenoid
+    volts: null
+    current_a: null
+    engage_after_stop_s:
+    - 0
+    - 8
+    note: 'DCU-1: fixed 8 s; DCU-3: 0-8 s, default 3 s'
+  sensor:
+    type: pot_dual_end_grounded_wiper
+    ohms: 500
+    wiring: CDE 8-wire
+    excitation: 'DCU-3: 8-9 VDC open'
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: in rotor
+  speed:
+    min_s: null
+    max_s: null
+    note: null
+  duty: null
+  cable:
+    conductors: 8
+    connector: Cinch 8-pin / terminal strip
+    gauge: null
+    pinout: *id001
+  sequencing: 'Copy DCU behaviour: short reverse at start, coast setting 0-10 deg (DCU-3), half-speed last 5 deg (DCU-1), no-motion stop 8 s.'
+  speed_control: Not recommended. RT-21 found HAMx/T2X the least responsive to its low-frequency AC PWM and ships AC rotors at MIN SPEED=10 (no
+    PWM). DCU-1 uses half-cycle motor pulses over the last 5 deg as a creep mode; triac half-cycle/cycle skipping can mimic this.
+  gotchas:
+  - 'These are controllers, not rotors: a user replacing one picks the rotor preset; DCU timings are the defaults to copy.'
+  sources:
+  - DCU3
+  - HAM5
+  unverified: []
+  notes: null
+- schema_version: 1
+  id: alias-rotor-ez
+  maker: Idiom Press
+  model: Rotor-EZ (board in CDE/Hy-Gain box)
+  aliases: []
+  axes: az
+  family: CDE-AC-brake-pot
+  support: alias
+  alias_of:
+  - hygain-ham-iv
+  - hygain-t2x
+  - hygain-cd-45ii
+  - cde-ham-ii
+  - cde-ham-iii
+  motor: *id005
+  brake:
+    type: wedge_solenoid
+    volts: null
+    current_a: null
+    engage_after_stop_s:
+    - 5
+    - 5
+    note: Fixed 5 s brake delay
+  sensor:
+    type: pot_dual_end_grounded_wiper
+    ohms: 500
+    wiring: uses stock box pot circuit
+    excitation: null
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: in rotor
+  speed:
+    min_s: null
+    max_s: null
+    note: null
+  duty: null
+  cable:
+    conductors: 8
+    connector: Jones plug numbering 7 5 3 1 / 8 6 4 2
+    gauge: null
+    pinout: *id001
+  sequencing: Release brake, run, 5 s brake delay.
+  speed_control: Not recommended. RT-21 found HAMx/T2X the least responsive to its low-frequency AC PWM and ships AC rotors at MIN SPEED=10 (no
+    PWM). DCU-1 uses half-cycle motor pulses over the last 5 deg as a creep mode; triac half-cycle/cycle skipping can mimic this.
+  gotchas:
+  - Board-in-box add-on; not a rotor. Use the rotor preset.
+  sources:
+  - REZ
+  unverified: []
+  notes: null
+- schema_version: 1
+  id: emoto-emotator
+  maker: EMOTO (Emotator, Japan)
+  model: Emotator 103/502/747/1102/1103/1105/1200 series (SX/MXX/FX)
+  aliases: []
+  axes: az (some az-el)
+  family: mixed
+  support: later
+  motor:
+    type: mixed
+    volts: null
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: Many AC models 100 VAC (out of scope), some 24 VAC; DC models 12 or 24 V
+  brake:
+    type: mixed
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: Varies by model
+  sensor:
+    type: pot_single_ended
+    ohms: null
+    wiring: null
+    excitation: null
+  travel:
+    range_deg: null
+    overlap_deg: null
+    limit_switches: null
+  speed:
+    min_s: 35
+    max_s: 170
+    note: AC 47-110 s, DC 35-170 s
+  duty: null
+  cable:
+    conductors: null
+    connector: null
+    gauge: null
+    pinout: null
+  sequencing: null
+  speed_control: null
+  gotchas:
+  - Spec table columns are merged in the source; per-model numbers not extracted.
+  - 100 VAC motors are not supported by the 20-36 VAC triac stage.
+  sources:
+  - EMO
+  unverified:
+  - motor
+  - sensor
+  - travel
+  notes: Per-model verification needed before any preset is published.
+- schema_version: 1
+  id: generic-ac-pot
+  maker: Generic
+  model: AC capacitor-run motor + pot
+  aliases: []
+  axes: az|el
+  family: generic
+  support: v1
+  motor:
+    type: ac_split_phase_cap_run
+    volts: 24
+    volts_range:
+    - 20
+    - 36
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: user
+    cap_note: User sets cap location (none / board / rotor)
+  brake:
+    type: optional
+    volts: 24
+    current_a: null
+    engage_after_stop_s: null
+    note: Brake output optional
+  sensor:
+    type: pot_any
+    ohms: null
+    wiring: dual-end grounded wiper | single-ended | rheostat
+    excitation: selectable
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: user
+  speed:
+    min_s: null
+    max_s: null
+    note: learned by calibration sweep
+  duty: user (default 3 min)
+  cable:
+    conductors: null
+    connector: null
+    gauge: null
+    pinout: null
+  sequencing: 'Defaults [proposed, bench-tune]: brake release 0.5 s before run, coast delay 3 s, reverse dwell 2 s, stall timeout 8 s.'
+  speed_control: 'AC: none / half-cycle creep.'
+  gotchas: []
+  sources:
+  - RT21
+  - DCU3
+  unverified: []
+  notes: null
+- schema_version: 1
+  id: generic-dc-pot
+  maker: Generic
+  model: DC PM motor + pot
+  aliases: []
+  axes: az|el
+  family: generic
+  support: v2-dc
+  motor:
+    type: dc_pm
+    volts: null
+    volts_range:
+    - 12
+    - 48
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: DC module 12-48 V, 5 A
+  brake:
+    type: optional
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pot_any
+    ohms: null
+    wiring: single-ended | rheostat
+    excitation: selectable
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: user
+  speed:
+    min_s: null
+    max_s: null
+    note: learned
+  duty: null
+  cable:
+    conductors: null
+    connector: null
+    gauge: null
+    pinout: null
+  sequencing: 'Ramp up/down [proposed: 1 s ramps].'
+  speed_control: DC PWM (~1.2 kHz like RT-21, or ultrasonic).
+  gotchas: []
+  sources:
+  - RT21
+  unverified: []
+  notes: null
+- schema_version: 1
+  id: generic-dc-pulse
+  maker: Generic
+  model: DC PM motor + pulse sensor (reed / Hall / encoder)
+  aliases: []
+  axes: az|el
+  family: generic
+  support: v2-dc
+  motor:
+    type: dc_pm
+    volts: null
+    volts_range:
+    - 12
+    - 48
+    current_a: null
+    cap_uf: null
+    cap_vac: null
+    cap_location: null
+    cap_note: null
+  brake:
+    type: optional
+    volts: null
+    current_a: null
+    engage_after_stop_s: null
+    note: null
+  sensor:
+    type: pulse_any
+    pulses_per_deg: null
+    wiring: 1 or 2 channels
+    excitation: 5 / 12 V pull-up
+  travel:
+    range_deg: 360
+    overlap_deg: 0
+    limit_switches: user; soft limits required if none
+  speed:
+    min_s: null
+    max_s: null
+    note: learned
+  duty: null
+  cable:
+    conductors: null
+    connector: null
+    gauge: null
+    pinout: null
+  sequencing: Ramp; count through coast; FRAM persist.
+  speed_control: DC PWM.
+  gotchas: []
+  sources:
+  - RT21
+  - SPIDMD
+  unverified: []
+  notes: null
