@@ -38,9 +38,12 @@ software/sim/gui_server
 software/sim/tests/run_tests
 software/sim/tests/run_integration_tests
 
-# Python drawing scripts
+# Python
 __pycache__/
 *.pyc
+*.egg-info/
+.pytest_cache/
+dist/
 
 # Editors
 .vscode/

@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rotatorctl"
+version = "0.1.0"
+description = "Console protocol, settings model, and CLI for the WA1HCO rotator controller."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "GPL-3.0-only" }
+authors = [{ name = "Jeff Millar", email = "wa1hco@users.noreply.github.com" }]
+dependencies = [
+  "pydantic>=2",
+  "pyserial>=3.5",
+  "PyYAML>=6",
+  "zeroconf>=0.131",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+rotatorctl = "rotatorctl.cli:main"
+rotatorctl-sim = "rotatorctl.sim:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+rotatorctl = ["py.typed"]

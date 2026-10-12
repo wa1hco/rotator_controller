@@ -2,6 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-10-12
+- Revised: 2026-10-12. The PC tool is in this repository. See ADR 0019.
 
 ## Context
 
@@ -36,8 +37,8 @@ Configuration is three layers, and only the first one is compile-time.
    already is). The file a person edits is text, described below.
 
 The draft namespaces, the command grammar, and the text file are in
-`docs/design/configuration.md`. That note is a skeleton. The rotator
-catalog is not filled in yet.
+`docs/design/configuration.md`. The rotor catalog is
+`software/firmware/presets/rotor-presets.yaml`.
 
 ### Rotor presets
 
@@ -93,10 +94,10 @@ they already have. Grammar detection is what "the same port" has to mean.
 The invariant (no shared tokens) is part of the grammar note, and a new
 GS-232 token or a new console verb has to keep it.
 
-**Python tool, later.** An optional program can speak the console
-protocol over USB or TCP. It is not part of this repository yet. WIMS
-can use that protocol instead of inventing a third one. The web UI's
-status and settings are the same operations.
+**Python tool.** The console library and the configuration app live in
+`software/gui`. ADR 0019 records the toolkit. WIMS can import the
+library without the GUI. The web UI's status and settings are the same
+operations.
 
 ### Programming, upgrades, and debug
 
