@@ -1,4 +1,6 @@
-import sys; sys.path.insert(0, "/workspace/rotator-design/img/src")
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import *
 
 L, W, T = 160.0, 103.0, 1.5
@@ -18,7 +20,7 @@ for s in (1, -1):   # 3.5 keepout bands
     y0 = YB - KO if s > 0 else -YB
     rect(ax, 0.5, y0, 159, KO, "none", "#555", lw=0.8, z=2.6, hatch="xx")
 # rear connectors (approx sizes)
-cons = [("RJ45", 29, 16, 21), ("USB-C", 18.5, 9, 7.5), ("13.8V", 6.6, 10.2, 10), ("26VAC", -5.0, 10.2, 10),
+cons = [("RJ45", 29, 16, 21), ("USB-C", 18.5, 9, 7.5), ("26 VAC PP", -5.0, 21.8, 10),
         ("rotor 8-pos 5.08", -46.0, 40.6, 10)]
 for name, y0, w, d in cons:
     rect(ax, 0.5, y0, d, w, C_CON, "k", z=4)
@@ -77,4 +79,4 @@ label(ax, (37, -12.7), "BTA16-600SW x3 standing\non bar front face", (110, -70),
 ax.text(0, -86, "Connector widths and depths are typical catalog sizes (approx.); final order/placement TBD.",
         fontsize=FS-2, color="#444", ha="left")
 ax.set_xlim(-26, 196); ax.set_ylim(-90, 80)
-f.savefig("/workspace/rotator-design/img/triac-top-view.png", dpi=100)
+f.savefig(Path(__file__).resolve().parents[1] / "triac-top-view.png", dpi=100)

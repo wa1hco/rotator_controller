@@ -381,7 +381,7 @@ Leakage note: the sense path (~2.5 mA) and the snubber (~1 mA) pass a few mA thr
 - K10 G5LE + AO3400 + 1N4148W
 - F1 5×20 clips
 - Optional RV10 MOV
-- **Replace U6** with a 60 V-input buck to 5 V at ≥ 300 mA, e.g. TI LMR36006 or LMR51430-class **[U part choice]**. Keep U7.
+- **Replace U6** with a non-isolated buck to 5 V. ADR 0018 is the clean-slate decision: half-wave from 26 VAC, buck rated ≥ 60 V, then the 3.3 V LDO. LMR51430 is only 36 V and does not qualify. LMR36006 does. Keep U7.
 
 ### Net names to keep
 `/26VAC` (becomes the post-relay bus), `/Left`, `/Right`, `/Brake`, `/Cap1`, `/Cap2`, `GND`, `/36VDC`, `/5V`, plus a unified `/+3V3`.

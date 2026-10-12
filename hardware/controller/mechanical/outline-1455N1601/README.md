@@ -1,6 +1,6 @@
 # Rotator controller PCB outline and end panels: Hammond 1455N1601
 
-Generated 2026-10-11 with KiCad 9.0.2. The generators, the downloaded datasheet copies, and the DRC report from that day are not in this repository. The KiCad project below is that board file. `outline.png` is the annotated top view and end view, redrawn here from the dimensions in this note. The 1:1 panel sheets are in [`../panels/`](../panels/).
+Generated 2026-10-11 with KiCad 9.0.2. The generators, the downloaded datasheet copies, and the DRC report from that day are not in this repository. The KiCad project below is that board file. `outline.png` is the annotated top view and end view, redrawn here from the dimensions in this note. The front and rear panel sheets that used to sit on User.Drawings (and the comment frames that sat on those sheets) have been removed. Machining drawings are generated from footprint fields ([ADR 0017](../../../../docs/decisions/0017-enclosure-machining-drawings.md)). The pre-layout 1:1 sheets are in [`../panels/preliminary-pre-layout/`](../panels/preliminary-pre-layout/). The hole table below is what that generator is checked against.
 
 Status tags: **[V]** read from a manufacturer drawing/page, **[E]** derived or scaled from one, **[U]** unverified/assumed, **[TBD]** part not chosen yet.
 
@@ -10,9 +10,9 @@ Heights chained from Hammond typical dimensions are about **±0.6 mm** and are n
 
 | File | What |
 |---|---|
-| `RotatorController-1455N1601-outline.kicad_pcb` (+ `.kicad_pro`, `.kicad_dru`) | KiCad 9 board: Edge.Cuts, keep-outs, bar footprint, annotations, both end-panel drawings on User.Drawings. 4-layer stackup + JLCPCB rules. |
+| `RotatorController-1455N1601-outline.kicad_pcb` (+ `.kicad_pro`, `.kicad_dru`) | KiCad 9 board: Edge.Cuts, keep-outs, bar footprint, motor caps, end-plate plane markers, height-limit notes, end view. No front/rear panel sheets. 4-layer stackup + JLCPCB rules. `kicad-cli` 9.0.9 DRC after that removal: 0 violations, 0 unconnected. |
 | `outline.png` | Annotated top view + end view |
-| [`../panels/`](../panels/) `front-panel-1455N1601.{svg,pdf,png}`, `rear-panel-…` | 1:1 printable A4 drawings (SVG/PDF, print at 100 %, 50 mm check bar) and phone PNGs |
+| [`../panels/preliminary-pre-layout/`](../panels/preliminary-pre-layout/) | Pre-layout 1:1 panel sheets (SVG/PDF, print at 100 %, 50 mm check bar) and phone PNGs. Superseded by `gen_machining.py` once the layout has `Panel` fields. |
 
 ## Sources
 
@@ -124,7 +124,14 @@ Digi-Key figures were read from digikey.com product pages. Mouser blocks automat
 
 Source URLs: https://www.digikey.com/en/products/result?keywords=R60EW61005000K, …=B32526T1336K000, …=B32526T1476K000, …=B32524Q1476K000, …=B32524Q1686K000, …=B32526R1686K000, …=R60EW (R60EW6150AA00K row); Mouser-via-aggregator https://www.omo-ja.com/chip/b08/b32526t1336k000-epcos.html; CBB60 size https://store.eurtonelectric.com/products/capacitor-cbb60-a270-70uf-250vac.
 
-## End panels (replace the V4 panel drawings)
+## End panels (preliminary hole table)
+
+These coordinates are the pre-layout hole table. They are no longer
+drawn on this board. `software/tools/enclosure/gen_machining.py`
+reproduces them within 0.05 mm from placeholder footprints (see
+[ADR 0017](../../../../docs/decisions/0017-enclosure-machining-drawings.md)).
+The hand sheets are in
+[`../panels/preliminary-pre-layout/`](../panels/preliminary-pre-layout/).
 
 What the old V4 drawings showed (rendered from `/workspace/v4/Rotator-Controller-V4.kicad_pcb` Dwgs.User, not modified): a 99 x 70 board, two 35 x 76 side panels. One panel had 4 light-pipe holes (R1.5, LP4-EP O1), two NKK BB15AH buttons (SW1/SW2, Ø6.5) and the Az_Preset pot RV1 (R3.1). The other had the rotor Mate-N-Lok J3 cutout 10.8 x 23.3 and two 13.6 x 6.5 slots (USB J1 and one more). All of it is superseded: no light pipes, no pot.
 
@@ -145,7 +152,7 @@ What the old V4 drawings showed (rendered from `/workspace/v4/Rotator-Controller
 
 | # | Feature | X | Y | Cutout | Part / basis |
 |---|---|---|---|---|---|
-| 1 | POWER IN | 17.50 | 33.40 | 22.00 x 12.50 R0.5 (bottom 0.25 below PCB top) | **TBD**: assumed 4-pos 5.08 mm pluggable terminal block carrying 13.8 VDC + 26 VAC |
+| 1 | 26 VAC Powerpoles | 17.50 | 38.40 | Ø16.3 gland, or a 2-position panel-mount bracket (cutout TBD) | Grey + black Anderson Powerpoles, the V2 pair (ADR 0018). Polarity does not matter; the colors key the plug so it is not a red/black 12 VDC pair. Drawable default is the pigtail gland, center 11.00 mm above the board. Do not drill a bracket hole from that default. The pre-layout PDF still shows the withdrawn 22.00 × 12.50 opening |
 | 2 | ROTOR GLAND | 43.50 | 38.40 | Ø16.3 | **TBD**: M16x1.5 nylon gland (cable 5-10 mm), lock nut AF19 with flats horizontal, sitting above the PCB (nut bottom 1.5 above board top). Pigtail exits here and ends in the CPC 206708-1 plug; inside, the wires drop to a board-top terminal. |
 | 3 | USB-C (isolated) | 69.50 | 29.08 | 13.60 x 6.50 R1.0 | GT-USB-7010ASV, centre height 1.68 [V LCSC-USB]; opening clears a cable overmold so the isolated USB shell never touches the chassis plate. Opening size is the V4 value [E] |
 | 4 | GND STUD | 69.50 | 42.50 | Ø4.3 | **TBD**: M4 screw/stud, 2 nuts + star washer + ring lug (single chassis bond point) |
@@ -158,13 +165,13 @@ Vertical tolerance is about ±0.6 mm: extrusion inner height ±0.56, plus the sl
 
 ## Bringing it into the V4 / F407 project
 
-- **Recommended:** start the new F407 layout from this file. Copy the `.kicad_pcb`, `.kicad_pro` and `.kicad_dru` into the project folder renamed to the project name (or File → Open and Save As), then Tools → Update PCB from Schematic. Stackup, rules, keep-outs and drawings come along.
+- **Recommended:** start the new F407 layout from this file. Copy the `.kicad_pcb`, `.kicad_pro` and `.kicad_dru` into the project folder renamed to the project name (or File → Open and Save As), then Tools → Update PCB from Schematic. Stackup, rules, keep-outs, the bar, the caps, and the height notes come along. Panel holes do not: add `Panel` / `PanelZ` / `PanelCutout` on the footprints and run `gen_machining.py` (ADR 0017).
 - **Into the existing V4 board:**
-  1. Open this file in pcbnew, set the layer filter, select Edge.Cuts + User.Drawings + User.Comments + F.Fab items + the 4 rule areas + footprint HS1, Ctrl+C. Pick the reference point at the origin cross (rear-left corner).
+  1. Open this file in pcbnew, set the layer filter, select Edge.Cuts + the remaining User.Drawings (end view, board dimensions, end-plate plane markers) + User.Comments + F.Fab items + the rule areas + footprint HS1, Ctrl+C. Pick the reference point at the origin cross (rear-left corner).
   2. In V4, delete the old Edge.Cuts rectangle and the old Dwgs.User panel drawings first.
   3. Ctrl+V, snapping the reference to the board corner you want.
   4. Then Board Setup → Board Stackup → set 4 layers / Import Settings from this `.kicad_pro` for rules and stackup.
-- Keep the triac bar position consistent with the top-wall drill template (enclosure x = 29.0).
+- Keep the triac bar position consistent with the top-wall drill template (enclosure x = 29.0). The generator reads the bar's NPTH pads; it does not read a drawing on the board.
 
 ## Unverified / open
 
