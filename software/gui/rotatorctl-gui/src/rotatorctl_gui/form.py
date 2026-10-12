@@ -30,6 +30,7 @@ _TITLES = {
     "ports": "Ports",
     "ui": "Interface",
     "safety": "Safety",
+    "park": "Park",
 }
 
 

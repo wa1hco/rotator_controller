@@ -1,6 +1,8 @@
 # Copyright (C) 2026 Jeff Millar, WA1HCO
 # SPDX-License-Identifier: GPL-3.0-only
-"""Render the configuration windows with two simulated controllers.
+"""Render the offline preference pages, then the connected-controller windows.
+
+Offline shots are written first, before the simulator starts.
 
 Run from anywhere:
 
@@ -26,7 +28,9 @@ from rotatorctl.discovery import USB_PID, USB_VID, ControllerInfo, Endpoint  # n
 from rotatorctl.sim import demo_pair  # noqa: E402
 from rotatorctl_gui.main_window import MainWindow  # noqa: E402
 
-OUT = ROOT / "docs" / "screenshots"
+DOCS = ROOT / "docs"
+OUT = DOCS / "screenshots"
+PAGES = ("axes", "limits", "park", "calibration", "display", "network", "console")
 
 
 def save_widget(widget, path: Path, width: int, height: int) -> None:
@@ -42,8 +46,38 @@ def save_widget(widget, path: Path, width: int, height: int) -> None:
         raise SystemExit(f"screenshot looks empty: {path} ({path.stat().st_size} bytes)")
 
 
+def capture_offline() -> None:
+    """Rotator catalog and each preference page, with no controller running."""
+    window = MainWindow()
+    window.resize(1280, 900)
+    window.show()
+    app.processEvents()
+    window.use_preset("yaesu-g-450a")
+    window.set_custom_override("az.overlap_deg", "100")
+    window.show_page("rotator")
+    app.processEvents()
+    detail = window.browser.detail
+    detail.widget().adjustSize()
+    app.processEvents()
+    bar = detail.verticalScrollBar()
+    content_h = max(detail.widget().sizeHint().height(), detail.widget().height(), bar.maximum() + detail.viewport().height())
+    shortfall = content_h - detail.viewport().height()
+    height = window.height() + max(0, shortfall) + 48
+    detail.verticalScrollBar().setValue(0)
+    app.processEvents()
+    save_widget(window, DOCS / "rotator-selection.png", 1280, height)
+    for key in PAGES:
+        window.show_page(key)
+        app.processEvents()
+        save_widget(window, DOCS / f"{key}.png", 1280, 860)
+    window.close()
+    print(f"wrote offline pages under {DOCS}")
+
+
 def main() -> None:
+    DOCS.mkdir(parents=True, exist_ok=True)
     OUT.mkdir(parents=True, exist_ok=True)
+    capture_offline()
     usb, net = demo_pair()
     usb.start()
     net.start()
@@ -72,6 +106,7 @@ def main() -> None:
         )
         window.resize(1280, 800)
         window.show()
+        window.show_page("controllers")
         app.processEvents()
         window.list.setCurrentRow(0)
         window.list.setFocus()

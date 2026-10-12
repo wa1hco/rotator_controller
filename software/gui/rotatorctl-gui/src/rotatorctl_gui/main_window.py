@@ -24,6 +24,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QScrollArea,
     QSplitter,
+    QStackedWidget,
     QStatusBar,
     QVBoxLayout,
     QWidget,
@@ -41,13 +42,15 @@ from rotatorctl.discovery import (
 from rotatorctl.document import Change, SettingsDocument, SettingsError, format_value, parse_ini_lines
 from rotatorctl.operate import stop_line
 from rotatorctl.phases import OPERATE_MILESTONES, UPGRADE_MILESTONES
-from rotatorctl.presets import Preset, load_presets
+from rotatorctl.presets import Preset, can_apply, load_presets, settings_from_preset
+from rotatorctl.rotcfg import RotConfig, dumps, loads, new_config, push_lines
 from rotatorctl.protocol import CommandError, ConsoleClient
 from rotatorctl.schema import Schema
 from rotatorctl.transport import TransportError, open_target
 from rotatorctl.upgrade import dfu_argv
 from rotatorctl_gui.dialogs import DiffDialog, HostPortDialog, PresetDialog, SerialDialog
 from rotatorctl_gui.form import SettingsForm
+from rotatorctl_gui.rotator_browser import RotatorBrowser
 
 _STYLE = """
 QMainWindow, QDialog { background: #f6f3ec; color: #1c1917; }
@@ -63,7 +66,9 @@ QGroupBox {
 }
 QGroupBox::title { subcontrol-origin: margin; left: 8px; padding: 0 4px; }
 QLineEdit, QComboBox, QPlainTextEdit { background: white; }
-QLabel#dirty { background: #f4d35e; color: #1c1917; padding: 8px 10px; font-weight: 600; }
+QLabel#dirty, QLabel#fileDirty { background: #f4d35e; color: #1c1917; padding: 8px 10px; font-weight: 600; }
+QLabel#offlinePill { background: #f4d35e; color: #1c1917; padding: 2px 8px; font-weight: 700; }
+QListWidget#pageNav::item { padding: 8px 10px; }
 QPushButton#stopButton { background: #9f1239; color: white; font-size: 16px; font-weight: 700; min-height: 40px; }
 QPushButton#stopButton:disabled { background: #e7e5e4; color: #78716c; }
 QFrame#header { background: #1f4d3a; }
@@ -71,6 +76,75 @@ QLabel#wordmark { color: white; font-size: 18px; font-weight: 700; }
 QLabel#headerSub { color: #d6d3d1; }
 QLabel#reboot { color: #9a3412; font-size: 11px; }
 """
+
+
+_PAGES: tuple[tuple[str, str, str, list[str]], ...] = (
+    (
+        "axes",
+        "Axes",
+        "Sensor and brake for each axis. Presence is a board fact: an offline file can record it, and a push leaves the controller's own presence flags alone.",
+        [
+            "az.present",
+            "az.sensor",
+            "az.brake",
+            "az.brake_delay_s",
+            "el.present",
+            "el.sensor",
+            "el.brake",
+            "el.brake_delay_s",
+        ],
+    ),
+    (
+        "limits",
+        "Limits",
+        "Travel, overlap, speed, and the safety stops. A value outside its limit is rejected and the file is left as it was.",
+        [
+            "az.travel_min_deg",
+            "az.travel_max_deg",
+            "az.overlap_deg",
+            "az.speed_min_s",
+            "az.speed_max_s",
+            "el.travel_min_deg",
+            "el.travel_max_deg",
+            "el.overlap_deg",
+            "el.speed_min_s",
+            "el.speed_max_s",
+            "safety.dead_time_ms",
+            "safety.max_run_s",
+            "safety.stall_a",
+        ],
+    ),
+    (
+        "park",
+        "Park",
+        "Headings Park will use, and whether the brake sets when the rotator arrives.",
+        ["az.park_deg", "el.park_deg", "park.brake"],
+    ),
+    (
+        "calibration",
+        "Calibration",
+        "End readings from the calibration sweep. The sweep itself is a later step. These counts stay empty until then, and a preset does not overwrite them.",
+        ["az.cal.cw_end", "az.cal.ccw_end", "el.cal.cw_end", "el.cal.ccw_end"],
+    ),
+    (
+        "display",
+        "Display",
+        "How headings and speed are shown. Stored angles stay in degrees.",
+        ["ui.angle_unit", "ui.display_range", "ui.speed_display", "ui.cardinal_labels"],
+    ),
+    (
+        "network",
+        "Network",
+        "Name and address to push later. The name is also the mDNS hostname. Nothing is advertised until a controller is connected.",
+        ["net.hostname", "net.dhcp", "net.address", "net.mdns"],
+    ),
+    (
+        "console",
+        "Console",
+        "The TCP port is shared by the text console and GS-232. There is no mode switch. S is stop. status and save are console commands. Pick the query token your logger sends; the port still accepts both C and C2.",
+        ["ports.tcp", "ports.gs232_query", "ui.console_echo", "ui.log_level"],
+    ),
+)
 
 
 class MainWindow(QMainWindow):
@@ -87,6 +161,13 @@ class MainWindow(QMainWindow):
                 self.presets = ()
         else:
             self.presets = presets
+        self.config = new_config()
+        self.preset_id = ""
+        self.overrides: dict[str, str] = {}
+        self.rotcfg_path: Path | None = None
+        self._syncing = False
+        self._saved_token = self._token()
+        self.page_forms: dict[str, SettingsForm] = {}
         self.infos: list[ControllerInfo] = []
         self.discovered: list[ControllerInfo] = []
         self.manual: list[ControllerInfo] = []
@@ -108,18 +189,65 @@ class MainWindow(QMainWindow):
         header_layout = QVBoxLayout(header)
         wordmark = QLabel("Rotator Controller")
         wordmark.setObjectName("wordmark")
-        sub = QLabel("Configuration")
+        sub = QLabel("Offline configuration")
         sub.setObjectName("headerSub")
         header_layout.addWidget(wordmark)
         header_layout.addWidget(sub)
         outer.addWidget(header)
+        outer.addWidget(self._build_file_bar())
+        self.file_dirty = QLabel("Unsaved configuration. Save writes a .rotcfg file. Push sends it to a controller later.")
+        self.file_dirty.setObjectName("fileDirty")
+        self.file_dirty.setVisible(False)
+        outer.addWidget(self.file_dirty)
 
-        splitter = QSplitter()
-        splitter.addWidget(self._build_list())
-        splitter.addWidget(self._build_editor())
-        splitter.setStretchFactor(1, 1)
-        splitter.setSizes([320, 960])
-        outer.addWidget(splitter, 1)
+        body = QSplitter()
+        self.nav = QListWidget()
+        self.nav.setObjectName("pageNav")
+        self.nav.setFixedWidth(168)
+        self._nav_keys = [
+            "rotator",
+            "axes",
+            "limits",
+            "park",
+            "calibration",
+            "display",
+            "network",
+            "console",
+            "controllers",
+        ]
+        for label in (
+            "Rotator",
+            "Axes",
+            "Limits",
+            "Park",
+            "Calibration",
+            "Display",
+            "Network",
+            "Console",
+            "Controllers",
+        ):
+            self.nav.addItem(label)
+        self.stack = QStackedWidget()
+        self.stack.setObjectName("pageStack")
+        self.browser = RotatorBrowser(self.presets)
+        self.browser.use_requested.connect(self.use_preset)
+        self.browser.override_set.connect(self._on_browser_override)
+        self.browser.override_cleared.connect(self.clear_override)
+        self.stack.addWidget(self.browser)
+        for key, title, intro, names in _PAGES:
+            self.stack.addWidget(self._preference_page(key, title, intro, names))
+        device = QSplitter()
+        device.addWidget(self._build_list())
+        device.addWidget(self._build_editor())
+        device.setStretchFactor(1, 1)
+        device.setSizes([320, 960])
+        self.stack.addWidget(device)
+        self.nav.currentRowChanged.connect(self.stack.setCurrentIndex)
+        self.nav.setCurrentRow(0)
+        body.addWidget(self.nav)
+        body.addWidget(self.stack)
+        body.setStretchFactor(1, 1)
+        outer.addWidget(body, 1)
 
         self.stop = QPushButton("STOP")
         self.stop.setObjectName("stopButton")
@@ -132,8 +260,9 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(root)
         self._build_menus()
         status = QStatusBar()
-        status.showMessage("Phase 1 · configuration")
+        status.showMessage("Offline · no controller connected")
         self.setStatusBar(status)
+        self._refresh_offline_views()
 
     def _build_list(self) -> QWidget:
         panel = QWidget()
@@ -209,6 +338,13 @@ class MainWindow(QMainWindow):
         return panel
 
     def _build_menus(self) -> None:
+        file_menu = self.menuBar().addMenu("File")
+        file_menu.addAction("New", self.new_document)
+        file_menu.addAction("Open…", self.on_open_rotcfg)
+        file_menu.addAction("Save", self.on_save_rotcfg)
+        file_menu.addAction("Save as…", self.on_save_rotcfg_as)
+        self.push_action = file_menu.addAction("Push to controller", self.on_push)
+        self.push_action.setEnabled(False)
         operate = self.menuBar().addMenu("Operate")
         operate.setObjectName("operateMenu")
         for milestone in OPERATE_MILESTONES:
@@ -223,6 +359,225 @@ class MainWindow(QMainWindow):
                 action.setToolTip(" ".join(dfu_argv("image.bin")))
                 action.setObjectName("dfuAction")
             upgrade.addAction(action)
+
+    def _build_file_bar(self) -> QWidget:
+        bar = QWidget()
+        layout = QHBoxLayout(bar)
+        layout.setContentsMargins(8, 6, 8, 6)
+        pill = QLabel("OFFLINE")
+        pill.setObjectName("offlinePill")
+        self.file_label = QLabel("Untitled.rotcfg")
+        self.file_label.setObjectName("fileLabel")
+        new_button = QPushButton("New")
+        new_button.clicked.connect(self.new_document)
+        open_button = QPushButton("Open…")
+        open_button.clicked.connect(self.on_open_rotcfg)
+        save_button = QPushButton("Save")
+        save_button.setObjectName("saveRotcfg")
+        save_button.clicked.connect(self.on_save_rotcfg)
+        layout.addWidget(pill)
+        layout.addWidget(self.file_label, 1)
+        layout.addWidget(new_button)
+        layout.addWidget(open_button)
+        layout.addWidget(save_button)
+        return bar
+
+    def _preference_page(self, key: str, title: str, intro: str, names: list[str]) -> QWidget:
+        page = QWidget()
+        page.setObjectName(f"page-{key}")
+        layout = QVBoxLayout(page)
+        heading = QLabel(title)
+        heading.setStyleSheet("font-size: 20px; font-weight: 700;")
+        layout.addWidget(heading)
+        text = QLabel(intro)
+        text.setWordWrap(True)
+        layout.addWidget(text)
+        if key == "calibration":
+            sweep = QPushButton("Start calibration sweep")
+            sweep.setEnabled(False)
+            sweep.setToolTip("Phase 2. The sweep records the end counts on this page.")
+            layout.addWidget(sweep)
+        specs = [spec for name in names if (spec := self.config.schema.get(name)) is not None]
+        form = SettingsForm(Schema(version=self.config.schema.version, settings=specs), self.config.document.snapshot())
+        form.changed.connect(lambda form=form: self._on_preference_edit(form))
+        self.page_forms[key] = form
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setWidget(form)
+        layout.addWidget(scroll, 1)
+        return page
+
+    def show_page(self, key: str) -> None:
+        self.nav.setCurrentRow(self._nav_keys.index(key))
+
+    def use_preset(self, preset_id: str) -> None:
+        preset = next((item for item in self.presets if item.id == preset_id), None)
+        if preset is None or not can_apply(preset):
+            return
+        for name, value in settings_from_preset(preset).items():
+            self.config.document.set(name, value)
+            self.overrides.pop(name, None)
+        self.preset_id = preset_id
+        self.config.preset = preset_id
+        self._refresh_offline_views()
+        self._mark_file_dirty()
+
+    def _on_browser_override(self, name: str, raw: str) -> None:
+        try:
+            self.set_custom_override(name, raw)
+        except SettingsError as exc:
+            QMessageBox.warning(self, "Override", exc.message)
+
+    def set_custom_override(self, name: str, raw: str) -> None:
+        spec = self.config.schema.get(name)
+        if spec is None or spec.readonly:
+            raise SettingsError("readonly", f"{name} cannot be overridden")
+        canonical = format_value(spec, raw)
+        self.config.document.set(name, canonical)
+        reference = self._preset_value(name)
+        if canonical == reference:
+            self.overrides.pop(name, None)
+        else:
+            self.overrides[name] = canonical
+        self._refresh_offline_views()
+        self._mark_file_dirty()
+
+    def clear_override(self, name: str) -> None:
+        self.overrides.pop(name, None)
+        reference = self._preset_value(name)
+        if self.config.schema.get(name) is not None:
+            self.config.document.set(name, reference)
+        self._refresh_offline_views()
+        self._mark_file_dirty()
+
+    def new_document(self) -> None:
+        self.config = new_config()
+        self.preset_id = ""
+        self.overrides = {}
+        self.rotcfg_path = None
+        self._saved_token = self._token()
+        self._rebuild_pages()
+        self._refresh_offline_views()
+        self._mark_file_dirty()
+
+    def save_rotcfg_to(self, path: str) -> None:
+        self.rotcfg_path = Path(path)
+        self.config.preset = self.preset_id
+        self.config.overrides = dict(self.overrides)
+        self.rotcfg_path.write_text(dumps(self.config), encoding="utf-8")
+        self._saved_token = self._token()
+        self._mark_file_dirty()
+
+    def load_rotcfg_text(self, text: str, path: str = "") -> None:
+        loaded = loads(text, self.config.schema)
+        self.config = loaded
+        self.preset_id = loaded.preset
+        self.overrides = dict(loaded.overrides)
+        if path:
+            self.rotcfg_path = Path(path)
+        self._rebuild_pages()
+        self._saved_token = self._token()
+        self._refresh_offline_views()
+        self._mark_file_dirty()
+
+    def push_document(self) -> None:
+        if self.client is None:
+            raise RuntimeError("connect a controller first")
+        self.config.preset = self.preset_id
+        self.config.overrides = dict(self.overrides)
+        self.client.restore_text(push_lines(self.config))
+
+    def on_open_rotcfg(self) -> None:
+        path, _selected = QFileDialog.getOpenFileName(self, "Open configuration", "", "Configuration (*.rotcfg *.yaml *.yml *.json)")
+        if path:
+            self.load_rotcfg_text(Path(path).read_text(encoding="utf-8"), path)
+
+    def on_save_rotcfg(self) -> None:
+        if self.rotcfg_path is None:
+            self.on_save_rotcfg_as()
+            return
+        self.save_rotcfg_to(str(self.rotcfg_path))
+
+    def on_save_rotcfg_as(self) -> None:
+        path, _selected = QFileDialog.getSaveFileName(self, "Save configuration", "station.rotcfg", "Configuration (*.rotcfg)")
+        if path:
+            self.save_rotcfg_to(path)
+
+    def on_push(self) -> None:
+        try:
+            self.push_document()
+        except (CommandError, TransportError, SettingsError, RuntimeError) as exc:
+            QMessageBox.warning(self, "Push", str(exc))
+
+    def _preset_value(self, name: str) -> str:
+        preset = next((item for item in self.presets if item.id == self.preset_id), None)
+        if preset is not None:
+            mapped = settings_from_preset(preset)
+            if name in mapped:
+                return mapped[name]
+        spec = self.config.schema.get(name)
+        return "" if spec is None else spec.default
+
+    def _on_preference_edit(self, form: SettingsForm) -> None:
+        if self._syncing:
+            return
+        for spec in form.schema.settings:
+            if spec.readonly:
+                continue
+            message = form.errors().get(spec.name)
+            if message:
+                continue
+            canonical = format_value(spec, form.value(spec.name))
+            if canonical == self.config.document.get(spec.name) and spec.name not in self.overrides:
+                continue
+            self.config.document.set(spec.name, canonical)
+            if canonical == self._preset_value(spec.name):
+                self.overrides.pop(spec.name, None)
+            else:
+                self.overrides[spec.name] = canonical
+        self.browser.set_values(self.config.document.snapshot())
+        self.browser.set_overrides(self.overrides, self.preset_id)
+        self._mark_file_dirty()
+
+    def _refresh_offline_views(self) -> None:
+        self._syncing = True
+        try:
+            snapshot = self.config.document.snapshot()
+            for form in self.page_forms.values():
+                form.load(snapshot)
+            self.browser.set_values(snapshot)
+            self.browser.set_overrides(self.overrides, self.preset_id)
+            if self.preset_id:
+                try:
+                    self.browser.select(self.preset_id)
+                except KeyError:
+                    pass
+        finally:
+            self._syncing = False
+        name = self.config.document.get("net.hostname")
+        file_name = self.rotcfg_path.name if self.rotcfg_path else "Untitled.rotcfg"
+        self.file_label.setText(f"{file_name}  ·  {name}")
+        self._mark_file_dirty()
+
+    def _rebuild_pages(self) -> None:
+        """Pages keep their widgets; values are reloaded from the new document."""
+        return
+
+    def _token(self) -> tuple[str, tuple[tuple[str, str], ...], tuple[tuple[str, str], ...]]:
+        return (
+            self.preset_id,
+            tuple(sorted(self.overrides.items())),
+            tuple(sorted(self.config.document.snapshot().items())),
+        )
+
+    def _mark_file_dirty(self) -> None:
+        dirty = self._token() != self._saved_token
+        self.file_dirty.setVisible(dirty)
+        if self.nav.currentRow() != self._nav_keys.index("controllers"):
+            title = "Rotator Controller — Offline"
+            if dirty:
+                title += " *"
+            self.setWindowTitle(title)
 
     def set_controllers(self, infos: list[ControllerInfo]) -> None:
         self.infos = merge_controllers(infos)
@@ -300,6 +655,7 @@ class MainWindow(QMainWindow):
             self.client.close()
         self.client = client
         self.connected_target = chosen
+        self.push_action.setEnabled(True)
         serial = str(ident.get("serial") or info.serial)
         name = str(ident.get("name") or "")
         self._stamp(chosen, serial, name, str(ident.get("fw") or ""), str(ident.get("axes") or ""))

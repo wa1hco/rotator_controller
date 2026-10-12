@@ -115,6 +115,7 @@ def test_edit_validates_and_confirms_before_write(qtbot, presets) -> None:
         assert window.form is not None
         assert window.form.value("net.hostname") == "Alpha"
         assert window.is_dirty() is False
+        window.show_page("controllers")
         window.show()
         window.form.set_value("net.address", "not-an-ip")
         assert "IPv4" in window.form.error_text("net.address")

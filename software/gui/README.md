@@ -1,6 +1,8 @@
 # Rotator controller, PC side
 
-Phase 1 is configuration. The app finds controllers on USB and on the network, reads the settings tree, edits it with validation, applies a rotor preset, and writes it back after showing the diff. Backup, restore, compare, and copy between controllers use the same settings file as the console.
+The app opens offline. No controller is required. The first screen is the rotator catalog: all 39 rows in `software/firmware/presets/rotor-presets.yaml`, filtered by family, manufacturer, and a search across model, maker, and alias. A row shows its specs, the settings it would write, and `[?]` on values the catalog still marks unverified. Choosing a rotator fills a configuration document. Custom overrides and the other preference pages (axes, limits, park, calibration, display, network, console) edit that same document. Save writes a `.rotcfg` file (YAML, or JSON when the text starts with `{`). Push, once a controller is connected, sends the writable settings and leaves the controller's serial and board facts alone.
+
+Controllers stay in the app, on the last page: USB and network discovery, the schema form, confirm-before-write, backup, restore, compare, and copy. That work is unchanged. It is not the start screen, because there is no controller to connect yet.
 
 Phases 2 and 3 are planned below. The window already reserves their places: STOP stays on screen, and the Operate and Upgrade menus are present and disabled.
 
@@ -70,12 +72,27 @@ Regenerate the review images (they are committed):
 QT_QPA_PLATFORM=offscreen python software/gui/scripts/capture_screenshots.py
 ```
 
+Offline pages, the ones to review first:
+
+| Image | What it shows |
+|---|---|
+| [docs/rotator-selection.png](docs/rotator-selection.png) | All 39 rotators. Yaesu G-450A selected, specs and settings with `[?]`, and a custom overlap override |
+| [docs/axes.png](docs/axes.png) | Sensor and brake for azimuth and elevation |
+| [docs/limits.png](docs/limits.png) | Travel, overlap, speed, and the safety stops |
+| [docs/park.png](docs/park.png) | Park headings and whether the brake sets on arrival |
+| [docs/calibration.png](docs/calibration.png) | End counts. The sweep button stays disabled until phase 2 |
+| [docs/display.png](docs/display.png) | Angle unit, display range, speed display, cardinal labels |
+| [docs/network.png](docs/network.png) | Hostname, DHCP, address, mDNS |
+| [docs/console.png](docs/console.png) | Shared TCP port, GS-232 query token, echo, log level |
+
+Connected-controller pages, from the simulator:
+
 | Image | What it shows |
 |---|---|
 | [docs/screenshots/controllers.png](docs/screenshots/controllers.png) | Bench on USB `1209:f407` and Tower on the network |
 | [docs/screenshots/settings.png](docs/screenshots/settings.png) | Schema form, unsaved banner, and a field error |
 | [docs/screenshots/confirm-save.png](docs/screenshots/confirm-save.png) | Diff before the write, including a reboot note |
-| [docs/screenshots/presets.png](docs/screenshots/presets.png) | Yaesu G-450A family, mapped settings, and `[?]` fields |
+| [docs/screenshots/presets.png](docs/screenshots/presets.png) | Preset dialog used from the Controllers page |
 
 ## Architecture
 
@@ -100,7 +117,7 @@ Preset preview and `preset apply` both use `settings_from_preset`, so the dialog
 
 ### Phase 1, configuration (this tree)
 
-Discover, connect, edit, validate, confirm, save, backup, restore, compare, copy, and apply a rotor preset. Several controllers at once. One identity when the same serial appears on USB and on Ethernet.
+Offline, a `.rotcfg` document: pick a rotator, override a mapped value, and edit axes, limits, park, calibration, display, network, and the shared console. With a controller connected: discover, connect, edit, validate, confirm, save, backup, restore, compare, copy, and push that document. Several controllers at once. One identity when the same serial appears on USB and on Ethernet.
 
 ### Phase 2, operate
 

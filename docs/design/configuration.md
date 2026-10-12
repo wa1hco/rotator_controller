@@ -25,8 +25,9 @@ the same setting.
 | `el.*` | The same for elevation. Present even when the board has no elevation sensor |
 | `net.*` | Hostname, DHCP or static address, mDNS name |
 | `ports.*` | USB and TCP listener ports. Not a GS-232/console mode switch |
-| `ui.*` | Web session limits, console echo, log level |
+| `ui.*` | Angle display, console echo, log level |
 | `safety.*` | Dead time, maximum run, stall and overlap limits |
+| `park.*` | Park heading per axis lives on `az.park_deg` and `el.park_deg`. `park.brake` says whether the brake sets on arrival |
 
 Version 1 names shared by the PC tool and the simulator. `schema` is the machine-readable list. The packed firmware blob is still the smaller stub and grows into this list:
 
@@ -173,6 +174,32 @@ parses the whole file, checks every value, runs migration if
 `sys.schema` is older than the firmware, and only then replaces the
 stored record. A bad line leaves the box as it was.
 
+## Offline configuration file
+
+No controller is required to review a station setup. The PC app starts
+offline and edits a configuration document, saved as `.rotcfg`. YAML is
+the usual form. JSON is accepted when the text starts with `{`.
+
+```
+# rotator-config 1
+format: rotcfg
+version: 1
+preset: yaesu-g-450a
+name: station
+overrides:
+  az.overlap_deg: "100"
+settings:
+  az.sensor: single_ended_pot
+  az.overlap_deg: "100"
+```
+
+`preset` is the catalog id last applied. `overrides` are the values the
+operator changed after that. `settings` is the full tree, including
+those overrides. A later push sends only the writable lines, in the
+restore format above, so the controller keeps its own serial and board
+facts. Readonly names such as `sys.serial` and `*.present` are omitted
+from that push.
+
 ## Presets
 
 The source table is `software/firmware/presets/rotor-presets.yaml`.
@@ -208,7 +235,7 @@ onto settings, so the preview and `preset apply` match.
 - Calibration, `net.*`, and `ports.*` are left alone.
 - A wedge brake with no `engage_after_stop_s` uses 3 seconds, the DCU-3 default in the sequencing text. Any other brake with no engage time uses 0.
 
-`support: no` and `support: later` are not shown. A row whose support is anything else outside `v1`, `v1-2axis`, `v2-dc`, and `alias` is not shown either. `alias` is shown and is not applied. Fields listed under `unverified` are marked `[?]` next to the family and the mapped settings.
+The offline rotator page lists every catalog row, including `support: no`, `later`, `check`, and `alias`. `Use this rotator` loads a row only when support is `v1`, `v1-2axis`, or `v2-dc`. An alias is shown and points at the rows it names. Fields listed under `unverified` are marked `[?]`. A custom override replaces one mapped value in the `.rotcfg` file and is shown next to the preset value.
 
 The web preset picker and wizard call these same steps. Board changes
 the catalog implies (pot modes, pulse inputs, run-cap placement, the

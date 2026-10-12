@@ -149,6 +149,15 @@ def _axis(prefix: str, title: str, present: str) -> list[SettingSpec]:
             max=300,
             help="Slowest full-scale travel, in seconds.",
         ),
+        _spec(
+            f"{prefix}.park_deg",
+            SettingType.FLOAT,
+            "0",
+            unit="deg",
+            min=0,
+            max=540 if prefix == "az" else 180,
+            help=f"{title} heading used by Park.",
+        ),
     ]
 
 
@@ -195,7 +204,14 @@ def default_schema(
             min=1,
             max=65535,
             reboot=True,
-            help="TCP port for the shared console and GS-232 listener.",
+            help="TCP port for the shared console and GS-232 listener. There is no GS-232/console mode switch.",
+        ),
+        _spec(
+            "ports.gs232_query",
+            SettingType.ENUM,
+            "C2",
+            enum=["C", "C2"],
+            help="Query token this station's logger sends. The port still accepts both C and C2.",
         ),
         *_axis("az", "Azimuth", "true" if azimuth else "false"),
         *_axis("el", "Elevation", "true" if elevation else "false"),
@@ -207,6 +223,40 @@ def default_schema(
             help="RAM log level. Same as `log level`.",
         ),
         _spec("ui.console_echo", SettingType.BOOL, "false", help="Echo received console lines. Off when a logger is attached."),
+        _spec(
+            "ui.angle_unit",
+            SettingType.ENUM,
+            "deg",
+            enum=["deg"],
+            help="Bearings are stored and shown in degrees.",
+        ),
+        _spec(
+            "ui.display_range",
+            SettingType.ENUM,
+            "full_travel",
+            enum=["full_travel", "modulo_360"],
+            help="full_travel shows the overlap range, such as 0 to 450. modulo_360 wraps the heading.",
+        ),
+        _spec(
+            "ui.speed_display",
+            SettingType.ENUM,
+            "seconds",
+            enum=["seconds", "deg_per_s"],
+            help="How travel time is shown. Stored speeds stay in seconds for a full-scale move.",
+        ),
+        _spec(
+            "ui.cardinal_labels",
+            SettingType.BOOL,
+            "true",
+            help="Label N, E, S, and W on the heading display.",
+        ),
+        _spec(
+            "park.brake",
+            SettingType.ENUM,
+            "engage",
+            enum=["engage", "leave"],
+            help="engage sets the brake at the park heading. leave keeps it released.",
+        ),
         _spec(
             "safety.dead_time_ms",
             SettingType.INT,

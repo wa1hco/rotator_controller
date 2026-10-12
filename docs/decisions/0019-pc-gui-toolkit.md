@@ -36,9 +36,12 @@ schema document. pyserial opens USB CDC. zeroconf browses
 The forms are built from the `schema` command. A new setting of a known
 type shows up without a GUI change.
 
-Phase 1, in this repository now, is configuration: discover, connect,
-edit, validate, confirm the diff, save, backup, restore, compare, copy
-between controllers, and apply a rotor preset. Phase 2 (operate) and
+Phase 1, in this repository now, is configuration. The window opens
+offline on a configuration document (`.rotcfg`, YAML or JSON) so a
+station can be reviewed before any controller exists. The first page is
+the rotor catalog. The other preference pages edit the same document.
+Discover, connect, confirm-before-write, backup, restore, compare, and
+copy stay on the Controllers page and in the library. Phase 2 (operate) and
 phase 3 (install and upgrade) have milestones in `software/gui/README.md`
 and hooks in the library: a STOP control that stays on screen, disabled
 Operate and Upgrade menus, `dfu_argv()` for the ROM DFU command in

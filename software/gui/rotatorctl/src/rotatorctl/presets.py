@@ -197,6 +197,54 @@ def unverified_labels(preset: Preset) -> list[str]:
     return [f"{path} [?]" for path in preset.unverified]
 
 
+def preset_facts(preset: Preset) -> list[tuple[str, str, bool]]:
+    """Readable spec rows: label, value, and whether a source field is unverified."""
+    raw = preset.raw
+    flagged = set(preset.unverified)
+    motor = _block(raw, "motor")
+    sensor = _block(raw, "sensor")
+    brake = _block(raw, "brake")
+    travel = _block(raw, "travel")
+    speed = _block(raw, "speed")
+    cable = _block(raw, "cable")
+
+    def marked(*paths: str) -> bool:
+        return any(path in flagged for path in paths)
+
+    speed_text = "—"
+    if speed.get("min_s") is not None or speed.get("max_s") is not None:
+        speed_text = f"{_dash(speed.get('min_s'))}–{_dash(speed.get('max_s'))} s"
+    conductors = cable.get("conductors")
+    return [
+        ("Family", preset.family or "—", False),
+        ("Axes", preset.axes or "—", False),
+        ("Support", preset.support or "—", False),
+        ("Motor", _dash(motor.get("type")), marked("motor")),
+        ("Motor volts", _dash(motor.get("volts"), " V"), marked("motor", "motor.volts")),
+        ("Motor current", _dash(motor.get("current_a"), " A"), marked("motor", "motor.current_a")),
+        ("Sensor", _dash(sensor.get("type")), marked("sensor", "sensor.type")),
+        ("Sensor ohms", _dash(sensor.get("ohms"), " ohm"), marked("sensor", "sensor.ohms")),
+        ("Brake", _dash(brake.get("type")), marked("brake", "brake.type")),
+        ("Travel", _dash(travel.get("range_deg"), " deg"), marked("travel", "travel.range_deg")),
+        ("Overlap", _dash(travel.get("overlap_deg"), " deg"), marked("travel", "travel.overlap_deg")),
+        ("Speed", speed_text, marked("speed", "speed.min_s", "speed.max_s")),
+        ("Cable", _dash(conductors, " conductors"), marked("cable", "cable.conductors")),
+    ]
+
+
+def preset_aliases(preset: Preset) -> tuple[str, ...]:
+    raw = preset.raw.get("aliases") or []
+    if isinstance(raw, list):
+        return tuple(str(item) for item in raw)
+    return ()
+
+
+def _dash(value: object, suffix: str = "") -> str:
+    if value is None or value == "":
+        return "—"
+    return f"{value}{suffix}"
+
+
 def unverified_setting_names(preset: Preset) -> set[str]:
     names: set[str] = set()
     for path in preset.unverified:
