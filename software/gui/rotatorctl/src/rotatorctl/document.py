@@ -15,6 +15,9 @@ from rotatorctl.schema import Schema, SettingSpec, SettingType
 _HOSTNAME = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,30}[A-Za-z0-9])?$")
 _IPV4 = re.compile(r"^(?:\d{1,3}\.){3}\d{1,3}$")
 _TOKEN = re.compile(r"^[^\s]+$")
+_CAL_MAP = re.compile(
+    r"^(?:none|(?:-?\d+(?:\.\d+)?:-?\d+(?:\.\d+)?)(?:,-?\d+(?:\.\d+)?:-?\d+(?:\.\d+)?){1,15})$"
+)
 
 
 class SettingsError(ValueError):
@@ -70,6 +73,8 @@ def format_value(spec: SettingSpec, raw: str) -> str:
             raise SettingsError("type", "net.hostname is letters, digits, and hyphens")
         if spec.name == "net.address" and not _ipv4_ok(text):
             raise SettingsError("type", "net.address is an IPv4 address")
+        if spec.name.endswith(".cal.map") and not _CAL_MAP.match(text):
+            raise SettingsError("type", f"{spec.name} is none, or raw:heading pairs separated by commas")
         return text
     raise SettingsError("type", f"{spec.name} has an unknown type")
 

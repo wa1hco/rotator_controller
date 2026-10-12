@@ -121,18 +121,23 @@ Offline, a `.rotcfg` document: pick a rotator, override a mapped value, and edit
 
 ### Phase 2, operate
 
-Milestones, in `rotatorctl.phases`:
+Milestones, in `rotatorctl.phases`, taken from the in-scope Operate rows of [feature-inventory.md](../../docs/design/feature-inventory.md):
 
 - Heading display per axis, from `status`
 - Go to bearing
 - CW / CCW jog
 - STOP, always on screen. The line it will send is GS-232 `S` (`rotatorctl.operate.stop_line`), on the same port, with no mode switch
-- Park
-- Heading presets (bearings, separate from rotor-model presets)
+- Park, and auto-park from `park.idle_min`
+- Heading preset recall (the six `preset.N` memories)
+- Soft limits, coast, creep, and the stall stop, using the settings already stored
+- PWM ramp on a DC drive (`sys.drive = dc_hbridge`)
+- Calibration wizard and the multi-point map
+- The rest of GS-232B: `W`, `X1`–`X4`, `O`/`F`, `P36`/`P45`, `Z`, and the jog letters
+- Hamlib rotctld, Easycom, and DCU-1, on the ports stored in phase 1 (`0` leaves each one off)
+- Live log
 - Multi-rotator dashboard
-- Calibration wizard, calling `calibrate`
 
-The simulator answers `calibrate` with `ERR unsupported` until that wizard has a protocol to drive.
+Moon, sun, and satellite tracking stay on the PC. The box accepts the next heading. The simulator answers `calibrate` with `ERR unsupported` until that wizard has a protocol to drive.
 
 ### Phase 3, install and upgrade
 

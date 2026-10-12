@@ -27,7 +27,8 @@ the same setting.
 | `ports.*` | USB and TCP listener ports. Not a GS-232/console mode switch |
 | `ui.*` | Angle display, console echo, log level |
 | `safety.*` | Dead time, maximum run, stall and overlap limits |
-| `park.*` | Park heading per axis lives on `az.park_deg` and `el.park_deg`. `park.brake` says whether the brake sets on arrival |
+| `park.*` | Park heading per axis lives on `az.park_deg` and `el.park_deg`. `park.brake` says whether the brake sets on arrival. `park.idle_min` is the auto-park timeout |
+| `preset.*` | Six heading memories, `preset.1` through `preset.6`, each with `.az` and `.el` |
 
 Version 1 names shared by the PC tool and the simulator. `schema` is the machine-readable list. The packed firmware blob is still the smaller stub and grows into this list:
 
@@ -50,7 +51,33 @@ safety.max_run_s = 120
 Each stored value has a type (bool, int, float, or a closed set of
 names) and limits. `set` and a file restore both reject a value outside
 those limits. `el.present` follows the board file: the operator cannot
-turn on an axis the board did not stuff.
+turn on an axis the board did not stuff. `sys.drive` is the same
+kind of fact: `triac`, `relay`, or `dc_hbridge`.
+
+The full in-or-out list, and which page holds each setting, is
+[feature-inventory.md](feature-inventory.md). Names added from that
+inventory, still schema version 1:
+
+| Name | Role |
+|---|---|
+| `az.center` | `north` or `south` center of travel |
+| `az.overlap_deg`, `*.travel_min_deg`, `*.travel_max_deg` | Overlap and the soft limits |
+| `*.coast_deg` | Degrees of coast before the target |
+| `*.offset_deg` | Beam heading offset |
+| `*.creep_deg`, `*.ramp_s`, `*.slowdown_deg` | AC creep and DC PWM ramp. Advanced |
+| `*.pulse_debounce_ms`, `*.pulse_deg`, `*.adc_samples` | Pulse input and pot averaging. Advanced |
+| `*.limit_switch` | Optional end-of-travel switches. Advanced |
+| `*.tolerance_deg` | Go-to stop window. Advanced |
+| `*.cal.cw_end`, `*.cal.ccw_end`, `*.cal.map` | Two-point ends, and a multi-point `raw:heading` list or `none` |
+| `safety.stall_timeout_s`, `safety.stall_deg` | No-motion jam stop |
+| `park.idle_min`, `preset.N.az`, `preset.N.el` | Auto-park and six memories |
+| `net.admin_lock`, `net.admin_password` | Web UI and console-verb lock. GS-232 lines stay open |
+| `ports.rotctld`, `ports.easycom`, `ports.dcu1` | Extra listeners. `0` leaves that protocol off |
+| `az.sensor` / `el.sensor` | `dual_end_pot`, `single_ended_pot`, `rheostat`, `pulse`, `incremental_encoder`, `hh12_as5045`, `none` |
+
+`*.cal.map` is `none`, or at least two `raw:heading` pairs joined by
+commas and no spaces (`0:0,180:181,450:448`). A preset does not write
+the offset, the map, the memories, or the network lock.
 
 `ports.*` does not contain a mode that selects GS-232 or the console.
 Both are accepted on USB CDC and on the TCP port. See the grammar below.

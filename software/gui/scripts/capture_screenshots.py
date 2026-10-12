@@ -69,7 +69,7 @@ def capture_offline() -> None:
     for key in PAGES:
         window.show_page(key)
         app.processEvents()
-        save_widget(window, DOCS / f"{key}.png", 1280, 860)
+        save_widget(window, DOCS / f"{key}.png", 1280, 1040)
     window.close()
     print(f"wrote offline pages under {DOCS}")
 

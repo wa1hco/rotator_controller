@@ -12,7 +12,8 @@ settled measurements.
 | File | Contents |
 |---|---|
 | [design/system-overview.md](design/system-overview.md) | Processor-agnostic system design |
-| [design/feature-survey.md](design/feature-survey.md) | What other controllers do, and the plan that follows |
+| [design/feature-survey.md](design/feature-survey.md) | What other controllers do, and the hardware plan that follows |
+| [design/feature-inventory.md](design/feature-inventory.md) | Settings, Operate, and Install inventory against K3NG and the commercial controllers |
 | [design/hardware-requirements.md](design/hardware-requirements.md) | v1 hardware requirements, connector and packaging addenda |
 | [design/v2-relay-protection-review.md](design/v2-relay-protection-review.md) | Why the V2 relay board burned capacitors |
 | [design/v4-discrete-triac-change.md](design/v4-discrete-triac-change.md) | Replace the CPC1966 channels with opto-triacs and BTA16s |

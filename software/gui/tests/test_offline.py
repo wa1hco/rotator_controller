@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import json
 
-from PySide6.QtWidgets import QLabel, QListWidget
+from PySide6.QtWidgets import QLabel, QListWidget, QPushButton, QWidget
 
 from rotatorctl.presets import settings_from_preset
 from rotatorctl.rotcfg import dumps, loads, new_config
@@ -68,6 +68,16 @@ def test_preference_pages_list_the_review_fields(qtbot, presets) -> None:
     window.show_page("park")
     assert window.page_forms["park"].has_field("az.park_deg")
     assert window.page_forms["park"].has_field("park.brake")
+    assert window.page_forms["park"].has_field("park.idle_min")
+    assert window.page_forms["limits"].has_field("az.center")
+    assert window.page_forms["axes"].value("sys.drive") == "triac"
+    body = window.page_forms["park"].findChild(QWidget, "advancedBody")
+    toggle = window.page_forms["park"].findChild(QPushButton, "advancedToggle")
+    assert body is not None and toggle is not None
+    assert body.isHidden()
+    toggle.click()
+    assert not body.isHidden()
+    assert window.page_forms["park"].has_field("preset.1.az")
     window.show_page("calibration")
     assert window.page_forms["calibration"].has_field("az.cal.cw_end")
     window.show_page("display")

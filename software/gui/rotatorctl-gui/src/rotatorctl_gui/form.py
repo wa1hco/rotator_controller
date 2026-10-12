@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QPushButton,
     QVBoxLayout,
     QWidget,
 )
@@ -31,6 +32,7 @@ _TITLES = {
     "ui": "Interface",
     "safety": "Safety",
     "park": "Park",
+    "preset": "Heading memories",
 }
 
 
@@ -46,22 +48,53 @@ class SettingsForm(QWidget):
         self._errors: dict[str, QLabel] = {}
         self._rows: dict[str, QWidget] = {}
         self._groups: dict[str, QGroupBox] = {}
+        self._advanced_groups: dict[str, QGroupBox] = {}
+        self._advanced_body: QWidget | None = None
         layout = QVBoxLayout(self)
         layout.setContentsMargins(8, 8, 8, 8)
         shown = {spec.name: values.get(spec.name, spec.default) for spec in schema.settings}
-        for spec in schema.settings:
-            prefix = spec.name.split(".", 1)[0]
-            group = self._groups.get(prefix)
-            if group is None:
-                group = QGroupBox(_TITLES.get(prefix, prefix))
-                group.setObjectName(f"group-{prefix}")
-                group.setLayout(QVBoxLayout())
-                self._groups[prefix] = group
-                layout.addWidget(group)
-            row = self._row(spec, shown[spec.name])
-            self._rows[spec.name] = row
-            group.layout().addWidget(row)
+        plain = [spec for spec in schema.settings if not spec.advanced]
+        extra = [spec for spec in schema.settings if spec.advanced]
+        for spec in plain:
+            self._place(spec, shown[spec.name], self._groups, layout, "")
+        if extra:
+            toggle = QPushButton("Advanced")
+            toggle.setObjectName("advancedToggle")
+            toggle.setCheckable(True)
+            toggle.setChecked(False)
+            toggle.setStyleSheet("text-align: left; font-weight: 700; padding: 6px 8px;")
+            body = QWidget()
+            body.setObjectName("advancedBody")
+            body_layout = QVBoxLayout(body)
+            body_layout.setContentsMargins(0, 0, 0, 0)
+            for spec in extra:
+                self._place(spec, shown[spec.name], self._advanced_groups, body_layout, "-advanced")
+            body.setVisible(False)
+            toggle.toggled.connect(body.setVisible)
+            self._advanced_body = body
+            layout.addWidget(toggle)
+            layout.addWidget(body)
         layout.addStretch(1)
+
+    def _place(
+        self,
+        spec: SettingSpec,
+        value: str,
+        groups: dict[str, QGroupBox],
+        layout: QVBoxLayout,
+        suffix: str,
+    ) -> None:
+        prefix = spec.name.split(".", 1)[0]
+        group = groups.get(prefix)
+        if group is None:
+            group = QGroupBox(_TITLES.get(prefix, prefix))
+            group.setObjectName(f"group-{prefix}{suffix}")
+            group.setLayout(QVBoxLayout())
+            groups[prefix] = group
+            layout.addWidget(group)
+        row = self._row(spec, value)
+        self._rows[spec.name] = row
+        group.layout().addWidget(row)
 
     def has_field(self, name: str) -> bool:
         return name in self._editors
@@ -125,11 +158,21 @@ class SettingsForm(QWidget):
         for spec in self.schema.settings:
             hay = f"{spec.name} {spec.help}".lower()
             self._rows[spec.name].setVisible(not query or query in hay)
-        for prefix, group in self._groups.items():
+        self._hide_empty(self._groups, False)
+        self._hide_empty(self._advanced_groups, True)
+        if self._advanced_body is not None and query:
+            matched = any(spec.advanced and self._rows[spec.name].isVisible() for spec in self.schema.settings)
+            if matched:
+                toggle = self.findChild(QPushButton, "advancedToggle")
+                if toggle is not None:
+                    toggle.setChecked(True)
+
+    def _hide_empty(self, groups: dict[str, QGroupBox], advanced: bool) -> None:
+        for prefix, group in groups.items():
             visible = any(
                 self._rows[spec.name].isVisible()
                 for spec in self.schema.settings
-                if spec.name.split(".", 1)[0] == prefix
+                if spec.advanced is advanced and spec.name.split(".", 1)[0] == prefix
             )
             group.setVisible(visible)
 

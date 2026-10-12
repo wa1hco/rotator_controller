@@ -4,7 +4,8 @@
 
 ``software/sim`` is the C++ K3NG sandbox. This process speaks the console
 and GS-232 grammar in ``docs/design/configuration.md``, so it lives in the
-installable library. ``software/gui/sim`` is a thin launcher.
+installable library. ``software/gui/sim`` is a thin launcher. Its settings
+tree is ``default_schema()``, the same names as the feature inventory.
 """
 
 from __future__ import annotations

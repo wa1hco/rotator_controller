@@ -17,10 +17,17 @@ OPERATE_MILESTONES = (
     "go to bearing",
     "cw/ccw jog",
     "stop",
-    "park",
-    "heading presets",
+    "park and auto-park",
+    "heading preset recall",
+    "soft limits, coast, creep, and stall stop",
+    "pwm ramp on a dc drive",
+    "calibration wizard and multi-point map",
+    "gs-232b commands beyond M, C, and S",
+    "hamlib rotctld",
+    "easycom",
+    "dcu-1",
+    "live log",
     "multi-rotator dashboard",
-    "calibration wizard",
 )
 
 UPGRADE_MILESTONES = (

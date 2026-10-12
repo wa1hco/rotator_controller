@@ -117,3 +117,36 @@ def test_dump_includes_header_and_save_status(client) -> None:
     status = client.status()
     assert status["az.motion"] == "stopped"
     assert status["faults"] == "none"
+
+
+def test_inventory_settings_round_trip_on_the_simulator(client) -> None:
+    schema = client.schema()
+    for name in (
+        "az.center",
+        "az.coast_deg",
+        "az.cal.map",
+        "sys.drive",
+        "park.idle_min",
+        "preset.6.el",
+        "ports.rotctld",
+        "ports.easycom",
+        "ports.dcu1",
+        "net.admin_lock",
+        "safety.stall_timeout_s",
+        "safety.stall_deg",
+    ):
+        assert schema.get(name) is not None
+    sensor = schema.get("az.sensor")
+    assert sensor is not None
+    assert "hh12_as5045" in sensor.enum
+    assert "incremental_encoder" in sensor.enum
+    assert "compass" not in sensor.enum
+    client.set("az.center", "south")
+    client.set("az.cal.map", "0:0,180:181,450:448")
+    client.set("park.idle_min", "15")
+    assert client.get("az.center") == "south"
+    assert "az.center = south" in client.dump_text()
+    with pytest.raises(CommandError):
+        client.set("az.cal.map", "nope")
+    client.command("reboot")
+    assert client.get("az.center") == "north"

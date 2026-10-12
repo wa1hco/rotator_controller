@@ -92,6 +92,16 @@ def test_schema_json_roundtrip() -> None:
     assert again.get("az.present").readonly is True
 
 
+def test_calibration_map_token() -> None:
+    schema = default_schema()
+    spec = schema.get("az.cal.map")
+    assert spec is not None
+    assert format_value(spec, "none") == "none"
+    assert format_value(spec, "0:0,180:181") == "0:0,180:181"
+    expect_reject(spec, "0:0")
+    expect_reject(spec, "0:0, 180:181")
+
+
 def expect_reject(spec: SettingSpec, raw: str) -> None:
     try:
         format_value(spec, raw)
