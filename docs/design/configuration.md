@@ -1,8 +1,13 @@
 # Configuration and console
 
-Draft. The namespaces below are the outline, not the rotator catalog.
-Preset rows (pot values, brake timing, travel limits per model) get
-filled in when that catalog is written. The decision is
+Draft for the command and settings shape. The rotator models are no
+longer a placeholder: the readable catalog is
+[rotator-catalog.md](rotator-catalog.md), and the preset table the
+firmware loads is
+[`software/firmware/presets/rotor-presets.yaml`](../../software/firmware/presets/rotor-presets.yaml)
+(schema_version 1). That YAML sits with the firmware because applying a
+preset is a firmware action, not a document. The markdown catalog is the
+same data for a person to read. The decision is
 [ADR 0015](../decisions/0015-configuration-and-ui.md).
 
 The on-box record is a versioned blob in flash. This note is the text
@@ -109,14 +114,28 @@ stored record. A bad line leaves the box as it was.
 
 ## Presets
 
+The source table is `software/firmware/presets/rotor-presets.yaml`.
+Each entry's `id` is the name `preset apply` takes (`hygain-ham-iv`,
+`yaesu-g-450a`, `spid-rak`, …). `support: no` and `support: later` are
+not offered. An `alias` entry points at a rotor preset instead of
+loading itself. Fields listed under `unverified` are copied as written
+and still need a bench check. The readable form, including family
+settings and sources, is [rotator-catalog.md](rotator-catalog.md).
+
 1. `preset list` shows the compiled-in models. The table is always
    linked. There is no per-model `#ifdef`.
-2. `preset apply HAM-IV` (the real ids come with the catalog) copies
-   that row into `az.*`, `el.*`, and `safety.*`.
+2. `preset apply hygain-ham-iv` copies that row into `az.*`, `el.*`,
+   and `safety.*`. A two-axis preset fills both axes.
 3. Network identity and an existing calibration are left alone.
-4. The calibration sweep then drives to one hard stop, records the
-   sensor reading, drives to the other, records that, and proposes
-   `az.cal.*` (or `el.cal.*`). Nothing is saved until the operator
-   confirms and `save` runs.
+4. If the preset has limit switches, the calibration sweep drives to
+   one end, records the sensor, drives to the other end, and proposes
+   `az.cal.*` (or `el.cal.*`). SPID and Prosistel D have no limit
+   switches, so the sweep does not hunt for a hard stop. The operator
+   sets those ends. Nothing is saved until the operator confirms and
+   `save` runs.
 
-The web preset picker and wizard call these same steps.
+The web preset picker and wizard call these same steps. Board changes
+the catalog implies (pot modes, pulse inputs, run-cap placement, the
+brake default, the DC module, and the unsupported 48 VAC Prosistel) are
+open items in
+[hardware-requirements.md](hardware-requirements.md).

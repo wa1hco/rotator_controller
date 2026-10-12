@@ -402,6 +402,16 @@ It drives the master-enable switch on each drive module. Direction interlock and
 10. **Yaesu, SPID, and M2 connector pinouts and pot values** for the v2 DC module (not yet verified).
 11. ~~Enclosure and heatsinking~~ **Resolved (Oct 11, 2026):** Hammond 1455N1601. Triacs go on a PCB-mounted bar clamped to the top wall through a 1.0 mm gap pad (Packaging addendum).
 
+The next seven items come from the rotator catalog's hardware implications (`rotator-catalog.md`, "Hardware implications for the V4/F407 board"). They are not decided. Numbers below are the catalog's figures, not new measurements.
+
+12. **Three pot modes, selected per axis.** CDE dual-end grounded wiper (500 Ω, wiper on the motor/brake common, with 60 Hz ripple). Single-ended, 150 Ω–10 kΩ. Rheostat (G-400RC, G-450XL, G-450ADC), which needs a known current source or a reference resistor. A 75 Ω pot (Alliance HD-73) needs current-limited excitation, about 20–30 mA at most, and must not sit straight across 5 V (67 mA). Leave a series-resistor footprint; the RT-21 uses 75–100 Ω.
+13. **Pot excitation above 3.3 V, and a way to use a narrow span.** The HDR-300 uses only a third of its 3-turn pot (0.83–2.5 V of a 5 V excitation). Prosistel D spans about 0.78 V around 5.4 V. Provide a programmable offset/gain stage, or an external 16–24-bit ADC, and allow pot REF above 3.3 V (5 V, and possibly 8–13 V). Old Prosistel pots are specified at ±12 V. A unipolar REF still works on that passive pot, so a −12 V rail is not required.
+14. **Two pulse channels per axis, with a selectable pull-up.** SPID HR has two Hall sensors, and Prosistel PRO has an encoder. Pull-up selectable between 5 V and 12 V, about 5 mA wetting (M2 runs about 11.3 V / 5 mA). RC filter, hysteresis, and ESD/RF protection, because SPID reports RF-induced false pulses. Rates stay under 1 kHz (about 72 Hz for M2).
+15. **Run-cap placement has to be configurable.** CDE: the cap is across terminals 4–8, and the drive is on 5 and 6 through the rotor limit switches. Yaesu and the HD-73: the cap is across the two drive ends. G-5500 and HDR-300: the cap is in the rotor, so the board cap must be left off. A jumper or relay, with the cap terminals separate from the drive terminals. Sizes in the catalog run from 100 to 156 µF, at 50–60 VAC at least, 100 VAC for margin.
+16. **Brake output defaults to engaged on a fault.** The CDE family needs it (24–30 VAC, 3.5–5 A steady, 0.75 Ω coil on the DCU-3 measurement, plus inrush). The HDR-300 needs one too; its voltage is not in the catalog. Its own triac or relay, and the unpowered or faulted state is brake engaged.
+17. **DC module, 12–48 V.** That span covers SPID at 12–24 V, Yaesu at 11–24 V, Prosistel up to 42 V, and M2 at 28–42 V (about 45 V open circuit). 5 A covers most of the catalog. BIG-RAS/HR needs up to 12 A, and the SPID MD's 20 A outputs are beyond a 5 A module. Record that limit, or plan a 10–15 A option.
+18. **48 VAC Prosistel is unsupported.** Older PST-51 / PST-61 / PST-71 boxes are 48 VAC. Peak line voltage plus the cap winding can exceed the SMAJ90CA 90 V standoff. Do not drive them with this board's AC stage.
+
 ---
 
 ## 13. Sources

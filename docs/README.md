@@ -19,6 +19,7 @@ settled measurements.
 | [design/triac-thermal-packaging.md](design/triac-thermal-packaging.md) | Heatsink bar and Hammond 1455N1601 packaging |
 | [design/mcu-ethernet-lcsc.md](design/mcu-ethernet-lcsc.md) | JLCPCB/LCSC check for the STM32F407VGT6, LAN8720A, and MagJack |
 | [design/configuration.md](design/configuration.md) | Draft settings namespaces, console grammar, and preset flow |
+| [design/rotator-catalog.md](design/rotator-catalog.md) | Rotor models, preset families, and sources. The preset YAML is under `software/firmware/presets/` |
 | [design/img/](design/img/) | End, side, and top views, plus the scripts that draw them |
 
 ## Decision records

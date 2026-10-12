@@ -23,6 +23,7 @@ to implement the HAL interfaces and call `MotionController::tick()`.
 | `include/rotator/motion/` | Per-axis state machine |
 | `include/rotator/protocol/` | GS-232A/B parser. `rotctld.hpp` is a placeholder |
 | `include/rotator/settings/` | Typed settings, schema version 1 |
+| `presets/rotor-presets.yaml` | Run-time rotor preset source (schema_version 1). Readable catalog: `docs/design/rotator-catalog.md` |
 | `tests/` | Host unit tests (GoogleTest via CMake FetchContent) |
 
 The motion states are `Idle`, `Arming`, `DeadTime`, `RunningClockwise`,
