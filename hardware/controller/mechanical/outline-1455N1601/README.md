@@ -152,7 +152,7 @@ What the old V4 drawings showed (rendered from `/workspace/v4/Rotator-Controller
 
 | # | Feature | X | Y | Cutout | Part / basis |
 |---|---|---|---|---|---|
-| 1 | POWER IN | 17.50 | 33.40 | 22.00 x 12.50 R0.5 (bottom 0.25 below PCB top) | **TBD**: assumed 4-pos 5.08 mm pluggable terminal block carrying 13.8 VDC + 26 VAC |
+| 1 | 26 VAC Powerpoles | 17.50 | 38.40 | Ø16.3 gland, or a 2-position panel-mount bracket (cutout TBD) | Grey + black Anderson Powerpoles, the V2 pair (ADR 0018). Polarity does not matter; the colors key the plug so it is not a red/black 12 VDC pair. Drawable default is the pigtail gland, center 11.00 mm above the board. Do not drill a bracket hole from that default. The pre-layout PDF still shows the withdrawn 22.00 × 12.50 opening |
 | 2 | ROTOR GLAND | 43.50 | 38.40 | Ø16.3 | **TBD**: M16x1.5 nylon gland (cable 5-10 mm), lock nut AF19 with flats horizontal, sitting above the PCB (nut bottom 1.5 above board top). Pigtail exits here and ends in the CPC 206708-1 plug; inside, the wires drop to a board-top terminal. |
 | 3 | USB-C (isolated) | 69.50 | 29.08 | 13.60 x 6.50 R1.0 | GT-USB-7010ASV, centre height 1.68 [V LCSC-USB]; opening clears a cable overmold so the isolated USB shell never touches the chassis plate. Opening size is the V4 value [E] |
 | 4 | GND STUD | 69.50 | 42.50 | Ø4.3 | **TBD**: M4 screw/stud, 2 nuts + star washer + ring lug (single chassis bond point) |

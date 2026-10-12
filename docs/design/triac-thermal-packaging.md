@@ -6,7 +6,7 @@ Scope: the three power triacs (CW, CCW, Brake) from `v4-discrete-triac-change.md
 
 Packaging constraints:
 - Front end plate carries the buttons and LEDs.
-- Rear end plate carries every cable: rotor pigtail / pluggable block, 13.8 V, 26 VAC, USB-C, RJ45.
+- Rear end plate carries every cable: rotor pigtail, 26 VAC Powerpoles, USB-C, RJ45. No separate 13.8 V lead (ADR 0018).
 - No parts on the other faces and no internal wiring.
 
 Written 2026-10-11; updated the same day with the chosen design.

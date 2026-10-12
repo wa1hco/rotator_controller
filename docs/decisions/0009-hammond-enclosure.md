@@ -21,9 +21,12 @@ The board slides into the side-wall card slots.
 - Board: 159 × 99 mm, in slot 6.
 - Front end plate: CCW, STOP, and CW, plus six Dialight 551 right-angle
   LED holes. No light pipes and no preset pot.
-- Rear end plate: every cable (power inlet, M16 rotor gland, USB-C,
-  RJ45 MagJack, ground stud). Ethernet is standard (ADR 0014). Power,
-  the gland, USB-C, and the stud are still TBD on the drawing.
+- Rear end plate: every cable (26 VAC Anderson Powerpoles, M16 rotor
+  gland, USB-C, RJ45 MagJack, ground stud). Ethernet is standard
+  (ADR 0014). The Powerpole pair is grey and black, as on V2
+  (ADR 0018). A panel-mount bracket for that pair is TBD; the other
+  option is a pigtail through a gland. The gland, USB-C, and the stud
+  are still TBD on the drawing.
 - No connectors on the other faces, and no internal wiring harness.
   The rear plate and the PCB connectors are one subassembly.
 - Motor run capacitor: KEMET 100 µF flat plus TDK 33 µF upright,

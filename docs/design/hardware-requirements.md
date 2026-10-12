@@ -4,7 +4,7 @@
 
 ## 0. Locked decisions (from you)
 
-1. **Power supply is separate from the controller.** Motor switching uses solid-state relays rated for the load (AC or DC). AC switching must either switch at zero current, or use snubbers to tame the inductive kick.
+1. **Mains and the transformer stay outside the controller.** The AC version has one 26 VAC feed and no separate logic supply (ADR 0018). Motor switching uses solid-state switches rated for the load. AC switching must either switch at zero current, or use snubbers to tame the inductive kick.
 2. **Full replacement** of the stock controller.
 3. **All sensor inputs:** dual-end pot, single-ended pot with excitation, pulse/reed counters.
 4. **Two axes** at the sensor and MCU level. The motor drive is modular or a conditional assembly.
@@ -21,9 +21,8 @@ Markers used below:
 ```mermaid
 flowchart LR
   subgraph PSU["External supply box (mains stays here)"]
-    XF["Transformer 26 VAC<br/>(AC rotators)"]
-    DCB["DC bus 12-48 V<br/>(DC rotators)"]
-    LOG["13.8 V DC logic<br/>(station supply)"]
+    XF["Transformer 26 VAC<br/>(AC version, ADR 0018)"]
+    DCB["DC bus, own supply<br/>(later DC-rotor module)"]
   end
 
   subgraph DRV["Drive module(s), one per axis"]
@@ -43,7 +42,8 @@ flowchart LR
     PFD["Power-fail detect<br/>+ hold-up"]
     SAF["Safety chain:<br/>E-stop loop, ext. watchdog,<br/>CW/CCW interlock + dead time"]
     ZX["AC sync / zero-cross sense"]
-    USB["Isolated USB-UART"]
+    PWR["Half-wave from 26 VAC,<br/>bulk cap, non-isolated buck to 5 V,<br/>LDO to 3V3"]
+    USB["Isolated USB (ADuM4160)"]
     ETH["LAN8720A RMII PHY + MagJack"]
     SER["RS-232 / RS-485 (optional)"]
     SIO["Station I/O:<br/>3 opto in, 3 OC out"]
@@ -55,8 +55,8 @@ flowchart LR
   PC["Shack PC / WIMS / loggers"]
 
   XF --> ACM
+  XF --> PWR
   DCB --> DCM
-  LOG --> LB
   XF -. sync .-> ZX
   MCU --> SAF --> MEN
   MEN --> ACM
@@ -85,11 +85,11 @@ flowchart LR
 
 | Board | Contents | Notes |
 |---|---|---|
-| **Logic board** (one) | STM32F407VGT6, 2 sensor front ends, pulse inputs, optional external ADC, FRAM, power-fail detect, safety chain, zero-cross sense, isolated USB, Ethernet (LAN8720A + MagJack), optional RS-232/RS-485, station I/O, drive-module connectors (x2), front-panel connector, expansion header, logic power | No mains and no motor current. The drive-module connector stays the same if the MCU changes |
+| **Logic board** (one) | STM32F407VGT6, 2 sensor front ends, pulse inputs, optional external ADC, FRAM, power-fail detect, safety chain, zero-cross sense, isolated USB, Ethernet (LAN8720A + MagJack), optional RS-232/RS-485, station I/O, drive-module connectors (x2), front-panel connector, expansion header, half-wave/buck/LDO from the 26 VAC | No mains and no motor current through the logic plane. Logic ground is the rotor return (ADR 0018). The drive-module connector stays the same if the MCU changes |
 | **Drive module, AC variant** (one per AC axis) | Master-enable switch, CW/CCW/BRAKE switches, RC snubbers, MOV, run-capacitor terminals, Hall current sensor, output-presence opto sense, rotor-power terminal block | v1 build for HAM-IV/T2X |
 | **Drive module, DC variant** (one per DC axis) | Reverse-polarity + fuse, bulk caps, H-bridge, gate driver, shunt amp, TVS, output-presence/voltage sense, terminal block | v2 (Yaesu DC, Prosistel, SPID, M2) |
 | **Front panel board** | Display, encoder + push, CW/CCW/STOP + 2–4 buttons, status LEDs, I2C GPIO expander | Ribbon to the logic board; STOP also wired into the safety chain |
-| **External supply** (separate box) | Mains entry, fuse, transformer(s) and/or DC supply | Keeps mains out of the controller (simpler safety review) |
+| **External supply** (separate box) | Mains entry, fuse, 26 VAC transformer for the AC version | Keeps mains out of the controller. No 13.8 V logic brick and no isolated DC-DC (ADR 0018). A later DC-rotor module has its own supply |
 
 ### Module vs. conditional SSR population
 
@@ -101,7 +101,7 @@ flowchart LR
 **Recommendation:** use **drive modules**, one module per axis, two variants. Both share a logic-side connector:
 - Enables: CW, CCW, BRAKE/AUX, PWM_A, PWM_B, MASTER_EN.
 - Returns: I_SENSE (analog), OUT_SENSE ×3, FAULT, MODULE_ID (resistor to ADC, or I2C EEPROM).
-- Power: logic 3V3/5V/GND.
+- Power: logic 3V3/5V and ground. Ground is the rotor return.
 
 The firmware reads MODULE_ID and refuses to drive a mismatched profile.
 
@@ -109,22 +109,65 @@ The firmware reads MODULE_ID and refuses to drive a mismatched profile.
 
 ## 3. Power architecture
 
+ADR 0018. The AC version has one input. There is no separate DC logic supply, no isolated DC-DC, and no 12 V input. The 12–48 V row below is the later DC-rotor module's own motor supply, not a logic feed and not a connector on this AC box.
+
 | Rail | Source | Use | Requirement |
 |---|---|---|---|
-| **Logic input** | 13.8 V DC station supply (accept 9–36 V) | Logic board, front panel, pulse pull-ups | Reverse-polarity protection, TVS, fuse; buck to 5 V and LDO to 3V3; hold-up cap for power-fail detect (≥20 ms after the PF threshold [U, size on bench]) |
-| **AC motor power** | External transformer, 26 VAC nominal | AC drive module only | HAM-IV: motor 24 VAC 2.25 A, brake 24 VAC 5 A, stock power transformer 26 VAC 10 % duty [V]. Simultaneous motor + brake ≈ 7.3 A × 26 V ≈ **190 VA intermittent** [U estimate]. A continuous-rated transformer runs cooler but costs more |
-| **DC bus** | External 12–48 V supply | DC drive module | RT-21-class coverage 12–48 VDC @ 5 A [V]; SPID 12–24 V, Yaesu DXC 11–24 V, Prosistel 24 V, M2 27 V/3.2 A [V]. Prop-pitch 10 A is out of v1 scope |
-| **Pot excitation** | Logic board, precision reference | Sensor front ends | See section 5 |
+| **26 VAC input** | External transformer, rear-panel Anderson Powerpoles, grey + black (V2 colors) | Motor, brake, and the logic rails derived below | HAM-IV: motor 24 VAC 2.25 A, brake 24 VAC 5 A, stock transformer 26 VAC 10 % duty [V]. Simultaneous motor + brake ≈ 7.3 A × 26 V ≈ **190 VA intermittent** [U]. Polarity does not matter. The colors key the plug so it is not a red/black 12 VDC pair. 15 A Powerpole contacts cover the intermittent current. Exact housings are the V2 pair; Mouser numbers TBD |
+| **Logic 5 V and 3.3 V** | Half-wave rectifier from that 26 VAC, bulk cap, non-isolated buck (≥ 60 V in) to 5 V, LDO to 3.3 V | MCU, PHY, LEDs, optos, front panel | See the sizing below. Power-fail detect watches the bulk rail, with hold-up for a FRAM write (≥20 ms after the threshold [U, size on bench]) |
+| **DC bus** | The later H-bridge module's own supply | DC drive module only | RT-21-class coverage 12–48 VDC @ 5 A [V]; SPID 12–24 V, Yaesu DXC 11–24 V, Prosistel 24 V, M2 27 V/3.2 A [V]. Not part of the AC controller. Prop-pitch 10 A is out of v1 scope |
+| **Pot excitation** | Logic board, from the derived rails or a reference | Sensor front ends | See section 5. Not a second input |
 
-Motor power does **not** feed logic, so the display, USB, and fault reporting stay alive with motor power off. That allows a "tower work" lockout by unplugging motor power. Optional: a logic-board input that senses motor-supply presence (AC: the zero-cross circuit; DC: a bus divider).
+The 26 VAC feed is the only power into the AC box. Unplugging the Powerpoles removes motor power and logic power together. There is no separate lockout that leaves the display and USB up. The zero-cross circuit still reports that the transformer is present.
 
-**Grounding.** In the CDE/Hy-Gain wiring, **terminal 1 is the common for the motor windings, the brake, and the pot wiper** [V, N0AX color-code/resistance table]. Motor and brake return current therefore flows in the same wire as the wiper reference. Your dual-end + notch method exists because of this.
+**Rear-panel opening for the Powerpoles.** Two options. The bracket is TBD, so the drawable default is the gland:
+
+- Pigtail through a gland. Default cutout Ø16.3, center 11.00 mm above the board (plate Y = 38.40, X = 17.50). Same opening class as the rotor gland. Gland size is [U].
+- 2-position panel-mount Powerpole bracket. Cutout and center height TBD. Do not drill that hole until a bracket is chosen. Then set `PanelCutout` and `PanelZ` and regenerate (ADR 0017).
+
+The old 22.00 × 12.50 terminal-block opening, and the idea that it carried 13.8 V plus 26 VAC, are withdrawn. The pre-layout PDF still shows that opening.
+
+**Grounding.** In the CDE/Hy-Gain wiring, **terminal 1 is the common for the motor windings, the brake, and the pot wiper** [V, N0AX]. Motor and brake return current flows in the same wire as the wiper reference. The dual-end measurement has to use that node, because of the pot's ground and the transients on it. So logic ground is terminal 1, and the whole controller floats on the rotor return.
 
 Consequences:
-- The logic ground of each axis's analog front end is effectively tied to rotor common, which is tower-referenced. So **USB must be isolated**, Ethernet is isolated by its magnetics, and RS-232 is an optional non-isolated port (document it).
-- The AC transformer secondary must float (not grounded in the supply box), so it can be referenced at terminal 1.
-- Switches always sit on the **hot** side; terminal 1 is the return.
-- Bond chassis to the station ground. Tie logic ground to chassis through a jumper/RC option (decide on the bench; see section 12).
+- **USB is isolated** by the ADuM4160. **Ethernet is isolated** by the MagJack magnetics. RS-232 is an optional non-isolated port (document it). Those are the isolation barriers. The buck is non-isolated: its ground is the rotor return.
+- The transformer secondary floats in the supply box. It is referenced only at terminal 1.
+- Switches sit on the **hot** side. Terminal 1 is the return.
+- The rear-plate ground stud bonds the chassis to station ground. The rotor return connects to the chassis through an RF capacitor in parallel with a TVS. Values TBD. That is not a DC short, and it is not a hard bond of logic ground to the chassis.
+
+### 3.1 Logic-rail sizing
+
+26 × √2 = 36.8 V, about **37 V** peak. One diode drop puts the nominal crest on the bulk cap near **36 V**. The V4 notes treated that rail as roughly 33–48 V; 48 V is the light-load / high-line figure used here, and it was not re-measured [U].
+
+**Linear-only, rejected.** Load estimate: F407 ~100 mA, LAN8720A ~50 mA, LEDs and optos 50–100 mA, so **200–250 mA** at 5 V. Dissipation from the bulk rail is (V_bulk − 5 V) × I. At 36 V and 200 mA that is 6.2 W. At 36 V and 250 mA it is 7.8 W. At 32 V and 220 mA it is 5.9 W. About **6–7 W** in the box, which the V4 SOT-89 LDO could not shed. Rejected.
+
+**Buck, then LDO.** Non-isolated buck, input rating ≥ 60 V, 5 V out, then an LDO to 3.3 V. At 85 % and 250 mA the buck wastes about 0.2 W. The LDO at 150 mA (MCU + PHY) from 5 V to 3.3 V wastes about 0.3 W. Keep LEDs and optos on 5 V. Give the ADC its own filtered 3.3 V or a VREF so the buck's ripple is not the pot reference. LDO and reference part numbers are TBD.
+
+**Bulk cap**, sized to ride through the sag when the ~5 A brake pulls in. It does not have to run the board for the whole brake-on interval. Assumptions [U]:
+
+| Item | Value |
+|---|---|
+| Ride-through | 100 ms (about six cycles at 60 Hz) |
+| Droop | 36 V down to 18 V (ΔV = 18 V), still enough for a 60 V buck to make 5 V |
+| Efficiency during the droop | 80 % |
+| Average voltage during the droop | 27 V |
+| Discharge current | (5 × 0.250) / (0.80 × 27) = 58 mA. Use **80 mA** |
+
+C = 0.080 × 0.100 / 18 = **444 µF**. Use **470 µF, 63 V**. Normal half-wave ripple is 0.080 / (60 × 470 µF) = 2.8 V. If a measurement shows a deeper or longer sag (200 ms down to 12 V), the same formula gives about 670 µF, so go to 1000 µF. If the crest exceeds 63 V, use an 80 V or 100 V cap.
+
+The half-wave diode sees about two peaks (about 74 V) and the cap inrush. Use ≥ 100 V, 1 A. Not a 1N4148. Part TBD.
+
+Half-wave DC bias in the transformer is this 60–80 mA, one polarity only. Against a 5 A brake that is about 1–2 %. Acceptable at this load. Do not half-wave the motor or the brake.
+
+**Buck candidates** (LCSC pages read 2026-10-12; stock not checked):
+
+| Part | Input | Current | LCSC |
+|---|---|---|---|
+| TI LM5164DDAR | 6–100 V | 1 A | C477928. Preferred: 100 V still fits if the crest is above 60 V |
+| TI LMR36006BRNXR | 4.2–60 V operating, 66 V transient abs max | 0.6 A | C1850367. Meets the 60 V floor; a continuous crest above 60 V does not |
+| MPS MP9486 | 100 V class, 1 A class, fixed-5 V option exists | | C-number TBD |
+
+Not candidates: LMR51430 is 4.5–36 V (LCSC C5185863 exists, and the voltage does not). MP4560 was not confirmed at ≥ 60 V.
 
 ---
 
@@ -275,9 +318,9 @@ Order matters: you moved the overvoltage diodes after the notch so 60 Hz doesn't
 ### 5.3 FRAM + power-fail detect
 
 - **FRAM** (I2C or SPI, ≥32 KB) holds the settings record, calibration tables, and **pulse-count checkpoints** (written on every stop, plus on power fail). Effectively unlimited endurance vs. EEPROM.
-- **Power-fail detect:** a comparator on the **logic input** (before the regulators), set above the regulator dropout, feeding an MCU interrupt. Size the hold-up capacitance so the MCU can finish the FRAM write and drop the master enable (≪10 ms needed; target ≥20 ms [U]).
-- **Coast problem:** if logic power dies while a pulse-sensor rotator coasts, coast pulses are lost. Mitigations:
-  - logic runs from the station 13.8 V supply, independent of motor power;
+- **Power-fail detect:** a comparator on the **bulk rail** (ahead of the buck), set above the buck's dropout, feeding an MCU interrupt. Size the hold-up so the MCU can finish the FRAM write and drop the master enable (≪10 ms needed; target ≥20 ms [U]). The 470 µF brake-sag cap is not automatically that hold-up; check the droop at the moment the transformer actually disappears.
+- **Coast problem:** if the 26 VAC feed dies while a pulse-sensor rotator coasts, coast pulses are lost. The AC version has no independent logic supply (ADR 0018). Mitigations:
+  - the bulk cap covers a short sag, not an unplugged transformer;
   - the firmware flags "count uncertain" after an unclean shutdown and asks for re-cal;
   - optional larger hold-up or a supercap [U: size from measured coast time].
 
@@ -350,7 +393,7 @@ It drives the master-enable switch on each drive module. Direction interlock and
 |---|---|---|---|
 | Pot A/B ×2 axes + excitation monitor | ADC | 5 | Or external SPI ADC (CS + DRDY = 2 pins) |
 | Motor current ×2 | ADC | 2 | From drive modules |
-| Logic-input + DC-bus monitors | ADC | 2 | Dividers |
+| Bulk-rail + DC-bus monitors | ADC | 2 | Dividers. Bulk rail is the AC version; the DC bus is the later module |
 | Module ID ×2 | ADC | 2 | Resistor ID (or I2C EEPROM on modules: 0 pins) |
 | Optional joystick/preset pot | ADC | 2 | Expansion |
 | **ADC subtotal** | **11–13 channels**, ≥12-bit, DMA | | ≈13 ch × 500 Hz × 16 oversample ≈ 100 kSPS aggregate |
@@ -392,10 +435,10 @@ It drives the master-enable switch on each drive module. Direction interlock and
    - A bench comparison of both on one HAM-IV would settle it.
 3. **Master-enable element:** mechanical relay (true air gap) or SSR.
 4. ~~**USB approach**~~ **Resolved (Oct 12, 2026):** native full-speed USB through the ADuM4160, so ROM DFU and CDC share USB-C. An FT230X bridge cannot enter the STM32 system-memory DFU bootloader. See the programming addendum.
-5. **Ground strategy:** logic/rotor-common tied to the chassis directly, through RC, or floating; test RF and hum behavior.
+5. ~~**Ground strategy**~~ **Resolved for the AC version (ADR 0018):** logic ground is the rotor return. Chassis bond is the ground stud to station ground. Rotor return meets the chassis only through an RF cap in parallel with a TVS. Those two part values are still TBD. Confirm RF and hum on the bench.
 6. **Supply box:**
    - Reuse a stock HAM-IV transformer (10 % duty) or a new continuous-rated one?
-   - Is DC from a separate supply, or the same box?
+   - The AC box does not take a logic DC feed. The later DC-rotor module's supply is still open.
 7. **External simultaneous-sampling ADC** in v1, or footprint only?
 8. **50 Hz support** in v1 (notch population variant)?
 9. **Front-panel display** for v1 (MAX7221 vs. LCD vs. TFT); this decides the panel board and the enclosure cutout.
@@ -482,7 +525,7 @@ Design implication: no panel-mount female exists in shell 13, so the controller 
   - About +1–2 °C/W per triac (brake ≈ 89 °C); 3/16 in angle gives ≈ 86 °C.
   - Height is fixed at 25.4 mm, so pick the slot (or pad thickness/shim) to suit.
 - **Rejected:** side-wall mounting (comb contact, lateral stack, side screws), no-screw interference fit (contact not guaranteed), bar on the lid with the board floating (lead stress), D²PAK to the belly plate (weak path, hot copper island, obsolete part). See `triac-thermal-packaging.md` §5.
-- §4.4 has been updated to match. The old "chassis wall through an insulator" wording is gone. Bond the box to chassis/GND at the rear plate.
+- §4.4 has been updated to match. The old "chassis wall through an insulator" wording is gone. The ground stud bonds the chassis to station ground. Logic ground (the rotor return) is not that bond; it meets the chassis through an RF cap and a TVS (ADR 0018).
 
 ## Addendum (Oct 11, 2026, evening): MCU, Ethernet, and who solders what
 
@@ -517,7 +560,7 @@ The front plate stays STOP, CW, and CCW. None of the controls in this addendum g
 - **DFU detection pins sit at a known level.** AN2606 says that if PA10 (USART1 RX), PB11 and PC11 (USART3 RX), or PB5 (CAN2 RX) float during the ROM's detection phase, the bootloader can lock onto noise instead of USB. Give each a pull-down or pull-up. PB11 is RMII TX_EN, so a pull-down is the one that also holds the PHY idle.
 - Part numbers for the two tactiles and the pull resistors are **TBD**. They are SMT, so they are LCSC parts once chosen.
 
-Procedure: the station logic supply is on (USB VBUS feeds only the upstream side of the isolator), hold BOOT0, press and release RESET, then release BOOT0. `dfu-util` or STM32CubeProgrammer sees the DFU device.
+Procedure: the 26 VAC feed is on, so the derived 3.3 V rail is up (ADR 0018). USB VBUS feeds only the upstream side of the isolator. Hold BOOT0, press and release RESET, then release BOOT0. `dfu-util` or STM32CubeProgrammer sees the DFU device.
 
 ### MCU crystal for DFU
 
@@ -536,7 +579,7 @@ D+ pull-up, checked against the ADuM4160 datasheet (Rev. E) and against the ROM 
 - USB-C CC1 and CC2 each get 5.1 kΩ to ground so a host provides VBUS. Those resistors are not the D+ pull-up. Their C-numbers are **TBD**.
 - USBLC6-2SC6 (LCSC C7519, already chosen) goes on the cable side of the isolator, on UD+ and UD−.
 
-The upstream side of the isolator runs from USB VBUS. The downstream side runs from the board 3.3 V. DFU therefore needs the station supply, not bus power alone.
+The upstream side of the isolator runs from USB VBUS. The downstream side runs from the board 3.3 V, which is derived from the 26 VAC feed. DFU therefore needs that feed, not bus power alone, and not a separate logic supply.
 
 ### Boot status LED
 
@@ -558,7 +601,7 @@ The drawings are in `hardware/controller/mechanical/`. The V4 KiCad project is n
 - **Triac bar:** 10 × 50 mm at board x 21.9–31.9, y 24.5–74.5. Top-wall drills Ø3.4 at enclosure x = 29 from the rear-plate inner face, y = ±20.
 - **Motor run cap (ADR 0016):** KEMET R60EW61005000K, 100 µF, lying flat (height 20.3 mm), in parallel with TDK B32526T1336K000, 33 µF, upright (height 15.0 mm). Total 133 µF nominal, inside the CDE 130–156 µF range. Both are 100 VDC / 63 VAC and are through-hole. The zone is board x 47.25–122.5, y 4.5–47.3.
 - **Front plate:** CCW, STOP, CW (Ø6.5) and six Dialight 551-xx07F holes (Ø4.0). No light pipes. LED functions are TBD.
-- **Rear plate:** power inlet, M16 gland (Ø16.3), USB-C, ground stud, Pulse J0011D01BNL cutout. Power, the gland, USB-C, and the stud are TBD on the drawing.
+- **Rear plate:** 26 VAC Anderson Powerpoles (grey + black), M16 rotor gland (Ø16.3), USB-C, ground stud, Pulse J0011D01BNL cutout. The Powerpole opening defaults to a pigtail gland (Ø16.3, center 11 mm above the board). A 2-position panel-mount bracket is the other option and its cutout is TBD (ADR 0018). The rotor gland, USB-C, and the stud are still TBD on the drawing.
 - **Tolerance:** slot heights are chained from Hammond typical dimensions and are about ±0.6 mm unverified. Test-fit one board in a box before drilling a batch.
 
 Detail, sources, and the unverified list are in `hardware/controller/mechanical/outline-1455N1601/README.md`.

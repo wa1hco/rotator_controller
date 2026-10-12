@@ -125,8 +125,8 @@
 		(property "Reference" "J_POWER" (at 0 0 0) (layer "F.SilkS"))
 		(property "Value" "POWER_IN" (at 0 0 0) (layer "F.Fab"))
 		(property "Panel" "rear" (at 0 0 0) (layer "F.Fab"))
-		(property "PanelCutout" "rrect:22.00x12.50:r0.5" (at 0 0 0) (layer "F.Fab"))
-		(property "PanelZ" "6.00" (at 0 0 0) (layer "F.Fab"))
+		(property "PanelCutout" "circle:16.3" (at 0 0 0) (layer "F.Fab"))
+		(property "PanelZ" "11.00" (at 0 0 0) (layer "F.Fab"))
 	)
 	(footprint "Gland_M16"
 		(layer "F.Cu")

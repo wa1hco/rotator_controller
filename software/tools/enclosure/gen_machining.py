@@ -28,8 +28,10 @@ drill defaults to 3.4 mm unless ``PanelCutout`` is set.
 
 ``PanelCutout`` accepts ``circle:6.5``, ``rect:17.02x14.60``, and
 ``rrect:13.6x6.5:r1``. Known buttons, LEDs, USB-C, RJ45, the gland,
-the ground stud, and the power inlet have defaults for cutout and
-``PanelZ`` when those properties are omitted.
+the ground stud, and the 26 VAC Powerpole feed have defaults for
+cutout and ``PanelZ`` when those properties are omitted. The
+Powerpole default is the pigtail gland (Ø16.3 at 11.00 mm). A
+panel-mount bracket is TBD and is not that default (ADR 0018).
 
 Print the PDF or SVG at 100 %. The sheet is A4 landscape and the plate
 is drawn at 1:1. A 50 mm bar is on every sheet.
@@ -69,7 +71,7 @@ DEFAULT_CUTOUTS: tuple[tuple[str, tuple[str, ...], str, float], ...] = (
     ("rj45", ("rj45", "magjack", "j0011", "j403"), "rrect:17.02x14.60:r0.25", 7.05),
     ("gland", ("gland", "m16"), "circle:16.3", 11.00),
     ("stud", ("stud", "gnd"), "circle:4.3", 15.10),
-    ("power", ("power", "inlet", "terminal"), "rrect:22.00x12.50:r0.5", 6.00),
+    ("power", ("powerpole", "power", "inlet"), "circle:16.3", 11.00),
     ("led", ("led", "dialight", "551", "cbi"), "circle:4.0", 5.08),
     ("button", ("button", "bb15", "nkk"), "circle:6.5", 3.40),
 )

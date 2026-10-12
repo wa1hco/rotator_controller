@@ -45,7 +45,7 @@ FRONT = [
     ("LED_FAULT", 91.50, 32.48, "circle", 4.0, 4.0, 0.0),
 ]
 REAR = [
-    ("J_POWER", 17.50, 33.40, "rrect", 22.00, 12.50, 0.50),
+    ("J_POWER", 17.50, 38.40, "circle", 16.3, 16.3, 0.0),
     ("J_GLAND", 43.50, 38.40, "circle", 16.3, 16.3, 0.0),
     ("J_USB", 69.50, 29.08, "rrect", 13.60, 6.50, 1.0),
     ("J_GND", 69.50, 42.50, "circle", 4.3, 4.3, 0.0),
@@ -134,7 +134,7 @@ class DefaultAndTransformTest(unittest.TestCase):
             ("RJ45_Pulse_J0011", "J0011D01BNL", "J2", "rrect:17.02x14.60:r0.25", 7.05),
             ("Gland_M16", "M16", "J3", "circle:16.3", 11.00),
             ("GND_STUD_M4", "M4", "J4", "circle:4.3", 15.10),
-            ("Terminal_Power_In", "POWER", "J5", "rrect:22.00x12.50:r0.5", 6.00),
+            ("Terminal_Power_In", "POWER", "J5", "circle:16.3", 11.00),
         ]
         for name, value, ref, spec, panel_z in cases:
             found = gm.lookup_default(name, value, ref)

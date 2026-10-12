@@ -23,3 +23,4 @@ They are short on purpose. The reasoning and the numbers live in
 | [0015](0015-configuration-and-ui.md) | Board file, no feature `#ifdef`s, versioned settings; web UI and a shared console |
 | [0016](0016-motor-run-capacitor.md) | CDE run cap: 100 µF flat plus 33 µF upright, 133 µF |
 | [0017](0017-enclosure-machining-drawings.md) | Panel holes are generated from footprint positions, not drawn on the PCB |
+| [0018](0018-ac-power-and-grounding.md) | AC version: one 26 VAC Powerpole feed; logic ground is the rotor return |

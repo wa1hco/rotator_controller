@@ -3817,7 +3817,7 @@
 			)
 		)
 	)
-	(gr_text "POWER IN z+6.00"
+	(gr_text "26 VAC PP z+11.00 gland; bracket TBD"
 		(at 48 65.5 0)
 		(layer "Cmts.User")
 		(uuid "3e15cdcb-9dc2-4e67-a674-b16fe844f4e6")
@@ -3853,7 +3853,7 @@
 			(justify left)
 		)
 	)
-	(gr_text "REAR: rotor cable, 13.8 V, 26 VAC, USB-C, RJ45"
+	(gr_text "REAR: rotor cable, 26 VAC Powerpoles, USB-C, RJ45"
 		(at 39.9 99.5 90)
 		(layer "Cmts.User")
 		(uuid "4dd01fac-1367-4016-b652-8a868726588f")

@@ -28,11 +28,13 @@ A footprint is on a plate when it has a property `Panel` = `front`,
 
 - `PanelCutout` is optional: `circle:6.5`, `rect:17.02x14.60`, or
   `rrect:13.6x6.5:r1`. Buttons, Dialight 551 LEDs, USB-C, RJ45, the
-  M16 gland, the ground stud, and the power inlet have defaults.
+  M16 gland, the ground stud, and the 26 VAC Powerpole feed have
+  defaults.
 - `PanelZ` is the optical or mechanical centre height above the
   board, in millimetres. The same parts have defaults (button 3.40,
-  LED 5.08, USB-C 1.68, RJ45 7.05, gland 11.00, stud 15.10, power
-  inlet 6.00).
+  LED 5.08, USB-C 1.68, RJ45 7.05, gland 11.00, stud 15.10). The
+  Powerpole default is the pigtail gland, Ø16.3 at 11.00 mm
+  (ADR 0018). A panel-mount bracket is TBD and is not that default.
 - The footprint anchor is the hole centre in the board plane. Board
   coordinates are millimetres from the Edge.Cuts minimum corner
   (rear-left).

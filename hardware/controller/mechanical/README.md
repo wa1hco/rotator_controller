@@ -84,7 +84,7 @@ Defaults when `PanelCutout` or `PanelZ` is omitted:
 | RJ45 (Pulse J0011) | 17.02 × 14.60 R0.25 | 7.05 |
 | M16 gland | Ø16.3 | 11.00 |
 | Ground stud | Ø4.3 | 15.10 |
-| Power inlet | 22.00 × 12.50 R0.5 | 6.00 |
+| 26 VAC Powerpoles | Ø16.3 gland (bracket TBD) | 11.00 |
 
 The top-wall template uses the `np_thru_hole` pads of a footprint
 named `AL_BAR…`, or any footprint with `Panel` = `top`. The wall
@@ -122,6 +122,10 @@ board has those fields. Do not drill a batch from these alone.
 Front plate: CCW, STOP, and CW (Ø6.5) and six Dialight 551 right-angle
 LED holes (Ø4.0). No light pipes. LED functions are still TBD.
 
-Rear plate: power inlet, M16 rotor gland, USB-C, RJ45, and a ground
-stud. Power, the gland, USB-C, and the stud are still marked TBD on
-the drawing.
+Rear plate: 26 VAC Anderson Powerpoles (grey + black), M16 rotor
+gland, USB-C, RJ45, and a ground stud. The drawable Powerpole default
+is a pigtail gland, Ø16.3 at 11.00 mm above the board (ADR 0018). A
+2-position panel-mount bracket is the other option; its cutout is
+TBD. The gland, USB-C, and the stud are still marked TBD on the
+drawing. The pre-layout PDF still shows the withdrawn 22.00 × 12.50
+terminal-block opening.

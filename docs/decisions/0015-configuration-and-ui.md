@@ -186,6 +186,7 @@ it. It is not a flash log.
   the hardware-requirements addendum. C-numbers stay TBD until those
   parts are looked up. The PHY crystal decision (C9006, REF_CLK from
   the LAN8720A) is unchanged.
-- ROM DFU needs the station logic supply. USB VBUS powers the upstream
-  side of the ADuM4160 only.
+- ROM DFU needs the 26 VAC feed, so the derived 3.3 V rail is up
+  (ADR 0018). USB VBUS powers the upstream side of the ADuM4160 only.
+  There is no separate logic supply.
 - The KiCad files are not edited by this decision.

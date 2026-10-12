@@ -1,4 +1,6 @@
-import sys; sys.path.insert(0, "/workspace/rotator-design/img/src")
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import *
 import matplotlib.gridspec as gs
 
@@ -85,7 +87,7 @@ dim(ax, (0.5, 12), (18.5, 12), "0..18 connectors", ext=False, tdy=-3.0)
 dim(ax, (38, 12), (75.7, 12), "38..76 drivers / snubbers / K10", ext=False, tdy=-3.0)
 
 # labels
-label(ax, (-0.75, 4), "Rear plate (all cables):\nrotor plug, RJ45, USB-C,\n13.8 V, 26 VAC", (2, -9), ha="left", va="top")
+label(ax, (-0.75, 4), "Rear plate (all cables):\nrotor plug, RJ45, USB-C,\n26 VAC Powerpoles", (2, -9), ha="left", va="top")
 label(ax, (160.75, 4), "Front plate:\nbuttons + LEDs\n(light pipes)", (158, -9), ha="right", va="top")
 label(ax, (68, zt+14), "K10 relay", (68, 50), ha="center")
 label(ax, (37, zt+8), "triacs", (88, 47), ha="left")
@@ -121,4 +123,4 @@ label(dx, (44, zp+0.8), "PCB 1.6 in slot k", (LX, 23.5))
 label(dx, (XL+0.4, zp-1), "Leads 2.5 from bar face (verify)", (LX, 19.5))
 label(dx, (XS+2.75, zp-1.6), "M3 x 6 pan from below, NPTH 3.2", (LX, 15.5))
 dx.set_xlim(8, 132); dx.set_ylim(13, 59)
-f.savefig("/workspace/rotator-design/img/triac-side-view.png", dpi=100)
+f.savefig(Path(__file__).resolve().parents[1] / "triac-side-view.png", dpi=100)
