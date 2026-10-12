@@ -1,0 +1,325 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d")
+	(paper "A3")
+	(lib_symbols)
+	(text "F407 rotator controller\nRoot sheet. This PR is the rotor interface and the AC motor drive only.\nThe processor sheet and the power sheet are not drawn yet.\nNo-connects on these sheet pins are the waiver for that.\nPower arrives later on +5V and +3V3. PWR_FLAG on the child sheet marks that.\nDo not copy hardware/controller/ (imported V4). It stays as reference."
+		(exclude_from_sim no)
+		(at 140 250 0)
+		(effects
+			(font
+				(size 1.6 1.6)
+			)
+			(justify left)
+		)
+		(uuid "88e7f4b9-481c-4185-8990-9397013735e3")
+	)
+	(sheet
+		(at 25 20)
+		(size 80 106.52)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e")
+		(property "Sheetname" "rotor_drive"
+			(at 25 128.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "rotor_drive.kicad_sch"
+			(at 25 18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "+5V" input
+			(at 25 121.52 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "7c3c34bd-09ed-476a-82df-05a600e7c70b")
+		)
+		(pin "+3V3" input
+			(at 25 116.44 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "3415d35f-c4e9-4851-a1db-63702a7b5684")
+		)
+		(pin "ROTOR_RETURN" bidirectional
+			(at 25 111.36 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "5cbab5ee-b552-4d96-8a10-e12049b1c4aa")
+		)
+		(pin "AC_HOT" bidirectional
+			(at 25 106.28 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "4577a765-ab97-4b8f-83db-a32e5c735248")
+		)
+		(pin "VIN_RECT" output
+			(at 25 101.2 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "7138e3fc-5979-42dc-b9a0-e5ee2ca4acc9")
+		)
+		(pin "AZ_CW_EN" input
+			(at 25 96.12 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "b8a289c4-c122-4782-9608-5a6451034fb8")
+		)
+		(pin "AZ_CCW_EN" input
+			(at 25 91.04 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "8507a546-d959-46cf-a476-9a23d3077ee6")
+		)
+		(pin "AZ_BRAKE_EN" input
+			(at 25 85.96 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "7b80b765-d9a6-4a66-a9f3-9cdf9b14337c")
+		)
+		(pin "ARM_EN" input
+			(at 25 80.88 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "b346f829-2447-4e58-9491-648d7ee62fb3")
+		)
+		(pin "WDI_KICK" input
+			(at 25 75.8 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "b90ac14b-d844-41e8-bace-175fb577f0ed")
+		)
+		(pin "STOP_N" input
+			(at 25 70.72 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "c9989d19-2da5-45e2-942b-f6173f20c6fb")
+		)
+		(pin "nRESET" output
+			(at 25 65.64 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "bef400ec-69bb-439c-ab17-66187ef45fe6")
+		)
+		(pin "ZC_SENSE" output
+			(at 25 60.56 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "35eba23b-e458-4c0a-8f8e-61b59793842d")
+		)
+		(pin "I_SENSE" output
+			(at 25 55.48 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "8ec8c1cb-3a9c-45d2-aa91-30ddac257271")
+		)
+		(pin "AZ_CW_SNS" output
+			(at 25 50.4 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "42e0109b-a49e-474c-80db-45dd2c53eef8")
+		)
+		(pin "AZ_CCW_SNS" output
+			(at 25 45.32 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "14819c5f-005b-4b00-9ff3-8784ffb82a95")
+		)
+		(pin "AZ_BRAKE_SNS" output
+			(at 25 40.24 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "7a47ddb6-0222-4d39-9074-d21e5db61f0b")
+		)
+		(pin "AZ_POT_3" bidirectional
+			(at 25 35.16 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "776dec49-b25f-4b6a-af11-a16ddb27bbaa")
+		)
+		(pin "AZ_POT_7" bidirectional
+			(at 25 30.08 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "04537e3a-3e92-4726-bbac-cd7eeb88a046")
+		)
+	)
+	(no_connect
+		(at 25 121.52)
+		(uuid "b07bad6b-5a8f-4d8a-aaa6-cbf78b512f65")
+	)
+	(no_connect
+		(at 25 116.44)
+		(uuid "f83dc85b-747a-4dab-b117-d893569f3604")
+	)
+	(no_connect
+		(at 25 111.36)
+		(uuid "330a6ee0-5782-4635-9037-9d56e2b9bca9")
+	)
+	(no_connect
+		(at 25 106.28)
+		(uuid "e2af95e9-7554-483f-9a47-4fdab5827590")
+	)
+	(no_connect
+		(at 25 101.2)
+		(uuid "8626cad9-b01a-4af8-a5da-8b90ecc0a863")
+	)
+	(no_connect
+		(at 25 96.12)
+		(uuid "b3b11ab5-60af-4812-adaa-9cea3ef526d3")
+	)
+	(no_connect
+		(at 25 91.04)
+		(uuid "38fb5bed-3525-4f71-8628-aba564a9071f")
+	)
+	(no_connect
+		(at 25 85.96)
+		(uuid "608fb497-5cec-4beb-9d98-30a5f4695c97")
+	)
+	(no_connect
+		(at 25 80.88)
+		(uuid "d5b58899-ca9e-4903-8738-381a63455c40")
+	)
+	(no_connect
+		(at 25 75.8)
+		(uuid "aea938af-40f5-4151-9e36-73d8049e5d29")
+	)
+	(no_connect
+		(at 25 70.72)
+		(uuid "aad7183b-d114-498b-9f84-80f34161839b")
+	)
+	(no_connect
+		(at 25 65.64)
+		(uuid "0eb3a6be-5fbf-43cd-9784-a52d5cc283da")
+	)
+	(no_connect
+		(at 25 60.56)
+		(uuid "061441cf-d818-4864-9eba-a0a94c5028ca")
+	)
+	(no_connect
+		(at 25 55.48)
+		(uuid "c2cb7169-3a7b-4d13-914b-5db70eced079")
+	)
+	(no_connect
+		(at 25 50.4)
+		(uuid "d78b07e3-c907-4245-9fe2-ec36804c46bc")
+	)
+	(no_connect
+		(at 25 45.32)
+		(uuid "552bb6f3-87fe-4ee9-b59c-b4a14757bf1a")
+	)
+	(no_connect
+		(at 25 40.24)
+		(uuid "b1ac956e-3056-48fa-9d14-ea421947b92c")
+	)
+	(no_connect
+		(at 25 35.16)
+		(uuid "7f206612-4263-44fd-a43b-903f59a1b524")
+	)
+	(no_connect
+		(at 25 30.08)
+		(uuid "c68279e3-85ee-4511-aa86-e63eeea06ad5")
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)
