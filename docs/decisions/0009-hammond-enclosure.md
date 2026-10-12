@@ -2,9 +2,10 @@
 
 - Status: Accepted
 - Date: 2026-10-11
-- Revised: 2026-10-12. The end-plate drawings and the slot-6 board
-  outline are in the repository. The motor run cap that fits this
-  height is ADR 0016.
+- Revised: 2026-10-12. The slot-6 board outline is in the repository.
+  The motor run cap that fits this height is ADR 0016. Machining
+  drawings are generated from the layout (ADR 0017); the PDFs under
+  `panels/preliminary-pre-layout/` are the pre-layout sheets.
 
 ## Context
 
@@ -30,8 +31,10 @@ The board slides into the side-wall card slots.
 
 ## Consequences
 
-The drawings are in `hardware/controller/mechanical/`:
-`outline-1455N1601/` for the board, `panels/` for the end plates.
+The board outline is in `hardware/controller/mechanical/outline-1455N1601/`.
+End-plate and top-wall drawings are generated from footprint fields
+(ADR 0017). The pre-layout sheets are in
+`panels/preliminary-pre-layout/`.
 Slot heights chained from Hammond typical dimensions are about
 ±0.6 mm. Test-fit one board in a box before drilling a batch.
 The top wall is the heat-sink surface (ADR 0010), because the side

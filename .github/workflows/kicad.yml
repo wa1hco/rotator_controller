@@ -70,3 +70,45 @@ jobs:
           name: kicad-erc-drc
           path: reports/
           if-no-files-found: error
+
+  # Drawings from Panel fields. A board with no such fields, and no
+  # triac-bar mounting holes, is a success: the V4 layout does not
+  # have them yet. The outline board does have the bar, so that run
+  # uploads a top-wall template.
+  enclosure-drawings:
+    name: Enclosure machining drawings
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install matplotlib
+        run: pip install matplotlib
+
+      - name: Regression test
+        run: python3 -m unittest discover -s software/tools/enclosure -p 'test_*.py'
+
+      - name: Outline board
+        run: |
+          python3 software/tools/enclosure/gen_machining.py \
+            hardware/controller/mechanical/outline-1455N1601/RotatorController-1455N1601-outline.kicad_pcb \
+            -o artifacts/outline \
+            --allow-empty
+
+      - name: Controller board
+        run: |
+          python3 software/tools/enclosure/gen_machining.py \
+            hardware/controller/Rotator-Controller-V4.kicad_pcb \
+            -o artifacts/controller \
+            --allow-empty
+
+      - name: Upload drawings
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: enclosure-drawings
+          path: artifacts/
+          if-no-files-found: ignore

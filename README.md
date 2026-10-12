@@ -16,10 +16,10 @@ not drawn into the board yet.
 | Path | What it is |
 |---|---|
 | [hardware/controller/](hardware/controller/README.md) | V4 KiCad 9 project and the project-local libraries it uses |
-| [hardware/controller/mechanical/](hardware/controller/mechanical/README.md) | Placeholder for enclosure drill templates and the triac bar drawing |
+| [hardware/controller/mechanical/](hardware/controller/mechanical/README.md) | Hammond 1455N1601 outline; machining drawings generated from the layout |
 | [software/firmware/](software/firmware/README.md) | C++17 core, host CMake build, unit tests. Board target STM32F407VGT6; the core stays processor-agnostic |
 | [software/sim/](software/sim/README.md) | Physics simulator, GS-232 harness, browser compass |
-| [software/tools/](software/tools/README.md) | Placeholder for calibration scripts, plots, and a web compass |
+| [software/tools/](software/tools/README.md) | Host tools, including the enclosure machining-drawing generator |
 | [docs/design/](docs/README.md) | System, hardware, triac, and packaging notes |
 | [docs/decisions/](docs/decisions/README.md) | Decision records |
 
