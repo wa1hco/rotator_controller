@@ -68,7 +68,7 @@ USB FS stays on PA11/PA12 (70/71), and SWD on PA13/PA14. RMII takes 6 of the 16 
 | USB FS D+/D- + VBUS sense | 3 |
 | SWD (SWDIO, SWCLK, SWO) | 3 |
 | Spare UART | 2 |
-| HSE crystal | 2 (OSC_IN/OUT) |
+| HSE crystal | 2 (OSC_IN/OUT). 8 MHz, for ROM USB DFU; not the PHY's 25 MHz crystal |
 | 2 axes of sensor inputs (pot/dual-end pot ADC, limit/stall/pulse inputs), about 6 per axis | 12 |
 | Triac drive (CW, CCW, brake/aux per axis) | 6 |
 | Buttons (about 6) and LEDs (about 6) | 12 |
@@ -112,6 +112,8 @@ It needs a 25 MHz crystal and magnetics/MagJack too. It would only make sense if
 | OT322550MJBA4SL (YXC) 50 MHz oscillator | C717684 | SMD3225-4P | Extended | 13,660 | 0.53 | Alternative |
 
 Recommendation: use the 25 MHz crystal C9006 (Basic, so no setup fee) on the PHY, and let the PHY output the 50 MHz REF_CLK. The LAN87xx needs 25 MHz ±50 ppm, which this part meets. Size the load capacitors for 12 pF.
+
+That crystal does not clock the MCU. ROM USB DFU needs a separate HSE on `OSC_IN`/`OSC_OUT` (ADR 0015). Use 8 MHz there, not a second C9006: AN2606's HSI measurement of HSE is less reliable at 25 MHz. The 8 MHz part and its load capacitors are TBD until they are looked up.
 https://www.lcsc.com/product-detail/crystals_yxc-crystal-oscillators-x322525mob4si_C9006.html
 
 ## 5. RJ45 MagJack (through-hole, hand soldered, **bought from Mouser**)

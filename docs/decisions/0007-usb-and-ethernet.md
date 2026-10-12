@@ -25,5 +25,6 @@ The parts, the 25 MHz PHY clock, and the MagJack are in ADR 0014.
 
 The rear panel always has USB and an RJ45. The imported V4 drawing is
 still the F405 board and does not yet show the PHY. GS-232 over USB is
-the first protocol path; a network listener uses the same parser. The
-core does not gain a TCP stack in the skeleton.
+the first protocol path; a network listener uses the same parser.
+GS-232 and the text console share those ports by grammar (ADR 0015).
+The core does not gain a TCP stack in the skeleton.

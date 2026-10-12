@@ -30,8 +30,30 @@ When symbols are updated (not done in the imported project):
 - An SMT part gets an `LCSC` field whose value is the LCSC C-number
   (for example `C12345` on the STM32F407VGT6).
 - A through-hole part gets a `Mouser` field with the Mouser order number.
-  The RJ45 candidate is the Pulse J0011D01BNL; that order number is not
-  confirmed yet, so the field waits until it is.
+The RJ45 candidate is the Pulse J0011D01BNL; that order number is not
+confirmed yet, so the field waits until it is.
+
+## Programming and debug (not in the schematic yet)
+
+The next layout adds these. Details and the reasons are in
+`docs/decisions/0015-configuration-and-ui.md` and the programming
+addendum of `docs/design/hardware-requirements.md`. Do not put them on
+the front plate.
+
+| Function | Part | Source field |
+|---|---|---|
+| BOOT0 tactile, pull-down to ground, button to 3.3 V | SMT tactile. C-number TBD | `LCSC` when known |
+| RESET tactile, to NRST | SMT tactile. C-number TBD | `LCSC` when known |
+| PB2 (BOOT1) pull-down | SMT resistor. C-number TBD | `LCSC` when known |
+| MCU HSE | 8 MHz crystal and load caps. C-numbers TBD. Not the PHY's 25 MHz C9006 | `LCSC` when known |
+| USB-C CC1 and CC2 | 5.1 kΩ each to ground. C-number TBD | `LCSC` when known |
+| Debug | Tag-Connect TC2050-IDC-NL pads (SWDIO, SWCLK, SWO, NRST). No part | none |
+| Boot LED | SMT LED and resistor. C-numbers TBD | `LCSC` when known |
+
+USB-C D+ does not get its own 1.5 kΩ. The ADuM4160's PIN pin is tied to
+VDD2 so the isolator's upstream pull-up is present for ROM DFU and for
+the application. SPU and SPD are tied high (full speed). The drawing
+still straps them low.
 
 ## Source
 

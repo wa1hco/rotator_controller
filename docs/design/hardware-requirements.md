@@ -287,11 +287,11 @@ Order matters: you moved the overvoltage diodes after the notch so 60 Hz doesn't
 
 | Port | v1 status | Implementation options | Recommendation |
 |---|---|---|---|
-| **USB serial (control)** | **Required** | (a) USB-UART bridge (FT230X class, as on your SO4R board, with custom product strings) powered from VBUS + a **2–4 channel digital isolator** to the MCU UART. (b) MCU native USB + USB isolator (ADuM4160 class, as on V4 [V part on V4]) | **(a)** is processor-agnostic, gives stable port names ("FTDI WA1HCO / Rotator Az") and RTS/CTS, and allows a ROM-UART bootloader for updates. (b) allows composite CDC (multiple ports) but ties the design to an MCU with USB |
+| **USB serial (control)** | **Required** | MCU native USB full-speed (PA11/PA12) through an ADuM4160 isolator to USB-C. The same socket is the CDC console and the ROM DFU port | Native USB, not an FT230X bridge. The STM32F407 system-memory bootloader speaks USB DFU, not a UART. Wiring is the programming addendum below |
 | **Ethernet** | **Required** | STM32F407 MAC + LAN8720A-CP-TR RMII PHY + 25 MHz crystal (PHY supplies 50 MHz REF_CLK) + through-hole MagJack. LAN8742A-CZ-TR is the same-footprint fallback | Magnetics give galvanic isolation. **PoE is not used.** The earlier W5500-on-SPI option is dropped (evening addendum) |
 | **RS-232** | Optional (populate) | MAX3232-class + DB-9 | Legacy loggers/hardware; not isolated (document it) |
 | **RS-485** | Optional (populate) | Half-duplex transceiver + terminal block, shares a UART with RS-232 by population | For future tower units / daisy-chain ("new idea") |
-| **Debug** | Required | SWD/JTAG header + console UART on the expansion header | — |
+| **Debug** | Required | Tag-Connect TC2050-IDC-NL pads: SWDIO, SWCLK, SWO, NRST, VTREF, GND. No header is placed | Chosen over a 10-pin 1.27 mm Cortex header because the footprint needs no part. See the programming addendum |
 
 ---
 
@@ -362,7 +362,7 @@ It drives the master-enable switch on each drive module. Direction interlock and
 | MCU_enable (safety chain), watchdog kick | GPIO | 2 | External watchdog |
 | Power-fail detect | GPIO/IRQ (or comparator) | 1 | Highest-priority IRQ |
 | AFE mode select (×2), pulse pull-up select (×2) | GPIO | 4 | Can move to the I2C expander |
-| USB-UART bridge | UART (+RTS/CTS) | 2–4 | |
+| USB FS (CDC and ROM DFU) | USB OTG FS, through the ADuM4160 | 2 (PA11/PA12) plus VBUS sense if used | Full speed. PIN tied to VDD2. See the programming addendum |
 | RS-232 / RS-485 | UART (+DE) | 2–3 | Shared by population |
 | Ethernet RMII (LAN8720A) | RMII + MDIO/MDC + nRST | about 11 | REF_CLK from the PHY. Not a W5500 |
 | FRAM | I2C (shared) or SPI CS | 0–1 | |
@@ -370,10 +370,10 @@ It drives the master-enable switch on each drive module. Direction interlock and
 | Station I/O | GPIO | 6 | 3 in, 3 out (or via expander) |
 | Status LEDs | GPIO | 2 | |
 | Expansion header | I2C, SPI, UART, 2 GPIO | 2 GPIO + shared buses + 2 UART | |
-| Debug | SWD + reset + boot | 3–4 | |
+| Debug | SWDIO, SWCLK, SWO on the TC2050-IDC-NL pads; NRST shared with the RESET button | 3 plus NRST | No populated header |
 | **Total direct GPIO** | | **≈ 70 pins** all direct; **≈ 50** with an I2C expander for slow signals (sense, mode selects, station I/O) | The chosen MCU is the 100-pin STM32F407VGT6. A 64-pin F405 has no Ethernet MAC, and ST does not make a 64-pin F407 |
 
-**Peripheral counts:** UART ×3 (USB, RS-232/485, expansion/console); SPI ×1 (display, external ADC); Ethernet is the MCU MAC, not a SPI controller; I2C ×1–2; timers for 4 PWM + 3 capture + system tick; ADC 11–13 channels with DMA; hardware watchdog; FPU helpful (dual-end solve, FIR).
+**Peripheral counts:** UART ×2 (RS-232/485 and expansion); USB OTG FS for CDC and ROM DFU (not a UART bridge); SPI ×1 (display, external ADC); Ethernet is the MCU MAC, not a SPI controller; I2C ×1–2; timers for 4 PWM + 3 capture + system tick; ADC 11–13 channels with DMA; hardware watchdog; FPU helpful (dual-end solve, FIR).
 
 **Memory:** the chosen part, STM32F407VGT6, has 1 MB flash and 192 KB RAM. The stack is the MCU MAC plus a host network stack (lwIP or equivalent), not a W5500 offload. 192 KB is the RAM the design has to live in [U: measure the stack].
 
@@ -391,7 +391,7 @@ It drives the master-enable switch on each drive module. Direction interlock and
    - vs. MOSFET + Si875x (low heat, AC/DC universal, but needs kick handling).
    - A bench comparison of both on one HAM-IV would settle it.
 3. **Master-enable element:** mechanical relay (true air gap) or SSR.
-4. **USB approach:** isolated FT230X-class bridge (recommended, MCU-agnostic) vs. native USB + ADuM4160.
+4. ~~**USB approach**~~ **Resolved (Oct 12, 2026):** native full-speed USB through the ADuM4160, so ROM DFU and CDC share USB-C. An FT230X bridge cannot enter the STM32 system-memory DFU bootloader. See the programming addendum.
 5. **Ground strategy:** logic/rotor-common tied to the chassis directly, through RC, or floating; test RF and hum behavior.
 6. **Supply box:**
    - Reuse a stock HAM-IV transformer (10 % duty) or a new continuous-rated one?
@@ -492,3 +492,50 @@ Locked the same day. The KiCad schematic and PCB in this repository are **not** 
 | RJ45 | Through-hole MagJack, hand-soldered. Candidate Pulse J0011D01BNL, not confirmed on Mouser | Mouser |
 
 Ethernet is on every board. The W5500 path in the earlier draft of section 6 is not the design. LQFP-64 to LQFP-100 is a re-layout; the MCU area of the imported board was barely started, so that re-layout is accepted. Recheck stock before ordering.
+
+## Addendum (Oct 12, 2026): Programming, reset, and debug
+
+Locked with ADR 0015. The KiCad schematic and PCB are not updated here. SMT parts are JLCPCB/LCSC parts; through-hole parts are Mouser. C-numbers below are TBD where a part was not looked up. Do not invent one at layout time.
+
+The front plate stays STOP, CW, and CCW. None of the controls in this addendum go on that plate.
+
+### BOOT0 and RESET
+
+- **BOOT0 tactile**, SMT, board-internal or recessed (a hole in the belly plate is enough). Not on the front plate. A pull-down holds BOOT0 low so a normal reset boots flash. The button ties BOOT0 to 3.3 V while it is held.
+- **RESET tactile**, SMT, next to BOOT0, also off the front plate. It ties NRST to ground. The STM32F4 NRST pin already has a pull-up.
+- **BOOT1 is PB2.** System-memory boot is BOOT0 high and BOOT1 low, latched at reset (AN2606, STM32F405/407 section). Pull PB2 down so a BOOT0 press cannot land in SRAM.
+- **DFU detection pins sit at a known level.** AN2606 says that if PA10 (USART1 RX), PB11 and PC11 (USART3 RX), or PB5 (CAN2 RX) float during the ROM's detection phase, the bootloader can lock onto noise instead of USB. Give each a pull-down or pull-up. PB11 is RMII TX_EN, so a pull-down is the one that also holds the PHY idle.
+- Part numbers for the two tactiles and the pull resistors are **TBD**. They are SMT, so they are LCSC parts once chosen.
+
+Procedure: the station logic supply is on (USB VBUS feeds only the upstream side of the isolator), hold BOOT0, press and release RESET, then release BOOT0. `dfu-util` or STM32CubeProgrammer sees the DFU device.
+
+### MCU crystal for DFU
+
+AN2606 requires an HSE crystal for USB DFU on this part: an integer number of MHz, from 4 to 26. The ROM measures it against HSI and can get a high frequency wrong; ST's note on that measurement prefers a low frequency, and names 8 MHz rather than 25 MHz. The LAN8720A's 25 MHz crystal (LCSC C9006) stays on the PHY and still drives the 50 MHz REF_CLK. It does not connect to `OSC_IN`. Add a separate **8 MHz crystal on the MCU HSE pins**. Crystal and load capacitors are **TBD** (LCSC, SMT). Do not reuse C9006 for this socket.
+
+### USB-C through the ADuM4160
+
+The ADuM4160 is a low-speed or full-speed isolator. It has no high-speed mode. Full speed (12 Mbps) is what STM32 USB DFU and the CDC console use. Strap it for full speed: SPU to VDD1 and SPD to VDD2. The imported drawing ties both pins low (low speed). That strap will not enumerate DFU or CDC. The datasheet says the two speed pins must match.
+
+D+ pull-up, checked against the ADuM4160 datasheet (Rev. E) and against the ROM bootloader:
+
+- The isolator has its own upstream 1.5 kΩ. Pin PIN (pin 12) connects it. The datasheet's typical application needs series resistors and bypass capacitors, not an extra 1.5 kΩ on the connector.
+- Tie PIN to VDD2. The ROM bootloader cannot drive PIN. A GPIO that rests low would hide the pull-up during DFU, and the host would never see a device. Tied to VDD2, the pull-up is present for DFU and for the application.
+- The STM32 still uses its internal DP pull-up on PA12. The ROM DFU bootloader enables it, and the application USB stack enables it. That is the downstream side of the isolator. No external 1.5 kΩ on PA12 either.
+- Do not add a 1.5 kΩ from USB-C D+ to 3.3 V. It would sit in parallel with the isolator's upstream pull-up.
+- USB-C CC1 and CC2 each get 5.1 kΩ to ground so a host provides VBUS. Those resistors are not the D+ pull-up. Their C-numbers are **TBD**.
+- USBLC6-2SC6 (LCSC C7519, already chosen) goes on the cable side of the isolator, on UD+ and UD−.
+
+The upstream side of the isolator runs from USB VBUS. The downstream side runs from the board 3.3 V. DFU therefore needs the station supply, not bus power alone.
+
+### Boot status LED
+
+One SMT LED and its series resistor, on a GPIO that is not a triac drive. C-numbers **TBD**. The field-upgrade bootloader blinks it (waiting, checking an image, rollback). The application can use it as a heartbeat.
+
+The ROM DFU bootloader does not drive this LED. While the chip is in system memory, progress is what `dfu-util` or STM32CubeProgrammer prints.
+
+### Debug footprint
+
+Tag-Connect **TC2050-IDC-NL**. Signals are SWDIO (PA13), SWCLK (PA14), SWO, NRST, VTREF, and ground, on Tag-Connect's published Cortex pad layout. Nothing is populated.
+
+A 10-pin 1.27 mm Cortex header would be a part on every board (an LCSC line if SMT, a Mouser line if through-hole) and would need a shroud in a box that has no panel space for it. The NL footprint avoids both. The cable is bought once. It has no alignment holes, so it has to be held square; that is fine for occasional debug. If it is not, the legged TC2050-IDC adds two holes and still needs no connector.
