@@ -78,6 +78,46 @@ def test_frozen_without_a_bundle_is_not_inside_the_app(tmp_path: Path, monkeypat
     assert not preset_path_is_bundled(path)
 
 
+def test_macos_resources_symlink_counts_as_bundled(tmp_path: Path, monkeypatch) -> None:
+    app = tmp_path / "RotatorController.app"
+    frameworks = app / "Contents" / "Frameworks"
+    resources = app / "Contents" / "Resources" / "rotatorctl" / "data"
+    macos = app / "Contents" / "MacOS"
+    macos.mkdir(parents=True)
+    resources.mkdir(parents=True)
+    yaml = resources / "rotor-presets.yaml"
+    yaml.write_text("presets: []\n", encoding="utf-8")
+    link_dir = frameworks / "rotatorctl" / "data"
+    link_dir.mkdir(parents=True)
+    link = link_dir / "rotor-presets.yaml"
+    link.symlink_to(yaml)
+    monkeypatch.delenv("ROTATOR_PRESETS", raising=False)
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setattr(sys, "_MEIPASS", str(frameworks), raising=False)
+    monkeypatch.setattr(sys, "executable", str(macos / "RotatorController"), raising=False)
+    found = default_preset_path()
+    assert found == link
+    assert preset_path_is_bundled(found)
+
+
+def test_symlink_out_of_the_app_is_not_bundled(tmp_path: Path, monkeypatch) -> None:
+    app = tmp_path / "RotatorController.app"
+    frameworks = app / "Contents" / "Frameworks"
+    macos = app / "Contents" / "MacOS"
+    macos.mkdir(parents=True)
+    outside = tmp_path / "checkout" / "rotor-presets.yaml"
+    outside.parent.mkdir()
+    outside.write_text("presets: []\n", encoding="utf-8")
+    link_dir = frameworks / "rotatorctl" / "data"
+    link_dir.mkdir(parents=True)
+    link = link_dir / "rotor-presets.yaml"
+    link.symlink_to(outside)
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setattr(sys, "_MEIPASS", str(frameworks), raising=False)
+    monkeypatch.setattr(sys, "executable", str(macos / "RotatorController"), raising=False)
+    assert not preset_path_is_bundled(link)
+
+
 def test_exe_directory_catalog_counts_as_bundled(tmp_path: Path, monkeypatch) -> None:
     exe_dir = tmp_path / "app"
     bundled = exe_dir / "rotatorctl" / "data" / "rotor-presets.yaml"

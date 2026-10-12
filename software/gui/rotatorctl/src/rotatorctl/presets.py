@@ -61,17 +61,38 @@ class Preset:
     raw: Mapping[str, Any]
 
 
+def _dedupe(paths: list[Path]) -> tuple[Path, ...]:
+    found: list[Path] = []
+    for path in paths:
+        if path not in found:
+            found.append(path)
+    return tuple(found)
+
+
 def bundle_roots() -> tuple[Path, ...]:
-    """Directories a frozen build may have unpacked the catalog into."""
+    """Directories a frozen build may have unpacked the catalog into.
+
+    Paths stay lexical. On a macOS ``.app``, PyInstaller symlinks
+    ``Contents/Frameworks`` data at ``Contents/Resources``. Resolving that
+    symlink too early hides the file from ``_MEIPASS``.
+    """
 
     if not getattr(sys, "frozen", False):
         return ()
     roots: list[Path] = []
     meipass = getattr(sys, "_MEIPASS", None)
     if meipass:
-        roots.append(Path(meipass).resolve())
-    roots.append(Path(sys.executable).resolve().parent)
-    return tuple(roots)
+        roots.append(Path(meipass))
+    exe = Path(sys.executable)
+    roots.append(exe.parent)
+    macos = exe.parent
+    contents = macos.parent
+    bundle = contents.parent
+    if macos.name == "MacOS" and contents.name == "Contents" and bundle.name.endswith(".app"):
+        roots.append(bundle)
+        roots.append(contents / "Frameworks")
+        roots.append(contents / "Resources")
+    return _dedupe(roots)
 
 
 def _bundled_preset_candidates() -> tuple[Path, ...]:
@@ -79,11 +100,42 @@ def _bundled_preset_candidates() -> tuple[Path, ...]:
     return tuple(root.joinpath(*parts) for root in bundle_roots())
 
 
-def preset_path_is_bundled(path: Path) -> bool:
-    """True when ``path`` sits inside the frozen app, not a repo checkout."""
+def _inside(root: Path, path: Path) -> bool:
+    try:
+        path.absolute().relative_to(root.absolute())
+    except ValueError:
+        return False
+    return True
 
-    resolved = path.resolve()
-    return any(resolved == root or root in resolved.parents for root in bundle_roots())
+
+def preset_path_is_bundled(path: Path) -> bool:
+    """True when ``path`` sits inside the frozen app, not a repo checkout.
+
+    The path as opened and the path after symlinks both have to land in
+    the bundle. A macOS ``.app`` keeps some data under ``Contents/Resources``
+    via a symlink from ``Contents/Frameworks``. A symlink out to a checkout
+    does not count.
+    """
+
+    if not getattr(sys, "frozen", False):
+        return False
+    targets = [path.absolute()]
+    try:
+        targets.append(path.resolve())
+    except OSError:
+        return False
+    roots: list[Path] = []
+    for root in bundle_roots():
+        roots.append(root.absolute())
+        try:
+            roots.append(root.resolve())
+        except OSError:
+            continue
+
+    def inside_any(target: Path) -> bool:
+        return any(_inside(root, target) for root in roots)
+
+    return all(inside_any(target) for target in targets)
 
 
 def default_preset_path() -> Path:
