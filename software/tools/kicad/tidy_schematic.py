@@ -9,6 +9,11 @@ boxes, wires, and other text. An item moves only when its ink box
 overlaps one of those. Everything else keeps its exact bytes: position,
 rotation, and justification.
 
+Fields and labels Jeff Millar edited in f665ffd are listed in
+owner_frozen.json. Those items stay exactly where he put them, even
+when they still overlap. The checker reports them and does not fail
+the build for his placements.
+
 Symbol bodies come from the embedded lib_symbols. Library coordinates
 are Y-up; the sheet file is Y-down. The instance transform matches
 KiCad's 0/90/180/270 matrices, including mirror. Text extents use the
@@ -31,6 +36,7 @@ does not overlap is byte-identical.
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 import uuid
 from dataclasses import dataclass, field
@@ -131,6 +137,19 @@ GLYPH_WIDTH = {
 }
 HIDE_WHEN_OVERLAPPING = {"Footprint", "LCSC", "MPN"}
 LABEL_HEADS = {"label", "global_label", "hierarchical_label"}
+
+
+def _load_frozen(path: Path | None = None) -> set[tuple]:
+    """Keys of fields and labels the owner placed. The tool never moves them."""
+    source = path if path is not None else Path(__file__).with_name("owner_frozen.json")
+    if not source.is_file():
+        return set()
+    data = json.loads(source.read_text(encoding="utf-8"))
+    return {tuple(key) for key in data.get("keys", [])}
+
+
+# (kind, uuid) or (kind, parent uuid, property name). Loaded once.
+FROZEN: set[tuple] = _load_frozen()
 
 
 # --- s-expression spans -------------------------------------------------
@@ -530,6 +549,10 @@ class TextItem:
     new_horiz: str | None = None
     hide: bool = False
     stub: tuple[float, float, float, float] | None = None
+    # (kind, uuid) or ("property"|"sheet_property", parent uuid, name).
+    key: tuple | None = None
+    # Owner-edited. Kept as an obstacle and never rewritten.
+    frozen: bool = False
 
     def current_box(self) -> Box:
         return self.box
@@ -685,6 +708,16 @@ def _symbol_graphics(lib_sym: Form, unit: int):
     return graphics, names_hidden, numbers_hidden
 
 
+def _bind(item: TextItem | None, key: tuple) -> TextItem | None:
+    if item is None:
+        return None
+    item.key = key
+    if key in FROZEN:
+        item.frozen = True
+        item.movable = False
+    return item
+
+
 def _make_text_item(kind, name, raw, node, at_info, effects, movable) -> TextItem | None:
     span, x, y, angle = at_info
     size_x, size_y = text_size_of(effects)
@@ -792,6 +825,7 @@ def load_sheet(text: str) -> tuple[Form, SheetModel]:
                 if len(prop.parts) >= 2 and prop.parts[1] == "Reference":
                     ref = prop.parts[2] if len(prop.parts) > 2 else ""
             symbols.append(SymbolBody(ref or lib_id, body, pins))
+            sym_uuid = node.atom_after("uuid") or ""
             for prop in node.children("property"):
                 if len(prop.parts) < 3:
                     continue
@@ -803,7 +837,10 @@ def load_sheet(text: str) -> tuple[Form, SheetModel]:
                 at_info = _at_span(prop)
                 if at_info is None:
                     continue
-                item = _make_text_item("property", pname, raw, prop, at_info, effects, True)
+                item = _bind(
+                    _make_text_item("property", pname, raw, prop, at_info, effects, True),
+                    ("property", sym_uuid, pname),
+                )
                 if item is not None:
                     texts.append(item)
         elif head in LABEL_HEADS:
@@ -811,7 +848,10 @@ def load_sheet(text: str) -> tuple[Form, SheetModel]:
             at_info = _at_span(node)
             if at_info is None:
                 continue
-            item = _make_text_item(head, head, raw, node, at_info, node.child("effects"), True)
+            item = _bind(
+                _make_text_item(head, head, raw, node, at_info, node.child("effects"), True),
+                (head, node.atom_after("uuid") or ""),
+            )
             if item is not None:
                 texts.append(item)
         elif head == "text":
@@ -819,7 +859,10 @@ def load_sheet(text: str) -> tuple[Form, SheetModel]:
             at_info = _at_span(node)
             if at_info is None:
                 continue
-            item = _make_text_item("text", "text", raw, node, at_info, node.child("effects"), True)
+            item = _bind(
+                _make_text_item("text", "text", raw, node, at_info, node.child("effects"), True),
+                ("text", node.atom_after("uuid") or ""),
+            )
             if item is not None:
                 texts.append(item)
         elif head == "wire":
@@ -836,6 +879,7 @@ def load_sheet(text: str) -> tuple[Form, SheetModel]:
                 ax, ay = (float(v) for v in list(at.atoms())[:2])
                 w, h = (float(v) for v in list(size.atoms())[:2])
                 symbols.append(SymbolBody("sheet", Box(ax, ay, ax + w, ay + h), []))
+            sheet_uuid = node.atom_after("uuid") or ""
             for prop in node.children("property"):
                 if len(prop.parts) < 3:
                     continue
@@ -845,8 +889,11 @@ def load_sheet(text: str) -> tuple[Form, SheetModel]:
                 at_info = _at_span(prop)
                 if at_info is None:
                     continue
-                item = _make_text_item(
-                    "property", prop.parts[1], prop.parts[2], prop, at_info, effects, True,
+                item = _bind(
+                    _make_text_item(
+                        "property", prop.parts[1], prop.parts[2], prop, at_info, effects, True,
+                    ),
+                    ("sheet_property", sheet_uuid, prop.parts[1]),
                 )
                 if item is not None:
                     texts.append(item)
@@ -855,8 +902,11 @@ def load_sheet(text: str) -> tuple[Form, SheetModel]:
                 at_info = _at_span(pin)
                 if at_info is None:
                     continue
-                item = _make_text_item(
-                    "sheet_pin", "pin", raw, pin, at_info, pin.child("effects"), True,
+                item = _bind(
+                    _make_text_item(
+                        "sheet_pin", "pin", raw, pin, at_info, pin.child("effects"), True,
+                    ),
+                    ("sheet_pin", pin.atom_after("uuid") or ""),
                 )
                 if item is not None:
                     # The pin's connection is the anchor, on the sheet edge.
@@ -963,7 +1013,8 @@ def item_overlaps(item: TextItem, model: SheetModel, texts: list[TextItem]) -> l
 def overlapping_items(model: SheetModel) -> list[tuple[TextItem, list[str]]]:
     found = []
     for item in model.texts:
-        if not item.movable:
+        # Hidden fields are not drawn. Owner placements stay in the report.
+        if not item.movable and not item.frozen:
             continue
         reasons = item_overlaps(item, model, model.texts)
         if reasons:
@@ -1082,6 +1133,8 @@ def _commit_place(item: TextItem, x, y, angle, horiz, vert, stub=None):
 
 
 def place_item(item: TextItem, model: SheetModel) -> bool:
+    if item.frozen:
+        return False
     if item.kind == "property" and item.name in HIDE_WHEN_OVERLAPPING:
         item.hide = True
         # A hidden field is not drawn and is not an obstacle.
@@ -1226,6 +1279,21 @@ def render_edits(text: str, changed: list[TextItem]) -> str:
     return out
 
 
+def _split_overlaps(rows):
+    """Owner placements are reported; only other overlaps fail the check."""
+    owner = [(item, reasons) for item, reasons in rows if item.frozen]
+    other = [(item, reasons) for item, reasons in rows if not item.frozen]
+    return owner, other
+
+
+def _print_overlap(prefix: str, item: TextItem, reasons: list[str]) -> None:
+    shown = item.shown.split("\n")[0][:40]
+    print(
+        f"  {prefix}{item.kind} {item.name} {shown!r} "
+        f"at {fmt_num(item.x)},{fmt_num(item.y)} overlaps {', '.join(reasons)}"
+    )
+
+
 def describe(item: TextItem) -> str:
     label = item.shown.split("\n")[0]
     if len(label) > 32:
@@ -1281,23 +1349,26 @@ def main(argv: list[str] | None = None) -> int:
         result = process_path(path, mode)
         name = path
         if mode == "check":
-            rows = result["before"]
-            print(f"{name}: {len(rows)} overlap(s)")
-            for item, reasons in rows:
-                shown = item.shown.split("\n")[0][:40]
-                print(f"  {item.kind} {item.name} {shown!r} at {fmt_num(item.x)},{fmt_num(item.y)} overlaps {', '.join(reasons)}")
-            if rows:
+            owner, other = _split_overlaps(result["before"])
+            print(f"{name}: {len(other)} overlap(s), {len(owner)} owner placement(s) left overlapping")
+            for item, reasons in other:
+                _print_overlap("", item, reasons)
+            for item, reasons in owner:
+                _print_overlap("OWNER ", item, reasons)
+            if other:
                 exit_code = 1
             continue
+        owner, other = _split_overlaps(result["leftovers"])
         print(f"{name}: moved {sum(1 for item in result['changed'] if not item.hide)}, "
               f"hid {sum(1 for item in result['changed'] if item.hide)}, "
-              f"leftover {len(result['leftovers'])}")
+              f"leftover {len(other)}, owner leftover {len(owner)}")
         for item in result["changed"]:
             print("  " + describe(item))
-        for item, reasons in result["leftovers"]:
-            shown = item.shown.split("\n")[0][:40]
-            print(f"  LEFTOVER {item.kind} {item.name} {shown!r} at {fmt_num(item.x)},{fmt_num(item.y)} overlaps {', '.join(reasons)}")
-        if result["leftovers"]:
+        for item, reasons in other:
+            _print_overlap("LEFTOVER ", item, reasons)
+        for item, reasons in owner:
+            _print_overlap("OWNER LEFTOVER ", item, reasons)
+        if other:
             exit_code = 1
     return exit_code
 

@@ -228,6 +228,34 @@ class TidyTests(unittest.TestCase):
             self.assertEqual(path.read_text(encoding="utf-8"), again)
             self.assertEqual(tidy.main(["--check", str(path)]), 0)
 
+    def test_owner_frozen_field_stays_byte_identical(self):
+        key = ("property", "bbbbbbbb-bbbb-4ccc-8ddd-eeeeeeeeeeee", "Reference")
+        tidy.FROZEN.add(key)
+        reference = """\
+		(property "Reference" "R1"
+			(at 50.8 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)"""
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / "sheet.kicad_sch"
+                path.write_text(SHEET, encoding="utf-8")
+                self.assertEqual(tidy.main([str(path)]), 0)
+                updated = path.read_text(encoding="utf-8")
+                self.assertIn(reference, updated)
+                self.assertIn("(hide yes)", updated)
+                _root, model = tidy.load_sheet(updated)
+                frozen_ref = next(item for item in model.texts if item.frozen)
+                self.assertEqual(frozen_ref.name, "Reference")
+                self.assertTrue(tidy.item_overlaps(frozen_ref, model, model.texts))
+                self.assertEqual(tidy.main(["--check", str(path)]), 0)
+        finally:
+            tidy.FROZEN.discard(key)
+
     def test_dry_run_does_not_write(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "sheet.kicad_sch"

@@ -114,8 +114,9 @@ jobs:
           if-no-files-found: ignore
 
   # F407 schematic text. V4 ERC stays report-only in the job above.
-  # This check fails the build when a reference, value, or label overlaps
-  # a symbol body, a wire, or another text item.
+  # This check fails the build when a reference, value, or label that
+  # Jeff did not edit still overlaps a symbol body, a wire, or other text.
+  # Placements from his f665ffd cleanup stay put and do not fail the job.
   schematic-text:
     name: F407 schematic text overlaps
     runs-on: ubuntu-latest

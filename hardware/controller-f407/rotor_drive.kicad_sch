@@ -5524,7 +5524,7 @@
 		(uuid "021b556b-ad2e-48f7-a540-a42def2657c9")
 	)
 	(label "N_CW_S2"
-		(at 129.54 819.15 90)
+		(at 129.54 819.15 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5604,12 +5604,12 @@
 		(uuid "13a1eae2-82b4-4298-aa38-32c6edac8df3")
 	)
 	(label "N_COIL"
-		(at 354.33 368.3 90)
+		(at 354.33 368.3 270)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "14f9bc21-eda4-4550-b501-891c63c91859")
 	)
@@ -5644,7 +5644,7 @@
 		(uuid "16424ce1-4e9e-459d-80e8-a2caa5341667")
 	)
 	(label "CCW_OUT"
-		(at 519.43 789.94 90)
+		(at 519.43 789.94 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5664,7 +5664,7 @@
 		(uuid "16ad340c-9ceb-4b10-b813-878c49ae0f9c")
 	)
 	(label "CAP_B"
-		(at 39.37 314.96 90)
+		(at 39.37 314.96 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5674,7 +5674,7 @@
 		(uuid "1b1f7e89-f947-40c4-ae93-c00435d49983")
 	)
 	(label "CCW_OUT"
-		(at 519.43 734.06 90)
+		(at 519.43 734.06 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5694,7 +5694,7 @@
 		(uuid "20d9bc94-ef5d-47ab-b541-7617d8bf19d6")
 	)
 	(label "N_CCW_S1"
-		(at 459.74 819.15 90)
+		(at 459.74 819.15 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5704,7 +5704,7 @@
 		(uuid "21fbf77e-7410-4a96-ad0e-2458aba08592")
 	)
 	(label "N_CW_LA"
-		(at 30.48 689.61 90)
+		(at 30.48 689.61 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5724,12 +5724,12 @@
 		(uuid "2e230f59-e13b-4891-875d-25175746f776")
 	)
 	(label "N_HDCCW"
-		(at 264.16 551.18 0)
+		(at 264.16 552.45 270)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "316217a3-5436-4aee-9f97-5411cb5fcc20")
 	)
@@ -5744,7 +5744,7 @@
 		(uuid "32f76ed4-c1fe-4217-9a6e-e2bad3b2a99b")
 	)
 	(label "N_HDCCW"
-		(at 219.71 554.99 90)
+		(at 219.71 554.99 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5754,7 +5754,7 @@
 		(uuid "3304d5d9-d93a-42be-953b-8f5a97fb1c4e")
 	)
 	(label "N_BRK_S1"
-		(at 849.63 819.15 90)
+		(at 849.63 819.15 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5764,7 +5764,7 @@
 		(uuid "340e44e5-dd07-4d5c-893e-b1ed61e9d2c0")
 	)
 	(label "N_CW_LK"
-		(at 78.74 685.8 0)
+		(at 80.01 685.8 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5894,12 +5894,12 @@
 		(uuid "3f8c8f2a-4bf4-4cb2-967b-cba46ccbe489")
 	)
 	(label "N_CCW_LK"
-		(at 468.63 685.8 0)
+		(at 468.63 687.07 270)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "41bee578-6761-45bd-942d-18819a7e65fb")
 	)
@@ -5994,7 +5994,7 @@
 		(uuid "50401173-4bad-41ac-8366-a801fdee4fd6")
 	)
 	(label "N_BRK_SN"
-		(at 849.63 789.94 90)
+		(at 849.63 789.94 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6044,7 +6044,7 @@
 		(uuid "5d49928e-890d-4886-a458-b4fc2c62215c")
 	)
 	(label "N_BRK_G"
-		(at 849.63 734.06 90)
+		(at 849.63 734.06 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6064,7 +6064,7 @@
 		(uuid "5fb73045-1b9e-4b25-9850-a21b0846f08b")
 	)
 	(label "BRK_OUT"
-		(at 910.59 734.06 90)
+		(at 910.59 734.06 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6114,7 +6114,7 @@
 		(uuid "642c1423-621e-4f4e-a6f5-7ca3ed4a2d3a")
 	)
 	(label "CCW_OUT"
-		(at 595.63 759.46 90)
+		(at 595.63 759.46 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6284,12 +6284,12 @@
 		(uuid "7a203e71-9b3d-46a0-a4f6-fe0db585a8f5")
 	)
 	(label "AC_FUSED"
-		(at 364.49 368.3 90)
+		(at 364.49 368.3 270)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "7e50079c-f596-4c68-b09e-ce75852f4f13")
 	)
@@ -6304,7 +6304,7 @@
 		(uuid "7ee7f272-d0fe-46c3-8f85-ab4426fadc6b")
 	)
 	(label "N_CCW_LA"
-		(at 420.37 689.61 90)
+		(at 420.37 689.61 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6314,7 +6314,7 @@
 		(uuid "7f267d67-e7f8-4b26-9bfc-bc56edfa76fb")
 	)
 	(label "N_CW_G"
-		(at 69.85 734.06 90)
+		(at 69.85 734.06 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6354,7 +6354,7 @@
 		(uuid "85c3691d-0195-4c16-b672-8360a4fb8ed1")
 	)
 	(label "N_HDCW"
-		(at 219.71 514.35 90)
+		(at 219.71 514.35 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6374,7 +6374,7 @@
 		(uuid "9155b2c0-794a-4fe4-bc47-88a05ed6aec2")
 	)
 	(label "N_HDCW"
-		(at 264.16 510.54 0)
+		(at 265.43 510.54 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6384,7 +6384,7 @@
 		(uuid "916e6620-a85a-4178-9f29-2c33f64cf4e0")
 	)
 	(label "N_BRK_LA"
-		(at 810.26 689.61 90)
+		(at 810.26 689.61 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6444,7 +6444,7 @@
 		(uuid "9bb58cc6-3151-4ae1-aaf4-d7c9157d8b9a")
 	)
 	(label "CW_OUT"
-		(at 204.47 759.46 90)
+		(at 204.47 759.46 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6454,7 +6454,7 @@
 		(uuid "9cbfc578-c369-498e-bcc3-6ccac90f6946")
 	)
 	(label "CW_OUT"
-		(at 129.54 734.06 90)
+		(at 129.54 734.06 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6584,7 +6584,7 @@
 		(uuid "b1f2b2df-bab2-459e-b60d-2b4f3d18271c")
 	)
 	(label "CAP_B"
-		(at 39.37 284.48 90)
+		(at 39.37 284.48 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6614,12 +6614,12 @@
 		(uuid "b36a2367-c71c-4dd6-a065-7e8899d5c23c")
 	)
 	(label "N_BRK_LK"
-		(at 858.52 685.8 0)
+		(at 858.52 687.07 270)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "b42a50c3-c221-463f-8326-b42f4fff00f9")
 	)
@@ -6724,7 +6724,7 @@
 		(uuid "cef5a4c6-8957-4c86-908e-b2960a4a4555")
 	)
 	(label "N_CCW_G"
-		(at 459.74 734.06 90)
+		(at 459.74 734.06 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6804,7 +6804,7 @@
 		(uuid "d97f64fd-2b6a-4d29-a5fe-4ee63068cab8")
 	)
 	(label "N_BRK_S2"
-		(at 910.59 819.15 90)
+		(at 910.59 819.15 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6834,7 +6834,7 @@
 		(uuid "da47af32-bf9e-4c75-87ce-933812394c4d")
 	)
 	(label "N_CCW_S2"
-		(at 519.43 819.15 90)
+		(at 519.43 819.15 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6864,7 +6864,7 @@
 		(uuid "e14ae2f8-8ec2-4315-ab76-0a969c7a9ccf")
 	)
 	(label "CW_OUT"
-		(at 129.54 789.94 90)
+		(at 129.54 789.94 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6894,7 +6894,7 @@
 		(uuid "e3fad658-f85d-4fb0-a1b5-50f6cd896d93")
 	)
 	(label "BRK_OUT"
-		(at 985.52 759.46 90)
+		(at 985.52 759.46 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6934,7 +6934,7 @@
 		(uuid "eb72e0fc-0ee8-45db-b55b-ba98c8a7ec8e")
 	)
 	(label "N_CCW_SN"
-		(at 459.74 789.94 90)
+		(at 459.74 789.94 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7074,7 +7074,7 @@
 		(uuid "fdae89b0-1000-4d3d-85a7-296ee3ca77c1")
 	)
 	(label "BRK_OUT"
-		(at 910.59 789.94 90)
+		(at 910.59 789.94 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7085,7 +7085,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 389.89 642.62 90)
+		(at 389.89 642.62 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7096,7 +7096,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 985.52 717.55 90)
+		(at 985.52 717.55 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7107,7 +7107,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 69.85 464.82 90)
+		(at 69.85 464.82 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7140,7 +7140,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 340.36 514.35 90)
+		(at 340.36 514.35 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7206,7 +7206,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 340.36 554.99 90)
+		(at 340.36 554.99 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7217,7 +7217,7 @@
 	)
 	(hierarchical_label "STOP_N"
 		(shape input)
-		(at 309.88 405.13 90)
+		(at 309.88 405.13 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7228,7 +7228,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 149.86 642.62 90)
+		(at 149.86 642.62 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7261,7 +7261,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 149.86 621.03 90)
+		(at 149.86 621.03 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7294,7 +7294,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 110.49 464.82 90)
+		(at 110.49 464.82 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7316,7 +7316,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 330.2 621.03 90)
+		(at 330.2 621.03 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7327,7 +7327,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 270.51 642.62 90)
+		(at 270.51 642.62 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7371,7 +7371,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 330.2 642.62 90)
+		(at 330.2 642.62 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7426,12 +7426,12 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 30.48 563.88 90)
+		(at 30.48 563.88 270)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "504e0b3f-981d-4928-a1b4-3caabe7a55b0")
 	)
@@ -7503,7 +7503,7 @@
 	)
 	(hierarchical_label "AZ_CCW_SNS"
 		(shape output)
-		(at 665.48 819.15 90)
+		(at 665.48 819.15 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7536,7 +7536,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 250.19 405.13 90)
+		(at 250.19 405.13 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7547,7 +7547,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 204.47 717.55 90)
+		(at 204.47 717.55 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7558,7 +7558,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 439.42 405.13 90)
+		(at 439.42 405.13 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7657,7 +7657,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 500.38 394.97 90)
+		(at 500.38 394.97 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7668,7 +7668,7 @@
 	)
 	(hierarchical_label "AZ_BRAKE_SNS"
 		(shape output)
-		(at 1055.37 819.15 90)
+		(at 1055.37 819.15 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7679,7 +7679,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 270.51 621.03 90)
+		(at 270.51 621.03 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7701,7 +7701,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 389.89 621.03 90)
+		(at 389.89 621.03 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7712,7 +7712,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 449.58 621.03 90)
+		(at 449.58 621.03 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7723,7 +7723,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 30.48 464.82 90)
+		(at 30.48 464.82 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7745,7 +7745,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 90.17 642.62 90)
+		(at 90.17 642.62 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7833,7 +7833,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 449.58 642.62 90)
+		(at 449.58 642.62 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7844,7 +7844,7 @@
 	)
 	(hierarchical_label "AZ_CW_SNS"
 		(shape output)
-		(at 275.59 819.15 90)
+		(at 275.59 819.15 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7855,7 +7855,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 207.01 690.88 90)
+		(at 208.28 690.88 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7921,7 +7921,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 80.01 554.99 90)
+		(at 80.01 554.99 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7932,7 +7932,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 598.17 690.88 90)
+		(at 599.44 690.88 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7954,7 +7954,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 595.63 717.55 90)
+		(at 595.63 717.55 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7987,7 +7987,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 299.72 554.99 90)
+		(at 299.72 554.99 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8020,12 +8020,12 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 250.19 370.84 90)
+		(at 250.19 370.84 270)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "c8ac0a63-d77c-4b39-a623-4368e04f020d")
 	)
@@ -8042,7 +8042,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 299.72 514.35 90)
+		(at 299.72 514.35 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8075,7 +8075,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 149.86 464.82 90)
+		(at 149.86 464.82 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8119,7 +8119,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 988.06 690.88 90)
+		(at 989.33 690.88 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8163,7 +8163,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 30.48 642.62 90)
+		(at 30.48 642.62 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8174,7 +8174,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 209.55 642.62 90)
+		(at 209.55 642.62 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8207,7 +8207,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 309.88 364.49 90)
+		(at 309.88 364.49 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8328,7 +8328,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 90.17 621.03 90)
+		(at 90.17 621.03 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8350,7 +8350,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 30.48 621.03 90)
+		(at 30.48 621.03 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8361,7 +8361,7 @@
 	)
 	(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
-		(at 209.55 621.03 90)
+		(at 209.55 621.03 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8380,7 +8380,7 @@
 		(dnp no)
 		(uuid "019b74a9-6859-4b22-b33f-dc5a0b4144ca")
 		(property "Reference" "R96"
-			(at 1055.37 810.26 0)
+			(at 1052.83 812.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8455,7 +8455,7 @@
 		(dnp no)
 		(uuid "01ea7c3b-3cc3-40a9-9367-2af79605d802")
 		(property "Reference" "C21"
-			(at 309.88 355.6 0)
+			(at 309.88 358.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8531,7 +8531,7 @@
 		(dnp no)
 		(uuid "0299c39b-dc64-4654-ac5c-7db03c104dd0")
 		(property "Reference" "U10"
-			(at 449.58 605.79 0)
+			(at 448.31 604.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8539,7 +8539,7 @@
 			)
 		)
 		(property "Value" "74LVC1G08GW"
-			(at 449.58 615.95 0)
+			(at 448.31 617.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8624,7 +8624,7 @@
 		(dnp no)
 		(uuid "02f03a4b-dd3c-4b7a-a9a2-0577b54a532a")
 		(property "Reference" "R50"
-			(at 30.48 455.93 0)
+			(at 27.94 458.47 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8699,7 +8699,7 @@
 		(dnp no)
 		(uuid "061e218a-e8d6-45bb-8767-b34d5a39f081")
 		(property "Reference" "U1"
-			(at 250.19 355.6 0)
+			(at 250.19 351.79 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8707,7 +8707,7 @@
 			)
 		)
 		(property "Value" "TPS3823-33DBVR"
-			(at 250.19 365.76 0)
+			(at 250.19 369.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8793,7 +8793,7 @@
 		(dnp no)
 		(uuid "0f6babd8-3778-418d-ba0e-0354cf009360")
 		(property "Reference" "R94"
-			(at 849.63 810.26 0)
+			(at 847.09 812.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9155,7 +9155,7 @@
 		(dnp no)
 		(uuid "1bfa7ab1-32d9-435b-99e0-233aaf922ee7")
 		(property "Reference" "C61"
-			(at 299.72 546.1 0)
+			(at 299.72 548.64 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9230,7 +9230,7 @@
 		(dnp no)
 		(uuid "1e752c3b-bc78-4db4-a30c-6342ba572bd0")
 		(property "Reference" "C5"
-			(at 149.86 633.73 0)
+			(at 149.86 636.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9305,7 +9305,7 @@
 		(dnp no)
 		(uuid "22604c0b-124a-42b4-8315-b42221a0ba1e")
 		(property "Reference" "R62"
-			(at 219.71 546.1 0)
+			(at 217.17 548.64 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9380,7 +9380,7 @@
 		(dnp no)
 		(uuid "22d3e86e-1b94-4707-8570-3b50865ef0d2")
 		(property "Reference" "U4"
-			(at 90.17 605.79 0)
+			(at 88.9 604.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9388,7 +9388,7 @@
 			)
 		)
 		(property "Value" "74LVC1G08GW"
-			(at 90.17 615.95 0)
+			(at 88.9 617.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9473,7 +9473,7 @@
 		(dnp no)
 		(uuid "258ac86c-0e6f-4b97-9ff4-ca3f0261e971")
 		(property "Reference" "U8"
-			(at 330.2 605.79 0)
+			(at 328.93 604.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9481,7 +9481,7 @@
 			)
 		)
 		(property "Value" "74LVC1G08GW"
-			(at 330.2 615.95 0)
+			(at 328.93 617.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9566,7 +9566,7 @@
 		(dnp no)
 		(uuid "2678a891-f1ff-4b62-8ce0-ae247f7c070c")
 		(property "Reference" "Q6"
-			(at 595.63 750.57 0)
+			(at 595.63 753.11 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9926,7 +9926,7 @@
 		(dnp no)
 		(uuid "2a8fb071-01d4-4216-a192-2ae5694456d6")
 		(property "Reference" "R2G"
-			(at 204.47 708.66 0)
+			(at 201.93 711.2 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10167,7 +10167,7 @@
 		(dnp no)
 		(uuid "2ca83a2a-4b08-4e62-b608-d2f3c7ea910a")
 		(property "Reference" "C7"
-			(at 270.51 633.73 0)
+			(at 270.51 636.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10318,7 +10318,7 @@
 		(dnp no)
 		(uuid "2eb9adf1-213d-443d-a38e-67ef6fc66a4d")
 		(property "Reference" "U6"
-			(at 209.55 605.79 0)
+			(at 208.28 604.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10326,7 +10326,7 @@
 			)
 		)
 		(property "Value" "74LVC1G08GW"
-			(at 209.55 615.95 0)
+			(at 208.28 617.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10411,7 +10411,7 @@
 		(dnp no)
 		(uuid "2fa52a37-9587-4b43-923b-7b2c8cfb9b63")
 		(property "Reference" "Q5"
-			(at 204.47 750.57 0)
+			(at 204.47 753.11 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10590,7 +10590,7 @@
 		(dnp no)
 		(uuid "30a18bd1-1083-4a4f-bb9a-2e3869700da7")
 		(property "Reference" "R70"
-			(at 30.48 680.72 0)
+			(at 27.94 683.26 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10666,7 +10666,7 @@
 		(dnp no)
 		(uuid "30dfde7d-9e15-458a-97b9-0eed2ca52af5")
 		(property "Reference" "U5"
-			(at 149.86 605.79 0)
+			(at 148.59 604.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10674,7 +10674,7 @@
 			)
 		)
 		(property "Value" "74LVC1G08GW"
-			(at 149.86 615.95 0)
+			(at 148.59 617.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10834,7 +10834,7 @@
 		(dnp no)
 		(uuid "35a3212b-cc95-4395-8c7d-2997b26a44a5")
 		(property "Reference" "R90"
-			(at 810.26 680.72 0)
+			(at 807.72 683.26 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10910,7 +10910,7 @@
 		(dnp no)
 		(uuid "3799489e-e2cd-4fb4-bcf4-7ba9886a3c07")
 		(property "Reference" "R83"
-			(at 459.74 781.05 0)
+			(at 457.2 783.59 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11062,7 +11062,7 @@
 		(dnp no)
 		(uuid "3b271716-96d8-4b3b-a09f-677befed0606")
 		(property "Reference" "C1"
-			(at 39.37 275.59 0)
+			(at 39.37 278.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11156,7 +11156,7 @@
 		(dnp no)
 		(uuid "3d188a24-5b02-475d-b26c-1db66a3cf82c")
 		(property "Reference" "Q7"
-			(at 985.52 750.57 0)
+			(at 985.52 753.11 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11244,7 +11244,7 @@
 		(dnp no)
 		(uuid "3de33a37-a948-43d0-b6dc-8c4daa5e1d28")
 		(property "Reference" "U7"
-			(at 270.51 605.79 0)
+			(at 269.24 604.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11252,7 +11252,7 @@
 			)
 		)
 		(property "Value" "74LVC1G08GW"
-			(at 270.51 615.95 0)
+			(at 269.24 617.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11337,7 +11337,7 @@
 		(dnp no)
 		(uuid "422651bc-72c4-4d05-a9dc-448896b502ff")
 		(property "Reference" "R81"
-			(at 459.74 725.17 0)
+			(at 457.2 727.71 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11413,7 +11413,7 @@
 		(dnp no)
 		(uuid "46a85ab3-8d88-4d91-8501-a3a065778da5")
 		(property "Reference" "R60"
-			(at 219.71 505.46 0)
+			(at 217.17 508 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11488,7 +11488,7 @@
 		(dnp no)
 		(uuid "4a94eeea-5a2a-435d-99dd-6bc778de35ce")
 		(property "Reference" "R91"
-			(at 849.63 725.17 0)
+			(at 847.09 727.71 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11572,7 +11572,7 @@
 			)
 		)
 		(property "Value" "2N7002"
-			(at 204.47 690.88 0)
+			(at 205.74 689.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11651,7 +11651,7 @@
 		(dnp no)
 		(uuid "4c9f1c5e-1aa0-4060-90ea-087e155994d8")
 		(property "Reference" "U3"
-			(at 30.48 605.79 0)
+			(at 29.21 604.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11659,7 +11659,7 @@
 			)
 		)
 		(property "Value" "74LVC1G08GW"
-			(at 30.48 615.95 0)
+			(at 29.21 617.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11986,7 +11986,7 @@
 		(dnp no)
 		(uuid "5abbd1f6-1b5c-4cc6-af96-1392d1f5147b")
 		(property "Reference" "R42"
-			(at 309.88 396.24 0)
+			(at 307.34 398.78 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12070,7 +12070,7 @@
 			)
 		)
 		(property "Value" "2N7002"
-			(at 985.52 690.88 0)
+			(at 986.79 689.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12149,7 +12149,7 @@
 		(dnp no)
 		(uuid "5e8e4534-269d-4dcc-952e-1a370395d85a")
 		(property "Reference" "R40"
-			(at 500.38 386.08 0)
+			(at 497.84 388.62 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12346,7 +12346,7 @@
 		(dnp no)
 		(uuid "6260c91e-bb6f-4776-a5d7-081c15aaaa1c")
 		(property "Reference" "K1"
-			(at 359.41 355.6 0)
+			(at 359.41 354.33 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12354,7 +12354,7 @@
 			)
 		)
 		(property "Value" "G5LE-1A4-DC5"
-			(at 359.41 365.76 0)
+			(at 359.41 367.03 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12440,7 +12440,7 @@
 		(dnp no)
 		(uuid "64b1c4fa-a0f9-47f4-bcdd-dee93f10d529")
 		(property "Reference" "R51"
-			(at 69.85 455.93 0)
+			(at 67.31 458.47 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12515,7 +12515,7 @@
 		(dnp no)
 		(uuid "65d28fe6-42e9-460c-a1dd-207681139132")
 		(property "Reference" "R4G"
-			(at 985.52 708.66 0)
+			(at 982.98 711.2 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12590,7 +12590,7 @@
 		(dnp no)
 		(uuid "689eecc7-78f2-4a51-b3b3-4bcdb2605f9b")
 		(property "Reference" "C72"
-			(at 910.59 781.05 0)
+			(at 910.59 783.59 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12996,7 +12996,7 @@
 		(dnp no)
 		(uuid "73c60454-2de9-45a7-8a09-185d45cc36b7")
 		(property "Reference" "C23"
-			(at 80.01 546.1 0)
+			(at 80.01 548.64 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13192,7 +13192,7 @@
 		(dnp no)
 		(uuid "75396155-4b94-4233-80ce-e942e199e2d6")
 		(property "Reference" "C6"
-			(at 209.55 633.73 0)
+			(at 209.55 636.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13343,7 +13343,7 @@
 		(dnp no)
 		(uuid "75dd90d5-d957-48fe-9bac-7a420a030fc6")
 		(property "Reference" "U2"
-			(at 30.48 546.1 0)
+			(at 30.48 542.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13351,7 +13351,7 @@
 			)
 		)
 		(property "Value" "SN74LVC14APWR"
-			(at 30.48 556.26 0)
+			(at 30.48 560.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13463,7 +13463,7 @@
 		(dnp no)
 		(uuid "775f8a83-0e1b-4184-9372-9d2f07689436")
 		(property "Reference" "R84"
-			(at 459.74 810.26 0)
+			(at 457.2 812.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13614,7 +13614,7 @@
 		(dnp no)
 		(uuid "7e280b50-1c88-445a-9039-f4e403d5d378")
 		(property "Reference" "R71"
-			(at 69.85 725.17 0)
+			(at 67.31 727.71 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13690,7 +13690,7 @@
 		(dnp no)
 		(uuid "7f863402-b10b-4c34-971e-9d76d5a14fcb")
 		(property "Reference" "C22"
-			(at 439.42 396.24 0)
+			(at 439.42 398.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13842,7 +13842,7 @@
 		(dnp no)
 		(uuid "84944604-d555-49f4-92cb-4664bb963637")
 		(property "Reference" "R93"
-			(at 849.63 781.05 0)
+			(at 847.09 783.59 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13926,7 +13926,7 @@
 			)
 		)
 		(property "Value" "2N7002"
-			(at 595.63 690.88 0)
+			(at 596.9 689.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14005,7 +14005,7 @@
 		(dnp no)
 		(uuid "8c2c3094-4fa6-4115-9825-6d2f4357c2c6")
 		(property "Reference" "R85"
-			(at 519.43 810.26 0)
+			(at 516.89 812.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14346,7 +14346,7 @@
 		(dnp no)
 		(uuid "93bdb0d7-d4e6-4eb1-9939-e3ecc6798df5")
 		(property "Reference" "R53"
-			(at 149.86 455.93 0)
+			(at 152.4 458.47 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14648,7 +14648,7 @@
 		(dnp no)
 		(uuid "a3c62238-df9a-4baf-bef0-0527cc0436ba")
 		(property "Reference" "R86"
-			(at 665.48 810.26 0)
+			(at 662.94 812.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14723,7 +14723,7 @@
 		(dnp no)
 		(uuid "a59548ea-ec03-4583-99c6-b3d022472a36")
 		(property "Reference" "C2"
-			(at 39.37 306.07 0)
+			(at 39.37 308.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15039,7 +15039,7 @@
 		(dnp no)
 		(uuid "ad596d33-34e0-45db-aacf-b41d6fc8dd97")
 		(property "Reference" "R72"
-			(at 129.54 725.17 0)
+			(at 127 727.71 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15115,7 +15115,7 @@
 		(dnp no)
 		(uuid "b3083b40-8124-4e72-b884-bf08f1b811a8")
 		(property "Reference" "R3G"
-			(at 595.63 708.66 0)
+			(at 593.09 711.2 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15190,7 +15190,7 @@
 		(dnp no)
 		(uuid "bcb0bb2e-e134-4bd6-898a-1e81b8ba8704")
 		(property "Reference" "R61"
-			(at 340.36 505.46 0)
+			(at 342.9 508 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15341,7 +15341,7 @@
 		(dnp no)
 		(uuid "bf524542-4b4a-47a6-be51-7573f2ad94d1")
 		(property "Reference" "C10"
-			(at 449.58 633.73 0)
+			(at 449.58 636.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15501,7 +15501,7 @@
 		(dnp no)
 		(uuid "c3f7b3df-777f-4a67-86c3-4a6c2ee9bf3d")
 		(property "Reference" "R52"
-			(at 110.49 455.93 0)
+			(at 107.95 458.47 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15661,7 +15661,7 @@
 		(dnp no)
 		(uuid "c9187e9b-f40e-4c04-a08f-16f37d2cf4e9")
 		(property "Reference" "U9"
-			(at 389.89 605.79 0)
+			(at 388.62 604.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15669,7 +15669,7 @@
 			)
 		)
 		(property "Value" "74LVC1G08GW"
-			(at 389.89 615.95 0)
+			(at 388.62 617.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15754,7 +15754,7 @@
 		(dnp no)
 		(uuid "c9a3c087-5f5d-4f2c-8c94-c5c05ef47239")
 		(property "Reference" "C9"
-			(at 389.89 633.73 0)
+			(at 389.89 636.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15913,7 +15913,7 @@
 		(dnp no)
 		(uuid "caa645f6-1f84-4b12-937d-e84b63f0c2e6")
 		(property "Reference" "R92"
-			(at 910.59 725.17 0)
+			(at 908.05 727.71 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16077,7 +16077,7 @@
 		(dnp no)
 		(uuid "cc927ead-53cb-407a-b04a-1ee346e18c6d")
 		(property "Reference" "C3"
-			(at 30.48 633.73 0)
+			(at 30.48 636.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16555,7 +16555,7 @@
 		(dnp no)
 		(uuid "d9d5b394-a113-49ea-b6f0-5444ee441b96")
 		(property "Reference" "R41"
-			(at 250.19 396.24 0)
+			(at 247.65 398.78 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16631,7 +16631,7 @@
 		(dnp no)
 		(uuid "da55514e-3ea1-4569-a1ca-8d9587873c1d")
 		(property "Reference" "R76"
-			(at 275.59 810.26 0)
+			(at 273.05 812.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16706,7 +16706,7 @@
 		(dnp no)
 		(uuid "df2466be-e316-4936-af7b-7fb6341f232b")
 		(property "Reference" "R82"
-			(at 519.43 725.17 0)
+			(at 516.89 727.71 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17084,7 +17084,7 @@
 		(dnp no)
 		(uuid "e7d833b4-ceac-4065-80ba-e6cff3db736c")
 		(property "Reference" "C71"
-			(at 519.43 781.05 0)
+			(at 519.43 783.59 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17169,7 +17169,7 @@
 		(dnp no)
 		(uuid "e9935cc9-8292-40c5-8fba-b89b75cf587a")
 		(property "Reference" "R75"
-			(at 129.54 810.26 0)
+			(at 127 812.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17244,7 +17244,7 @@
 		(dnp no)
 		(uuid "eb0f30ab-be45-434f-b761-043657cdbc6a")
 		(property "Reference" "C60"
-			(at 299.72 505.46 0)
+			(at 299.72 508 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17543,7 +17543,7 @@
 		(dnp no)
 		(uuid "edaf6093-f1c7-4246-add7-46c4f7ba501e")
 		(property "Reference" "C4"
-			(at 90.17 633.73 0)
+			(at 90.17 636.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17618,7 +17618,7 @@
 		(dnp no)
 		(uuid "edc8bd44-7eb7-4218-9561-a275504d425b")
 		(property "Reference" "C8"
-			(at 330.2 633.73 0)
+			(at 330.2 636.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17693,7 +17693,7 @@
 		(dnp no)
 		(uuid "f100f8fd-8f83-4081-95c9-2ec4d06286d4")
 		(property "Reference" "R80"
-			(at 420.37 680.72 0)
+			(at 417.83 683.26 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17769,7 +17769,7 @@
 		(dnp no)
 		(uuid "f11e5da5-4a7c-409f-b262-21bcdf84e5a5")
 		(property "Reference" "R95"
-			(at 910.59 810.26 0)
+			(at 908.05 812.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17844,7 +17844,7 @@
 		(dnp no)
 		(uuid "f6bb52f8-d4f8-4fe2-ab01-16b5941a5954")
 		(property "Reference" "C70"
-			(at 129.54 781.05 0)
+			(at 129.54 783.59 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18005,7 +18005,7 @@
 		(dnp no)
 		(uuid "fad1b379-0421-4a4d-810a-c6465275ca47")
 		(property "Reference" "R63"
-			(at 340.36 546.1 0)
+			(at 342.9 548.64 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18353,5 +18353,86 @@
 				)
 			)
 		)
+	)
+
+	(wire
+		(pts
+			(xy 264.16 551.18) (xy 264.16 552.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c04ff78b-bcf6-46f8-8c72-c6dc2fad30d9")
+	)
+	(wire
+		(pts
+			(xy 78.74 685.8) (xy 80.01 685.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ba6f56a1-90a8-4a87-ac50-448c03f12b66")
+	)
+	(wire
+		(pts
+			(xy 468.63 685.8) (xy 468.63 687.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "92ae7fd0-3641-456e-a1b3-e9de0053d38e")
+	)
+	(wire
+		(pts
+			(xy 264.16 510.54) (xy 265.43 510.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7af1c906-771c-4407-8196-8164e972b21c")
+	)
+	(wire
+		(pts
+			(xy 858.52 685.8) (xy 858.52 687.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e59c107a-f612-453f-bf54-83150a02a369")
+	)
+	(wire
+		(pts
+			(xy 207.01 690.88) (xy 208.28 690.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "85d2f13f-03e3-4b1d-8f7c-cedfe25b3f1d")
+	)
+	(wire
+		(pts
+			(xy 598.17 690.88) (xy 599.44 690.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2870964f-522b-413b-a1ec-5bc6239aece2")
+	)
+	(wire
+		(pts
+			(xy 988.06 690.88) (xy 989.33 690.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c39a38fa-4e9a-4748-8901-46360256d670")
 	)
 )
