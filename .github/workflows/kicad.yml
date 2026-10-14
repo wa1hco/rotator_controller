@@ -112,3 +112,26 @@ jobs:
           name: enclosure-drawings
           path: artifacts/
           if-no-files-found: ignore
+
+  # F407 schematic text. V4 ERC stays report-only in the job above.
+  # This check fails the build when a reference, value, or label that
+  # Jeff did not edit still overlaps a symbol body, a wire, or other text.
+  # Placements from his f665ffd cleanup stay put and do not fail the job.
+  schematic-text:
+    name: F407 schematic text overlaps
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Tidy tool tests
+        run: python3 -m unittest discover -s software/tools/kicad -p 'test_*.py'
+
+      - name: No overlapping schematic text
+        run: |
+          python3 software/tools/kicad/tidy_schematic.py --check \
+            hardware/controller-f407/controller-f407.kicad_sch \
+            hardware/controller-f407/rotor_drive.kicad_sch
