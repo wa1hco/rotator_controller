@@ -256,6 +256,33 @@ class TidyTests(unittest.TestCase):
         finally:
             tidy.FROZEN.discard(key)
 
+    def test_off_page_freeze_is_lifted(self):
+        # A4 is 297 x 210 mm. x=400 is outside the border; x=50.8 is on the page.
+        key = ("property", "bbbbbbbb-bbbb-4ccc-8ddd-eeeeeeeeeeee", "Reference")
+        tidy.FROZEN.add(key)
+        try:
+            sheet = SHEET.replace("(at 50.8 50.8 0)", "(at 400 50.8 0)")
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / "sheet.kicad_sch"
+                path.write_text(sheet, encoding="utf-8")
+                _root, model = tidy.load_sheet(sheet)
+                self.assertTrue(model.symbols[0].off_page)
+                reference = next(item for item in model.texts if item.name == "Reference")
+                self.assertTrue(reference.off_page)
+                self.assertFalse(reference.frozen)
+                self.assertEqual(tidy.main([str(path)]), 0)
+                updated = path.read_text(encoding="utf-8")
+                self.assertIn('(lib_id "Device:R")\n\t\t(at 400 50.8 0)', updated)
+                self.assertNotIn('(property "Reference" "R1"\n\t\t\t(at 400 50.8 0)', updated)
+                self.assertEqual(tidy.main(["--check", str(path)]), 0)
+        finally:
+            tidy.FROZEN.discard(key)
+
+    def test_usledger_page_box(self):
+        root = tidy.parse_sexpr('(kicad_sch (paper "USLedger"))')
+        box = tidy.page_box(root)
+        self.assertEqual((box.x0, box.y0, box.x1, box.y1), (0.0, 0.0, 431.8, 279.4))
+
     def test_dry_run_does_not_write(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "sheet.kicad_sch"
