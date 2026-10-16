@@ -10,9 +10,11 @@ overlaps one of those. Everything else keeps its exact bytes: position,
 rotation, and justification.
 
 Fields and labels Jeff Millar edited in f665ffd are listed in
-owner_frozen.json. Those items stay exactly where he put them, even
-when they still overlap. The checker reports them and does not fail
-the build for his placements.
+owner_frozen.json. Those items stay exactly where he put them when
+they sit on the page. Text outside the page border is not placed yet,
+so the freeze is lifted there and those overlaps are cleared. The
+checker still lists his in-page overlaps and fails only when off-page
+text, or other non-frozen text, still overlaps.
 
 Symbol bodies come from the embedded lib_symbols. Library coordinates
 are Y-up; the sheet file is Y-down. The instance transform matches
@@ -137,6 +139,24 @@ GLYPH_WIDTH = {
 }
 HIDE_WHEN_OVERLAPPING = {"Footprint", "LCSC", "MPN"}
 LABEL_HEADS = {"label", "global_label", "hierarchical_label"}
+# Landscape page size in millimetres. KiCad's sheet origin is the top-left
+# corner and Y grows downward, so the page is the box (0, 0, width, height).
+PAPER_MM = {
+    "A5": (210.0, 148.0),
+    "A4": (297.0, 210.0),
+    "A3": (420.0, 297.0),
+    "A2": (594.0, 420.0),
+    "A1": (841.0, 594.0),
+    "A0": (1189.0, 841.0),
+    "A": (279.4, 215.9),
+    "B": (431.8, 279.4),
+    "C": (558.8, 431.8),
+    "D": (863.6, 558.8),
+    "E": (1117.6, 863.6),
+    "USLetter": (279.4, 215.9),
+    "USLegal": (355.6, 215.9),
+    "USLedger": (431.8, 279.4),
+}
 
 
 def _load_frozen(path: Path | None = None) -> set[tuple]:
@@ -512,6 +532,8 @@ class SymbolBody:
     name: str
     box: Box
     pins: list  # (x, y) connection points in sheet coordinates
+    # Body lies entirely outside the page. He has not placed these yet.
+    off_page: bool = False
 
 
 @dataclass
@@ -553,6 +575,8 @@ class TextItem:
     key: tuple | None = None
     # Owner-edited. Kept as an obstacle and never rewritten.
     frozen: bool = False
+    # Anchor is outside the page, so the owner freeze does not apply.
+    off_page: bool = False
 
     def current_box(self) -> Box:
         return self.box
@@ -764,6 +788,7 @@ class SheetModel:
     symbols: list
     wires: list
     texts: list
+    page: Box | None = None
 
 
 def load_sheet(text: str) -> tuple[Form, SheetModel]:
@@ -913,7 +938,75 @@ def load_sheet(text: str) -> tuple[Form, SheetModel]:
                     symbols[-1].pins.append((item.x, item.y))
                     texts.append(item)
     _mark_attached(texts, symbols)
-    return root, SheetModel(symbols, wires, texts)
+    model = SheetModel(symbols, wires, texts)
+    _classify_page(root, model)
+    return root, model
+
+
+def page_box(root: Form) -> Box | None:
+    """Page rectangle from the sheet's (paper ...) token."""
+    paper = root.child("paper")
+    if paper is None:
+        return None
+    atoms = list(paper.atoms())
+    if not atoms:
+        return None
+    name = atoms[0]
+    portrait = "portrait" in atoms[1:]
+    if name == "User" and len(atoms) >= 3:
+        width, height = float(atoms[1]), float(atoms[2])
+    elif name in PAPER_MM:
+        width, height = PAPER_MM[name]
+    else:
+        return None
+    if portrait:
+        width, height = height, width
+    return Box(0.0, 0.0, width, height)
+
+
+def _point_outside(x: float, y: float, page: Box) -> bool:
+    return x < page.x0 or y < page.y0 or x > page.x1 or y > page.y1
+
+
+def _body_outside(box: Box, page: Box) -> bool:
+    """True when the body does not meet the page at all."""
+    return box.x1 <= page.x0 or box.x0 >= page.x1 or box.y1 <= page.y0 or box.y0 >= page.y1
+
+
+def _classify_page(root: Form, model: SheetModel) -> None:
+    """Mark off-page symbols and lift the owner freeze on off-page text.
+
+    A symbol is off-page when its whole body is outside the border. A field
+    or label is off-page when its anchor is outside. Those items are parts
+    he has not placed, so owner_frozen.json does not hold them.
+    """
+    page = page_box(root)
+    model.page = page
+    if page is None:
+        return
+    for sym in model.symbols:
+        sym.off_page = _body_outside(sym.box, page)
+    for item in model.texts:
+        item.off_page = _point_outside(item.x, item.y, page)
+        if item.off_page and item.frozen:
+            item.frozen = False
+            item.movable = True
+
+
+def _ink_meets_page(box: Box, page: Box) -> bool:
+    return not (
+        box.x1 <= page.x0 or box.x0 >= page.x1 or box.y1 <= page.y0 or box.y0 >= page.y1
+    )
+
+
+def _stays_off_page(item: TextItem, model: SheetModel) -> bool:
+    """Off-page text may move, but only to another off-page spot."""
+    page = model.page
+    if page is None or not item.off_page:
+        return True
+    if not _point_outside(item.x, item.y, page):
+        return False
+    return not _ink_meets_page(item.box, page)
 
 
 def _mark_attached(texts, symbols):
@@ -1116,7 +1209,7 @@ def _try_place(item: TextItem, x, y, angle, horiz, vert, model: SheetModel) -> b
     saved = (item.x, item.y, item.angle, item.horiz, item.vert, item.box)
     item.x, item.y, item.angle, item.horiz, item.vert = x, y, angle, horiz, vert
     item.box = item._rebuild_box()
-    clear = not item_overlaps(item, model, model.texts)
+    clear = _stays_off_page(item, model) and not item_overlaps(item, model, model.texts)
     if not clear:
         item.x, item.y, item.angle, item.horiz, item.vert, item.box = saved
     return clear
@@ -1280,10 +1373,17 @@ def render_edits(text: str, changed: list[TextItem]) -> str:
 
 
 def _split_overlaps(rows):
-    """Owner placements are reported; only other overlaps fail the check."""
-    owner = [(item, reasons) for item, reasons in rows if item.frozen]
-    other = [(item, reasons) for item, reasons in rows if not item.frozen]
-    return owner, other
+    """Off-page overlaps must be cleared. In-page owner placements are listed."""
+    off = [(item, reasons) for item, reasons in rows if item.off_page]
+    on_owner = [(item, reasons) for item, reasons in rows if not item.off_page and item.frozen]
+    on_other = [(item, reasons) for item, reasons in rows if not item.off_page and not item.frozen]
+    return off, on_owner, on_other
+
+
+def _page_counts(model: SheetModel) -> tuple[int, int]:
+    inside = sum(1 for sym in model.symbols if not sym.off_page)
+    outside = sum(1 for sym in model.symbols if sym.off_page)
+    return inside, outside
 
 
 def _print_overlap(prefix: str, item: TextItem, reasons: list[str]) -> None:
@@ -1333,6 +1433,7 @@ def process_path(path: str, mode: str) -> dict:
         "leftovers": leftovers,
         "original": original,
         "updated": updated,
+        "model": model,
     }
 
 
@@ -1348,27 +1449,40 @@ def main(argv: list[str] | None = None) -> int:
     for path in args.sheets:
         result = process_path(path, mode)
         name = path
+        inside, outside = _page_counts(result["model"])
+        print(f"{name}: symbols inside page {inside}, outside page {outside}")
         if mode == "check":
-            owner, other = _split_overlaps(result["before"])
-            print(f"{name}: {len(other)} overlap(s), {len(owner)} owner placement(s) left overlapping")
-            for item, reasons in other:
-                _print_overlap("", item, reasons)
-            for item, reasons in owner:
-                _print_overlap("OWNER ", item, reasons)
-            if other:
+            off, on_owner, on_other = _split_overlaps(result["before"])
+            print(
+                f"{name}: off-page overlaps {len(off)}, "
+                f"in-page overlaps {len(on_other)}, "
+                f"in-page owner leftovers {len(on_owner)}"
+            )
+            for item, reasons in off:
+                _print_overlap("OFF-PAGE ", item, reasons)
+            for item, reasons in on_other:
+                _print_overlap("IN-PAGE ", item, reasons)
+            for item, reasons in on_owner:
+                _print_overlap("IN-PAGE OWNER ", item, reasons)
+            if off or on_other:
                 exit_code = 1
             continue
-        owner, other = _split_overlaps(result["leftovers"])
-        print(f"{name}: moved {sum(1 for item in result['changed'] if not item.hide)}, "
-              f"hid {sum(1 for item in result['changed'] if item.hide)}, "
-              f"leftover {len(other)}, owner leftover {len(owner)}")
+        off, on_owner, on_other = _split_overlaps(result["leftovers"])
+        print(
+            f"{name}: moved {sum(1 for item in result['changed'] if not item.hide)}, "
+            f"hid {sum(1 for item in result['changed'] if item.hide)}, "
+            f"off-page leftover {len(off)}, in-page leftover {len(on_other)}, "
+            f"in-page owner leftover {len(on_owner)}"
+        )
         for item in result["changed"]:
             print("  " + describe(item))
-        for item, reasons in other:
-            _print_overlap("LEFTOVER ", item, reasons)
-        for item, reasons in owner:
-            _print_overlap("OWNER LEFTOVER ", item, reasons)
-        if other:
+        for item, reasons in off:
+            _print_overlap("OFF-PAGE LEFTOVER ", item, reasons)
+        for item, reasons in on_other:
+            _print_overlap("IN-PAGE LEFTOVER ", item, reasons)
+        for item, reasons in on_owner:
+            _print_overlap("IN-PAGE OWNER ", item, reasons)
+        if off or on_other:
             exit_code = 1
     return exit_code
 
