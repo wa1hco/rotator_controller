@@ -4925,7 +4925,7 @@
 		)
 		(uuid "9fcc164c-5e9a-4229-83f1-f02c5e68c5b4")
 	)
-	(text "ROTOR INTERFACE AND AC MOTOR DRIVE  (azimuth, AC version)\nF407 controller, first sheet. MCU pin assignment is deferred.\nLogic ground is ROTOR_RETURN (CDE terminal 1). See DESIGN-NOTES.md and ADR 0018.\nHierarchical labels leave this sheet for the processor sheet and the power sheet."
+	(text "ROTOR INTERFACE AND AC MOTOR DRIVE  (azimuth, AC version)\nF407 controller, first sheet. MCU pin assignment is deferred.\nLogic ground is ROTOR_RETURN = GNDPWR (CDE terminal 1). See DESIGN-NOTES.md and ADR 0018.\nHierarchical labels leave this sheet for the processor sheet and the power sheet."
 		(exclude_from_sim no)
 		(at 14.986 -39.624 0)
 		(effects
@@ -20131,5 +20131,25 @@
 				)
 			)
 		)
+	)
+	(wire
+		(pts
+			(xy 137.16 36.83) (xy 121.92 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c4e8a1b2-7d63-4f0e-9a55-2b6d0e7f1843")
+	)
+	(wire
+		(pts
+			(xy 121.92 36.83) (xy 121.92 33.02)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d5f9b2c3-8e74-401f-8b66-3c7e1f802954")
 	)
 )

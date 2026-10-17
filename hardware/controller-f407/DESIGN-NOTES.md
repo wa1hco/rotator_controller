@@ -4,7 +4,7 @@ Azimuth, AC version. The processor sheet and the power sheet are later. MCU pins
 
 Nets on this sheet join by name. A label on a pin is the connection. Hierarchical labels are the ones that leave the sheet. `+5V` and `+3V3` are hierarchical labels with a power flag, because those supplies are on the power sheet, which is not drawn yet. Logic ground is the `GNDPWR` power symbol, and it is flagged too. The root sheet no-connects every sheet pin for the same reason.
 
-Logic ground is `GNDPWR`. CDE terminal 1 lands on that net (ADR 0018). Do not put a current shunt in it. The pot measurement uses it as the ADC reference. The hierarchical label `ROTOR_RETURN` is still on the sheet so the parent pin keeps its name, and no part connects to it.
+Logic ground is `ROTOR_RETURN`, and that hierarchical label is tied to the `GNDPWR` power symbol, so they are one net. CDE terminal 1 lands on it (ADR 0018). Do not put a current shunt in it. The pot measurement uses it as the ADC reference. The parent-sheet pin `ROTOR_RETURN` is that same net. The root sheet no-connects the pin, the same waiver as the other sheet pins, because the power sheet is not drawn yet.
 
 ## Rotor connector
 
@@ -178,7 +178,7 @@ Nameplate motor plus brake, about 7.3 A, is past the 5 A rating. If the CT staye
 | Label | Direction | Meaning |
 | --- | --- | --- |
 | `+5V`, `+3V3` | in | From the power sheet. |
-| `ROTOR_RETURN` | both | Parent-sheet pin. Nothing on this sheet connects to it. Logic ground is `GNDPWR`, CDE terminal 1. |
+| `ROTOR_RETURN` | both | Logic ground, tied to `GNDPWR`. CDE terminal 1. Parent-sheet pin. |
 | `AC_HOT` | both | Powerpole hot, before the fuse. |
 | `VIN_RECT` | out | Half-wave raw dc into the power sheet. |
 | `AZ_CW_EN`, `AZ_CCW_EN`, `AZ_BRAKE_EN`, `ARM_EN` | in | MCU requests. Brake high releases. |
