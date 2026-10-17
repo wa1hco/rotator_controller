@@ -1,12 +1,12 @@
 # Drive controller
 
-Design proposal, 2026-10-17. The decision record is [ADR 0020](../decisions/0020-drive-controller.md), status Proposed. This note does not change the schematic or the firmware.
+Design note, 2026-10-17. The decision record is [ADR 0020](../decisions/0020-drive-controller.md), status Accepted. This note does not change the schematic or the firmware.
 
 The board gains a second MCU, the Drive. It is the virtual rotator: a short command interface, every deadline, and the same behavior when the STM32F407 is off, busy, or in the middle of an update. The F407 becomes the Station. It keeps the web UI, USB, Ethernet, GS-232, Hamlib, Easycom, the operator preset catalog, logging, parking schedules, multi-rotator, and firmware updates for both chips.
 
 The principle for the split is: deadlines live in the Drive.
 
-Owner decisions recorded against the first draft: the names Drive and Station; an AC axis is on or off, so its ramp time is 0; K1 stays, one ARM relay on the first board, because it is the only way to take a shorted triac off the bus; TR1, the ZMCT103C, stays as drawn. The heartbeat default, the residual-hardware choice, and the Drive MCU part are still open. Section 8 is that list.
+Decided: the names Drive and Station; an AC axis is on or off, so its ramp time is 0; K1 stays, one ARM relay on the first board, because it is the only way to take a shorted triac off the bus; TR1, the ZMCT103C, stays as drawn; residual hardware is ARM_OK only; the heartbeat default is 5 seconds (allowed 2–30) and the default loss policy is stop; the Drive MCU is the STM32G431RBT6, LCSC C431633. U2, the direction AND gates, and the hold RC come off in a later schematic edit. Section 8 is what is still open.
 
 ## 1. Names
 
@@ -166,7 +166,7 @@ Flags, which are not faults: `HOST_LOST`, the two soft-limit flags, and `PARKED`
 
 The host heartbeat is a deadline of seconds. It is a different timer from the TPS3823, which the Drive kicks faster than 0.9 s, and from the Drive's independent watchdog.
 
-Proposed host timeout: 5 seconds, set per rotor, allowed range 2 to 30 seconds. Proposed default loss policy: stop.
+The heartbeat default is 5 seconds, set per rotor, allowed range 2 to 30 seconds. The default loss policy is stop. Hold and complete-the-move stay available as per-rotor settings.
 
 The deadline arms when a move is accepted and disarms on entry to IDLE. An idle axis and a parked axis have no heartbeat deadline.
 
@@ -529,9 +529,9 @@ Safe outputs, latched. `clear_fault` returns to IDLE only when every cause is go
 
 ## 5. Hardware
 
-### Candidate MCU
+### Drive MCU
 
-LCSC product pages were read on 2026-10-17. Warehouse stock moves, and it is not a promise. JLC's own assembly stock was not rechecked; confirm it before ordering. ADR 0013 still holds: JLCPCB assembles the SMT parts, so an LQFP does not have to be hand-soldered. A QFN would be an assembly part too. The candidates below are LQFP so the pins can be probed.
+The Drive MCU is the STM32G431RBT6. The other two rows are the parts checked against it on the LCSC pages on 2026-10-17. Warehouse stock moves, and it is not a promise. JLC's own assembly stock was not rechecked; confirm it before ordering. ADR 0013 still holds: JLCPCB assembles the SMT parts, so an LQFP does not have to be hand-soldered.
 
 | Part | LCSC | Package | I/O | Core and memory | Analog, as listed on the LCSC page | Warehouse stock | Qty-1 price |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -539,9 +539,9 @@ LCSC product pages were read on 2026-10-17. Warehouse stock moves, and it is not
 | STM32G431CBT6 | [C529355](https://www.lcsc.com/product-detail/C529355.html) | LQFP-48, 7×7 | 38 | Same flash and core | Same analog list | 4,642 | $5.1654 |
 | STM32G071RBT6 | [C432213](https://www.lcsc.com/product-detail/C432213.html) | LQFP-64, 10×10 | 60 | Cortex-M0+, 64 MHz, 128 KB flash, 36 KB SRAM | One 12-bit ADC, 0.4 µs, up to 16 external channels; two comparators | 788 | not copied off the page |
 
-Recommendation: **STM32G431RBT6, C431633.** Two ADCs can take the pot ends and the current transformer without folding them into one long scan. The comparators and op-amps are available for the jam path and the pot front end. VREFBUF is a concrete candidate for the ADC reference ADR 0018 left open. Fifty-two I/O pins cover azimuth and elevation with room left. The 48-pin G431 covers a first pin count and is tight once SWD, BOOT0, and optional limit inputs are added. The G071 is the part to revisit if a single ADC and a scan are acceptable.
+The Drive is the **STM32G431RBT6, LCSC C431633.** Two ADCs can take the pot ends and the current transformer without folding them into one long scan. The comparators and op-amps are available for the jam path and the pot front end. VREFBUF is a concrete candidate for the ADC reference ADR 0018 left open. Fifty-two I/O pins cover azimuth and elevation with room left. The 48-pin G431 (C529355) and the G071 (C432213) were the parts checked against it on 2026-10-17. JLC assembly stock was not rechecked; confirm it before ordering.
 
-A 512 KB STM32G474 in LQFP-64 was not opened for this note. Its C-number and its stock are TBD. Assumption: 128 KB holds the state machine, the pot filters, the config pages, and a bootloader. If that fails, the next step is a live page for the larger-flash part, not a guessed C-number.
+The accepted part is the 128 KB STM32G431RBT6. A 512 KB STM32G474 in LQFP-64 was not opened for this note, and it has no C-number here.
 
 The Station is already an STM32F407 (ADR 0014). The Drive is a second chip. Other MCU families were not given C-numbers here.
 
@@ -582,7 +582,7 @@ A Drive that is held in reset, or whose pins are high-Z, has to drop the triac g
 
 Three residual options:
 
-| | None (pulldowns only) | ARM_OK only (recommended) | ARM_OK plus direction lockout |
+| | None (pulldowns only) | ARM_OK only (decided) | ARM_OK plus direction lockout |
 | --- | --- | --- | --- |
 | What is on the board | Gate pulldowns. Reset puts the pins in high-Z and the pulldowns turn the drivers off. | `nRESET` from the TPS3823 forces the CW, CCW, and brake driver gates off and forces the relay FET off, including while a GPIO is driven high. Pulldowns cover the high-Z interval. | The ARM_OK clamp, plus gates so a CW request enables CW only while CCW is low, and the mirror. The RC hold network is still absent. |
 | Reset, brownout, STOP on `/MR`, or a wedged core that stops kicking the watchdog | Drivers off after the pins tri-state. The wait is the watchdog period. | Drivers and the relay off when `nRESET` falls, including if the GPIO drivers are still high at that moment. | Same as ARM_OK. |
@@ -591,9 +591,9 @@ Three residual options:
 | A driver-gate net shorted to 3.3 V | That triac stays armed. Reset does not clear a short on the far side of the pin. | The clamp is upstream of that short, so the short can still hold the gate. | Same for a short on the output of the lockout. |
 | Shorted power triac | Stuck-on sense reports it. The ARM relay removes the bus when ARM drops or `nRESET` drops. A relay FET that is itself shorted on leaves the bus live; that is unchanged from the present sheet. | Same. | Same. The lockout does not open a shorted triac. |
 
-Recommendation: **ARM_OK only.** The direction network and the RC hold are the timing cases this design moves into the state table, where each one is a row with a host test. The both-on window that remains is the independent-watchdog period while the core is still executing. If that window is unacceptable, direction lockout is the option that closes it, and dead time still belongs to the FSM.
+**ARM_OK only** is the residual hardware. The direction network and the RC hold move into the state table, where each case is a row with a host test. The both-on window that remains is the independent-watchdog period while the core is still executing. A 100 ms starting point is the working figure; the register values are TBD (section 8). Dead time stays in `DEAD_TIME`.
 
-The clamp itself (one AND, a FET that holds the driver gates down, or one gate per output) is part of the schematic change that follows acceptance. This note does not assign that glue a new C-number. The function to keep is the one U3 has today: `ARM_OK = ARM_EN AND nRESET`, fanned out so it can force every driver and the relay off.
+The clamp itself (one AND, a FET that holds the driver gates down, or one gate per output) is part of the later schematic edit. This note does not assign that glue a new C-number. The function to keep is the one U3 has today: `ARM_OK = ARM_EN AND nRESET`, fanned out so it can force every driver and the relay off.
 
 STOP_N stays on the TPS3823 `/MR`, as on the current sheet. While the button is held, the Drive is in reset, the FSM is not running, and the gates are off because `nRESET` is low. Releasing the button starts `BOOT`. A GPIO copy of STOP is optional (section 8). The path that works while the core is held in reset is `/MR`.
 
@@ -605,7 +605,7 @@ Field update uses the same UART. The Station sends `ENTER_BOOTLOADER` (magic TBD
 
 ### Parts that leave, and parts that stay
 
-This list is for the schematic edit after ADR 0020 is accepted. Nothing is lifted in this change.
+ADR 0020 is accepted. U2, the direction AND gates, and the hold RC come off in a later schematic edit. Nothing is lifted in this change.
 
 Leaves with the direction logic and the hold delay:
 
@@ -641,7 +641,7 @@ Pulldowns R50–R53 (100 kΩ on `AZ_CW_EN`, `AZ_CCW_EN`, `AZ_BRAKE_EN`, and `ARM
 
 | Rule today (DESIGN-NOTES, ADR 0005) | In this design |
 | --- | --- |
-| `ARM_OK = ARM_EN AND nRESET` | The recommended residual hardware. |
+| `ARM_OK = ARM_EN AND nRESET` | The residual hardware. ARM_OK only. |
 | `CW_GATE = AZ_CW_EN AND NOT AZ_CCW_EN AND ARM_OK AND NOT HOLD_CCW`, and the CCW mirror | One direction gate, and only in `RAMP_UP`, `RUN`, `CREEP`, and the gated part of `RAMP_DOWN`. `ARM_OK` remains the hardware enable. |
 | U4 is `AZ_CW_EN AND nCCW`, because ANDing a signal with its own inversion would never turn on | The running direction and the pending direction are data in the machine. The eight-gate network leaves. |
 | RC hold, calculated near 92 ms, design window 70–110 ms | Removed. `DEAD_TIME` is the gap, floor 500 ms. |
@@ -708,26 +708,24 @@ None of that code is in this change.
 
 ## 8. Open questions
 
-Settled, and removed from this list: the names Drive and Station; AC axes on or off with ramp time 0; K1 stays, one relay on the first board; TR1 stays as drawn.
+Settled, and removed from this list: the names Drive and Station; AC axes on or off with ramp time 0; K1 stays, one relay on the first board; TR1 stays as drawn; residual hardware is ARM_OK only; heartbeat default 5 seconds (range 2–30) with loss policy stop; Drive MCU STM32G431RBT6, LCSC C431633.
 
-1. Heartbeat default of 5 seconds, allowed 2–30, and default loss policy stop.
-2. A jog under the complete policy takes the stop path, because a jog has no target.
-3. A command on a healthy link counts as a heartbeat. After `host_lost`, only HEARTBEAT or READ_STATUS clears the flag.
-4. Dead-time floor of 500 ms, brake released through the reversal, and brake-release and brake-engage times (values TBD).
-5. Residual hardware: ARM_OK only (recommended), or ARM_OK plus direction lockout. Proposed independent-watchdog period 100 ms, registers TBD.
-6. K1 rating. The relay stays. The G5LE-1A4 5 A inductive rating against about 7.3 A motor-plus-brake overlap is still open, as in DESIGN-NOTES.
-7. Drive MCU. STM32G431RBT6, LQFP-64, LCSC C431633, is the recommendation. A larger-flash G4 has no C-number in this note. JLC assembly stock was not rechecked.
-8. Pot reference: the G4 VREFBUF (2.048 V, 2.5 V, or 2.95 V), or the separate filtered 3.3 V ADR 0018 left TBD.
-9. Which sense interfaces get connector pins on the first board, beyond the dual-end pot.
-10. STOP_N stays on `/MR`. Whether the Drive also gets a readable copy.
-11. Front-panel CW and CCW, if the headless panel of ADR 0006 is fitted: Drive inputs, so they become jog and stop events while the Station is busy.
-12. Field update: the STM32 ROM USART bootloader, with the Station driving BOOT0 and NRST, and the value of the `ENTER_BOOTLOADER` magic.
-13. The CCW hold on the current sheet is open (`/HOLD_CCW` is only U2 pin 9). This proposal deletes the network. A repair of the discrete hold would be a different change.
-14. D2, the SMAJ90CA, pending the owner's push. Section 6 still records the discrepancy already in this tree: DESIGN-NOTES says `AC_BUS`; the 2026-10-17 netlist has pin 2 on `AC_FUSED`. The local schematic, not yet pushed, places D2 after the fuse and before the relay. This tree is not edited to match until that push.
-15. TR1, the ZMCT103C, stays. Still open: the 5 A rating versus about 7.3 A motor-plus-brake, and saturation.
-16. Heading unit of 0.01° and speed in permille.
-17. Drive flash stores park, limits, calibration, ramps, and deadlines. The preset catalog and the parking schedules stay on the Station.
-18. Duty-cycle rest (the CDE 10% and Yaesu three-minute notes in the system overview). This machine enforces max run as `RUN_TIMEOUT` and leaves a minimum off time out until a preset needs it.
+1. A jog under the complete policy takes the stop path, because a jog has no target.
+2. A command on a healthy link counts as a heartbeat. After `host_lost`, only HEARTBEAT or READ_STATUS clears the flag.
+3. Dead-time floor of 500 ms, brake released through the reversal, and brake-release and brake-engage times (values TBD).
+4. Drive independent-watchdog period. The working figure is 100 ms. The register values are TBD. The TPS3823, 0.9–2.5 s, stays the backstop.
+5. K1 rating. The relay stays. The G5LE-1A4 5 A inductive rating against about 7.3 A motor-plus-brake overlap is still open, as in DESIGN-NOTES.
+6. Pot reference: the G4 VREFBUF (2.048 V, 2.5 V, or 2.95 V), or the separate filtered 3.3 V ADR 0018 left TBD.
+7. Which sense interfaces get connector pins on the first board, beyond the dual-end pot.
+8. STOP_N stays on `/MR`. Whether the Drive also gets a readable copy.
+9. Front-panel CW and CCW, if the headless panel of ADR 0006 is fitted: Drive inputs, so they become jog and stop events while the Station is busy.
+10. Field update: the STM32 ROM USART bootloader, with the Station driving BOOT0 and NRST, and the value of the `ENTER_BOOTLOADER` magic.
+11. The CCW hold on the current sheet is open (`/HOLD_CCW` is only U2 pin 9). The accepted design deletes that network in a later schematic edit. A repair of the discrete hold would be a different change.
+12. D2, the SMAJ90CA, pending the owner's push. Section 6 still records the discrepancy already in this tree: DESIGN-NOTES says `AC_BUS`; the 2026-10-17 netlist has pin 2 on `AC_FUSED`. The local schematic, not yet pushed, places D2 after the fuse and before the relay. This tree is not edited to match until that push.
+13. TR1, the ZMCT103C, stays. Still open: the 5 A rating versus about 7.3 A motor-plus-brake, and saturation.
+14. Heading unit of 0.01° and speed in permille.
+15. Drive flash stores park, limits, calibration, ramps, and deadlines. The preset catalog and the parking schedules stay on the Station.
+16. Duty-cycle rest (the CDE 10% and Yaesu three-minute notes in the system overview). This machine enforces max run as `RUN_TIMEOUT` and leaves a minimum off time out until a preset needs it.
 
 ## Developer
 
