@@ -35,4 +35,4 @@ U2, the direction AND gates U4–U9, and the hold RC leave the schematic in a la
 
 The state machine is a shared C++17 core, unit-tested on the PC and, later, run against the physics simulator. That code is not in this change.
 
-The CCW hold on the current sheet is open (`HOLD_CCW` is only U2 pin 9 in the 2026-10-17 netlist). Acceptance of this record removes that network rather than repairing it.
+The CCW hold on the current sheet is open (`HOLD_CCW` is only U2 pin 9 in the 2026-10-17 netlist). The later schematic edit removes that network. It does not repair it.
