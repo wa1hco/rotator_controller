@@ -1,0 +1,34 @@
+# ADR 0020: Drive MCU in place of the discrete interlock
+
+- Status: Proposed
+- Date: 2026-10-17
+
+## Context
+
+ADR 0005 puts CW/CCW exclusion and the reversal gap in 74LVC gates and an RC hold, with a longer gap in firmware. Those gates are hard to review for every timing edge, and the STM32F407 is also busy with Ethernet, USB, the web UI, and firmware updates. A deadline that lives in that firmware can slip for reasons that have nothing to do with the motor.
+
+The long form, the state diagram, and the state-by-event tables are in `docs/design/drive-controller.md`.
+
+## Decision
+
+Add a second MCU, the Drive. The STM32F407 is the Station.
+
+Deadlines live in the Drive: triac and brake gates, the ARM relay, reversal dead time, ramps, soft limits, stall, jam, run timeout, position sensing, and the heartbeat. The Drive stores its own copy of the limits, calibration, park heading, and loss policy, and it follows that copy while the Station is off. The Station keeps the web UI, USB, Ethernet, GS-232, Hamlib, Easycom, the operator catalog, logging, schedules, multi-rotator, and updates for both chips.
+
+Commands from the Station are targets on a 3.3 V UART. Both chips share the rotor-return ground (ADR 0018), so the link has no isolator. A late, duplicate, or lost command leaves the Drive on the last accepted target.
+
+The host heartbeat is several seconds, with a per-rotor loss policy of stop, hold, or complete the move. Idle and parked axes have no heartbeat deadline. The per-axis machine, including dead time, limits, ramp, stall, and heartbeat, is the diagram and the tables in the design note.
+
+Candidate part: STM32G431RBT6, LQFP-64, LCSC C431633, checked on the LCSC page on 2026-10-17. JLC assembly stock was not rechecked.
+
+Residual hardware, recommended: `ARM_OK` (`ARM_EN AND nRESET` from the TPS3823) forces the triac-driver gates and the relay off while the Drive is in reset, plus pulldowns, plus the brake defaulting to engaged. Direction exclusion and the 500 ms gap move into the Drive state machine. The direction-lockout option is recorded in the design note if that both-on window is unacceptable.
+
+When this record is accepted, it replaces the combinatorial-gate and RC-hold parts of ADR 0005. ADR 0005 stays Accepted until then. The ARM relay, brake-defaults-engaged, stuck-on sensing, and a dead time of at least 500 ms remain. The dead time is enforced by the Drive.
+
+## Consequences
+
+U2, the direction AND gates U4–U9, and the hold RC leave the schematic in a later edit. U10 leaves with them if the ARM_OK clamp already forces the brake driver off. U3's `ARM_OK` function stays. The schematic and the firmware are unchanged by this proposal.
+
+The state machine is a shared C++17 core, unit-tested on the PC and, later, run against the physics simulator. That code is not in this change.
+
+The CCW hold on the current sheet is open (`HOLD_CCW` is only U2 pin 9 in the 2026-10-17 netlist). Acceptance of this record removes that network rather than repairing it.
