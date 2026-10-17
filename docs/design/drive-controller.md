@@ -6,18 +6,18 @@ The board gains a second MCU, the Drive. It is the virtual rotator: a short comm
 
 The principle for the split is: deadlines live in the Drive.
 
+Owner decisions recorded against the first draft: the names Drive and Station; an AC axis is on or off, so its ramp time is 0; K1 stays, one ARM relay on the first board, because it is the only way to take a shorted triac off the bus; TR1, the ZMCT103C, stays as drawn. The heartbeat default, the residual-hardware choice, and the Drive MCU part are still open. Section 8 is that list.
+
 ## 1. Names
 
-Recommendation: **Drive** for the new MCU and **Station** for the STM32F407.
+**Drive** is the new MCU. **Station** is the STM32F407.
 
 | Name | Chip | The word covers |
 | --- | --- | --- |
 | Drive | the new MCU | motors, sensing, brakes, and every deadline |
 | Station | STM32F407VGT6, the chip in ADR 0014 | web UI, USB, Ethernet, operator protocols, logging, schedules, multi-rotator, updates |
 
-The product is already called the rotator controller. A second chip also called a controller makes the link, the faults, and the two bootloaders ambiguous. Drive is the chip that fires the triacs, times the reversal, and still holds the limits when the Station is down. Station is the chip that faces the shack. "Interlock MCU" would hide the ramps, the position loop, and the config store.
-
-Q1 records that the names are the owner's to confirm.
+The product is already called the rotator controller. Drive is the chip that fires the triacs, times the reversal, and still holds the limits when the Station is down. Station is the chip that faces the shack.
 
 ## 2. Who owns what
 
@@ -27,7 +27,7 @@ Deadlines live in the Drive. A deadline here means a time after which the hardwa
 | --- | --- | --- |
 | CW, CCW, and brake triac gates; ARM relay | owns | |
 | Reversal dead time | owns | |
-| Ramp up, ramp down, creep near the target | owns | |
+| Ramp states. AC ramp time is 0, so the axis is on or off. A real slope is the later DC H-bridge module (ADR 0018). | owns the states | |
 | Soft limits and the overlap choice | owns | displays |
 | Stall, jam, run timeout | owns | displays and logs |
 | Position: pot ADC, filtering, calibration, pulse and quadrature inputs | owns | displays |
@@ -117,7 +117,7 @@ Proposed opcodes:
 | SET_LIMITS | `0x06` | axis, minimum, maximum, overlap flag |
 | SET_CALIBRATION | `0x07` | axis, sensor kind, end readings, end headings. Byte layout TBD. |
 | SET_PRESET | `0x08` | axis, park heading |
-| SET_MOTION | `0x09` | ramp time, creep window, target window, dead time, brake times, stall, jam, run timeout, heartbeat, loss policy |
+| SET_MOTION | `0x09` | ramp time (0 on an AC axis), creep window, target window, dead time, brake times, stall, jam, run timeout, heartbeat, loss policy |
 | READ_STATUS | `0x0A` | empty. The ACK carries the status record. |
 | CLEAR_FAULT | `0x0B` | axis mask |
 | ENTER_BOOTLOADER | `0x0C` | a 32-bit magic. The constant is TBD, so a damaged payload cannot enter the bootloader. |
@@ -127,7 +127,7 @@ Proposed opcodes:
 
 NACK reasons: `BAD_SEQ`, `BAD_STATE`, `HOST_LOST`, `LIMIT`, `BAD_CONFIG`, `FAULT`, `AXIS_ABSENT`, `BAD_MAGIC`.
 
-Assumption: headings are hundredths of a degree. Speed is permille of full rotor speed. On an on/off triac profile, a permille above the creep threshold is full on, and the ramp time may be 0. The states in section 4 still run.
+An AC axis is on or off. Its ramp time is 0, and CREEP commands the same full-on direction gate as RUN. Permille speed and a non-zero ramp belong to the later DC H-bridge module. The states in section 4 still run, and on AC the ramp states pass straight through. Heading unit and the permille encoding are still open (section 8).
 
 Axis bit 0 is azimuth. Bit 1 is elevation.
 
@@ -172,7 +172,7 @@ The deadline arms when a move is accepted and disarms on entry to IDLE. An idle 
 
 | Policy | Result of a missed heartbeat |
 | --- | --- |
-| stop | Ramp down if a direction is on, engage the brake, enter IDLE, set `host_lost`, and drop the goal. |
+| stop | Leave the direction through `RAMP_DOWN` (immediate when the ramp time is 0), engage the brake, enter IDLE, set `host_lost`, and drop the goal. |
 | hold | The same motion as stop. The abandoned heading stays in `held_target` for the Station to display. The axis does not continue. |
 | complete | The goto or park already underway runs to IDLE. New commands wait for `heartbeat_ok`. A jog has no target, so a jog takes the stop path. |
 
@@ -195,17 +195,17 @@ Brake gate high means the solenoid releases the wedge, matching DESIGN-NOTES. Ga
 
 CW and CCW are never both on. A tick that would turn both on latches `BOTH_ON` and enters FAULT.
 
-Assumption: an on/off triac profile may set the ramp time to 0. `RAMP_UP` and `RAMP_DOWN` are still entered, and `ramp_done` follows on the next tick. Phase-angle control uses the same states with a non-zero ramp. Which profile the AC rotor uses is Q5.
+An AC axis has ramp time 0. `RAMP_UP` and `RAMP_DOWN` are still entered, and `ramp_done` follows on the next tick, with the direction gate full on and then full off. A slope, and a creep speed below full on, are the later DC H-bridge module.
 
 Dead time floor: 500 ms, the value already compiled in as `reversal_dead_time_ms` and `MotionConfig::dead_time_ms`. Changing the pending direction restarts the full interval. The interval is never shortened. STOP during `DEAD_TIME` waits the interval out, because a triac can stay latched until current zero.
 
-Assumption, and Q6: during a reversal the brake stays released through `DEAD_TIME`, and it engages on the way to IDLE. Brake release and brake engage times are config fields. Their values are TBD. The 50 ms arm time and 150 ms stop time in the current host test are code defaults, not measured solenoid times.
+Assumption, still open: during a reversal the brake stays released through `DEAD_TIME`, and it engages on the way to IDLE. Brake release and brake engage times are config fields. Their values are TBD. The 50 ms arm time and 150 ms stop time in the current host test are code defaults, not measured solenoid times.
 
 Parked is a flag on IDLE. It is set when a park goal reaches IDLE inside the park window.
 
 Overlap is chosen when a goto or park is accepted, from the heading, the target, the soft limits, and the overlap flag. The machine stores the choice as the direction.
 
-![One axis of the Drive. Solid edges are the motion path. Dashed edges are heartbeat loss under stop or hold. A complete-move loss stays on the solid path. Dotted edges are faults.](img/drive-controller-fsm.png)
+![One axis of the Drive. Solid edges are the motion path. Dashed edges are heartbeat loss under stop or hold. A complete-move loss stays on the solid path. Dotted edges are faults. On AC, RAMP_UP and RAMP_DOWN have ramp time 0.](img/drive-controller-fsm.png)
 
 The drawing is the motion path. The tables below are the full event list. Source for the figure: `docs/design/img/src/drive-controller-fsm.dot`.
 
@@ -213,7 +213,7 @@ These fields are context, not states: the goal (none, goto, jog, park), the dire
 
 A row is one accepted event. A duplicate SEQ never reaches the table. Command rows still say what happens when `host_lost` is already set, so that edge is visible.
 
-`stop_input` faults every axis. A jam on the single shared current transformer faults every axis whose gate is on. If no gate is on, it faults both axes, because the current was not commanded. That second sentence assumes one transformer for the whole bus; Q17 asks about a per-axis transformer. Every other event is per axis. A stuck triac is the triac of that axis.
+`stop_input` faults every axis. TR1 stays one current transformer on the shared hot. A jam on that reading faults every axis whose gate is on. If no gate is on, it faults both axes, because the current was not commanded. The 5 A rating against about 7.3 A motor-plus-brake, and saturation, stay open. Every other event is per axis. A stuck triac is the triac of that axis.
 
 Each state lists the same 23 events.
 
@@ -312,7 +312,7 @@ ARM on, brake releasing, directions off. Heartbeat armed.
 
 ### RAMP_UP
 
-One direction on, speed rising. With a ramp time of 0, `ramp_done` is the next tick.
+One direction on. On AC the ramp time is 0, so `ramp_done` is the next tick and the gate is already full on. A DC H-bridge module is what gives this state a slope.
 
 
 | Event | Result |
@@ -374,7 +374,7 @@ One direction at the commanded speed.
 
 ### CREEP
 
-One direction, slow, inside the creep window of a goto or a park.
+Inside the creep window of a goto or a park. On AC the gate stays full on, the same as RUN. A reduced creep speed is the later DC H-bridge module.
 
 
 | Event | Result |
@@ -405,7 +405,7 @@ One direction, slow, inside the creep window of a goto or a park.
 
 ### RAMP_DOWN
 
-Slowing the direction that was on. `ramp_done` starts dead time when a reverse is pending, and engages the brake when the axis is stopping.
+The direction that was on, then off. On AC the ramp time is 0, so `ramp_done` is the next tick. `ramp_done` starts dead time when a reverse is pending, and engages the brake when the axis is stopping.
 
 
 | Event | Result |
@@ -574,7 +574,7 @@ Without the optional limit inputs that is about 30 signals plus the SWD header. 
 
 The pot wiper is rotor return (ADR 0018). The Drive measures the two ends. The 60 Hz notch and the FIR described in the system overview run on the Drive. The firmware in the tree today implements the ideal end-voltage ratio only; the notch and the FIR are not written yet.
 
-Sensor kinds to pin now, from ADR 0008: dual-end pot, single-ended pot with an excitation GPIO, pulse or reed, and quadrature. The connector positions for the kinds the first cable does not use are TBD (Q11).
+Sensor kinds to pin now, from ADR 0008: dual-end pot, single-ended pot with an excitation GPIO, pulse or reed, and quadrature. The connector positions for the kinds the first cable does not use are TBD (section 8).
 
 ### What remains hardware on a reset
 
@@ -595,7 +595,7 @@ Recommendation: **ARM_OK only.** The direction network and the RC hold are the t
 
 The clamp itself (one AND, a FET that holds the driver gates down, or one gate per output) is part of the schematic change that follows acceptance. This note does not assign that glue a new C-number. The function to keep is the one U3 has today: `ARM_OK = ARM_EN AND nRESET`, fanned out so it can force every driver and the relay off.
 
-STOP_N stays on the TPS3823 `/MR`, as on the current sheet. While the button is held, the Drive is in reset, the FSM is not running, and the gates are off because `nRESET` is low. Releasing the button starts `BOOT`. A GPIO copy of STOP is optional (Q12) and is not the path that works while the core is held in reset.
+STOP_N stays on the TPS3823 `/MR`, as on the current sheet. While the button is held, the Drive is in reset, the FSM is not running, and the gates are off because `nRESET` is low. Releasing the button starts `BOOT`. A GPIO copy of STOP is optional (section 8). The path that works while the core is held in reset is `/MR`.
 
 ### Programming and update
 
@@ -623,15 +623,15 @@ The CCW hold is already open on the sheet this note was written against. `kicad-
 - R62 pin 1 is on `/CCW_GATE`. C61 pin 2 and R63 pin 2 are on `GNDPWR`.
 - C61 pin 1, both pins of D61, R62 pin 2, and R63 pin 1 appear on no net.
 
-This proposal removes that network. Repairing the discrete hold would be a different change (Q15).
+This proposal removes that network. Repairing the discrete hold would be a different change (section 8).
 
 Stays:
 
 - MOC3023 optos, triacs, gate resistors, and snubbers (ADR 0004).
 - Q2, Q3, and Q4, the 2N7002 LED switches, and their gate pulldowns.
-- K1, the ARM relay, Q1, and the flyback diode. Coil off, the rotator is dark.
+- K1, the ARM relay, one relay on the first board, plus Q1 and the flyback diode. Coil off, the rotator is dark. K1 stays because it is the only way to end a shorted-triac fault: stuck-on sense can see the short, and opening K1 takes that triac off the 26 VAC bus. Gate pulldowns and `nRESET` cannot open a triac that has failed short. The G5LE-1A4 5 A inductive rating against about 7.3 A motor-plus-brake overlap stays open, as already written in DESIGN-NOTES.
 - U1, TPS3823-33, LCSC C7719, with STOP_N on `/MR` and the WDI pulldown R41.
-- U14, U15, and U16 stuck-on sense; U17 zero-cross; TR1 and the `I_SENSE` bias and clamps.
+- U14, U15, and U16 stuck-on sense; U17 zero-cross; TR1, the Zeming ZMCT103C, and the `I_SENSE` bias and clamps. TR1 stays as drawn. Its 5 A rating against about 7.3 A motor-plus-brake, and saturation of the core, stay open.
 - Pot clamps, the SMAJ90CA parts, the fuse, and the MOV.
 - The F407, the ADuM4160, and the MagJack.
 
@@ -649,7 +649,7 @@ Pulldowns R50–R53 (100 kΩ on `AZ_CW_EN`, `AZ_CCW_EN`, `AZ_BRAKE_EN`, and `ARM
 | `BRK_GATE = AZ_BRAKE_EN AND ARM_OK`, high = release | `BRAKE_RELEASE` and the released states drive the brake pin, and only while `ARM_OK` is true. |
 | Watchdog, brownout, or `STOP_N` drops the brake gate and the wedge engages | Unchanged. The TPS3823 drops `nRESET`, which drops `ARM_OK`. |
 | 100 kΩ pulldowns on the four request pins | Pulldowns on the Drive outputs. |
-| ARM relay in series with the triac bus. Normal motion does not break load current in that contact. It opens on a fault. | Unchanged. `FAULT` and reset open it. |
+| ARM relay in series with the triac bus. Normal motion does not break load current in that contact. It opens on a fault. | K1 stays, one relay on the first board. It is the only way to end a shorted-triac fault. `FAULT` and reset open it. The 5 A versus about 7.3 A overlap rating stays open. |
 | Stuck-on sense: armed, that gate off, no pulse for 20 ms | `STUCK_TRIAC`, same 20 ms, then ARM off. |
 | WDI kicked faster than 0.9 s. R41 makes a floating WDI time out. | The Drive kicks WDI. The host heartbeat is the slower, separate deadline. |
 | Current `MotionController`: direction outputs off except in the two Running states, which are never active together | Kept, and applied to every state in the output table. |
@@ -668,7 +668,7 @@ The code in the tree uses a smaller state set. The later software change maps it
 
 `request_stop` today steps Fault straight to Idle. The proposal uses `clear_fault`, and only after the cause is gone.
 
-DESIGN-NOTES places D2, the SMAJ90CA, on `AC_BUS`. The 2026-10-17 netlist places D2 pin 2 on `AC_FUSED` and D2 pin 1 on `GNDPWR`. K1 pin 1 is on `AC_FUSED` and K1 pin 3 is on `AC_BUS`. This proposal does not move D2 (Q16).
+DESIGN-NOTES places D2, the SMAJ90CA, on `AC_BUS`. The 2026-10-17 netlist places D2 pin 2 on `AC_FUSED` and D2 pin 1 on `GNDPWR`. K1 pin 1 is on `AC_FUSED` and K1 pin 3 is on `AC_BUS`. This proposal does not move D2 (section 8).
 
 ## 7. Software
 
@@ -686,7 +686,7 @@ The 230 rows are the unit-test list: one host test per row. These scripts sit on
 
 - A reversal visits `RAMP_DOWN`, `DEAD_TIME`, and `RAMP_UP`. The dead-time timer is at least the configured floor. STOP during `DEAD_TIME` does not shorten it. Changing the pending direction restarts the full interval.
 - On every tick of that script, including the transition ticks, CW and CCW are never both commanded.
-- A ramp time of 0 still enters `RAMP_UP` and `RAMP_DOWN`.
+- An AC profile, ramp time 0, still enters `RAMP_UP` and `RAMP_DOWN` and leaves each on the next tick, with the gate full on and then full off.
 - A duplicate SEQ applies a GOTO once and does not restart the brake timer.
 - A SEQ other than `last_seq` or the next one is rejected, and the state is unchanged.
 - A dropped frame, retried with the same SEQ, applies once.
@@ -708,26 +708,26 @@ None of that code is in this change.
 
 ## 8. Open questions
 
-1. Confirm the names Drive and Station.
-2. Heartbeat default of 5 seconds, allowed 2–30, and default loss policy stop.
-3. A jog under the complete policy takes the stop path, because a jog has no target.
-4. A command on a healthy link counts as a heartbeat. After `host_lost`, only HEARTBEAT or READ_STATUS clears the flag.
-5. AC speed ramp: phase control, or a ramp time of 0 on the on/off triacs. The states cover both.
-6. Dead-time floor of 500 ms, brake released through the reversal, and brake-release and brake-engage times (values TBD).
-7. Residual hardware: ARM_OK only, or ARM_OK plus direction lockout. Proposed independent-watchdog period 100 ms, registers TBD.
-8. One ARM relay for both axes, or a contactor per axis, once elevation is populated.
-9. Confirm STM32G431RBT6 (128 KB flash, C431633). A larger-flash G4 has no C-number in this note. JLC assembly stock was not rechecked.
-10. Pot reference: the G4 VREFBUF (2.048 V, 2.5 V, or 2.95 V), or the separate filtered 3.3 V ADR 0018 left TBD.
-11. Which sense interfaces get connector pins on the first board, beyond the dual-end pot.
-12. STOP_N stays on `/MR`. Whether the Drive also gets a readable copy.
-13. Front-panel CW and CCW, if the headless panel of ADR 0006 is fitted: Drive inputs, so they become jog and stop events while the Station is busy.
-14. Field update: the STM32 ROM USART bootloader, with the Station driving BOOT0 and NRST, and the value of the `ENTER_BOOTLOADER` magic.
-15. The CCW hold on the current sheet is open (`/HOLD_CCW` is only U2 pin 9). This proposal deletes the network. A repair of the discrete hold would be a different change.
-16. D2, the SMAJ90CA: DESIGN-NOTES says `AC_BUS`; the 2026-10-17 netlist has pin 2 on `AC_FUSED`.
-17. One current transformer on the shared hot cannot tell azimuth current from elevation current. Per-axis transformers, or accept the summed reading. Saturation at motor-plus-brake current is still the open item in DESIGN-NOTES.
-18. Heading unit of 0.01° and speed in permille.
-19. Drive flash stores park, limits, calibration, ramps, and deadlines. The preset catalog and the parking schedules stay on the Station.
-20. Duty-cycle rest (the CDE 10% and Yaesu three-minute notes in the system overview). This machine enforces max run as `RUN_TIMEOUT` and leaves a minimum off time out until a preset needs it.
+Settled, and removed from this list: the names Drive and Station; AC axes on or off with ramp time 0; K1 stays, one relay on the first board; TR1 stays as drawn.
+
+1. Heartbeat default of 5 seconds, allowed 2–30, and default loss policy stop.
+2. A jog under the complete policy takes the stop path, because a jog has no target.
+3. A command on a healthy link counts as a heartbeat. After `host_lost`, only HEARTBEAT or READ_STATUS clears the flag.
+4. Dead-time floor of 500 ms, brake released through the reversal, and brake-release and brake-engage times (values TBD).
+5. Residual hardware: ARM_OK only (recommended), or ARM_OK plus direction lockout. Proposed independent-watchdog period 100 ms, registers TBD.
+6. K1 rating. The relay stays. The G5LE-1A4 5 A inductive rating against about 7.3 A motor-plus-brake overlap is still open, as in DESIGN-NOTES.
+7. Drive MCU. STM32G431RBT6, LQFP-64, LCSC C431633, is the recommendation. A larger-flash G4 has no C-number in this note. JLC assembly stock was not rechecked.
+8. Pot reference: the G4 VREFBUF (2.048 V, 2.5 V, or 2.95 V), or the separate filtered 3.3 V ADR 0018 left TBD.
+9. Which sense interfaces get connector pins on the first board, beyond the dual-end pot.
+10. STOP_N stays on `/MR`. Whether the Drive also gets a readable copy.
+11. Front-panel CW and CCW, if the headless panel of ADR 0006 is fitted: Drive inputs, so they become jog and stop events while the Station is busy.
+12. Field update: the STM32 ROM USART bootloader, with the Station driving BOOT0 and NRST, and the value of the `ENTER_BOOTLOADER` magic.
+13. The CCW hold on the current sheet is open (`/HOLD_CCW` is only U2 pin 9). This proposal deletes the network. A repair of the discrete hold would be a different change.
+14. D2, the SMAJ90CA, pending the owner's push. Section 6 still records the discrepancy already in this tree: DESIGN-NOTES says `AC_BUS`; the 2026-10-17 netlist has pin 2 on `AC_FUSED`. The local schematic, not yet pushed, places D2 after the fuse and before the relay. This tree is not edited to match until that push.
+15. TR1, the ZMCT103C, stays. Still open: the 5 A rating versus about 7.3 A motor-plus-brake, and saturation.
+16. Heading unit of 0.01° and speed in permille.
+17. Drive flash stores park, limits, calibration, ramps, and deadlines. The preset catalog and the parking schedules stay on the Station.
+18. Duty-cycle rest (the CDE 10% and Yaesu three-minute notes in the system overview). This machine enforces max run as `RUN_TIMEOUT` and leaves a minimum off time out until a preset needs it.
 
 ## Developer
 

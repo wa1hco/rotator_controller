@@ -11,17 +11,21 @@ The long form, the state diagram, and the state-by-event tables are in `docs/des
 
 ## Decision
 
-Add a second MCU, the Drive. The STM32F407 is the Station.
+Add a second MCU, the Drive. The STM32F407 is the Station. Those names are confirmed.
 
-Deadlines live in the Drive: triac and brake gates, the ARM relay, reversal dead time, ramps, soft limits, stall, jam, run timeout, position sensing, and the heartbeat. The Drive stores its own copy of the limits, calibration, park heading, and loss policy, and it follows that copy while the Station is off. The Station keeps the web UI, USB, Ethernet, GS-232, Hamlib, Easycom, the operator catalog, logging, schedules, multi-rotator, and updates for both chips.
+Deadlines live in the Drive: triac and brake gates, the ARM relay, reversal dead time, the ramp states, soft limits, stall, jam, run timeout, position sensing, and the heartbeat. An AC axis is on or off. Its ramp time is 0, so `RAMP_UP` and `RAMP_DOWN` pass straight through. A real slope belongs to the later DC H-bridge module (ADR 0018). The Drive stores its own copy of the limits, calibration, park heading, and loss policy, and it follows that copy while the Station is off. The Station keeps the web UI, USB, Ethernet, GS-232, Hamlib, Easycom, the operator catalog, logging, schedules, multi-rotator, and updates for both chips.
 
 Commands from the Station are targets on a 3.3 V UART. Both chips share the rotor-return ground (ADR 0018), so the link has no isolator. A late, duplicate, or lost command leaves the Drive on the last accepted target.
 
-The host heartbeat is several seconds, with a per-rotor loss policy of stop, hold, or complete the move. Idle and parked axes have no heartbeat deadline. The per-axis machine, including dead time, limits, ramp, stall, and heartbeat, is the diagram and the tables in the design note.
+The host heartbeat is several seconds, with a per-rotor loss policy of stop, hold, or complete the move. Idle and parked axes have no heartbeat deadline. The timeout number and the default policy are still open. The per-axis machine, including dead time, limits, the ramp states, stall, and heartbeat, is the diagram and the tables in the design note.
 
-Candidate part: STM32G431RBT6, LQFP-64, LCSC C431633, checked on the LCSC page on 2026-10-17. JLC assembly stock was not rechecked.
+K1, the ARM relay, stays: one relay on the first board. It is the only way to end a shorted-triac fault. Gate pulldowns cannot open a triac that has failed short. The 5 A inductive rating against about 7.3 A motor-plus-brake overlap stays open.
 
-Residual hardware, recommended: `ARM_OK` (`ARM_EN AND nRESET` from the TPS3823) forces the triac-driver gates and the relay off while the Drive is in reset, plus pulldowns, plus the brake defaulting to engaged. Direction exclusion and the 500 ms gap move into the Drive state machine. The direction-lockout option is recorded in the design note if that both-on window is unacceptable.
+TR1, the ZMCT103C, stays as drawn. Its 5 A rating against that same overlap current, and saturation, stay open.
+
+Candidate part, not yet confirmed: STM32G431RBT6, LQFP-64, LCSC C431633, checked on the LCSC page on 2026-10-17. JLC assembly stock was not rechecked.
+
+Residual hardware, recommended and still open: `ARM_OK` (`ARM_EN AND nRESET` from the TPS3823) forces the triac-driver gates and the relay off while the Drive is in reset, plus pulldowns, plus the brake defaulting to engaged. Direction exclusion and the 500 ms gap move into the Drive state machine. The direction-lockout option is recorded in the design note if that both-on window is unacceptable.
 
 When this record is accepted, it replaces the combinatorial-gate and RC-hold parts of ADR 0005. ADR 0005 stays Accepted until then. The ARM relay, brake-defaults-engaged, stuck-on sensing, and a dead time of at least 500 ms remain. The dead time is enforced by the Drive.
 
