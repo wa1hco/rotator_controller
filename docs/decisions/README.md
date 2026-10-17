@@ -10,7 +10,7 @@ They are short on purpose. The reasoning and the numbers live in
 | [0002](0002-full-replacement.md) | The box replaces the stock controller |
 | [0003](0003-external-power-supply.md) | Motor and logic power supplies stay outside the box |
 | [0004](0004-discrete-triacs.md) | MOC3023M + BTA16-600SW and snubbers, not CPC1966 |
-| [0005](0005-direction-interlock.md) | Hardware CW/CCW exclusion, ARM relay, firmware dead time |
+| [0005](0005-direction-interlock.md) | ARM relay and dead time remain; the gate and RC hold are superseded by 0020 |
 | [0006](0006-headless-panel.md) | Headless, with STOP / CW / CCW and LEDs |
 | [0007](0007-usb-and-ethernet.md) | USB and Ethernet both required |
 | [0008](0008-two-axes.md) | Two axes at the sensor and MCU |
@@ -25,3 +25,4 @@ They are short on purpose. The reasoning and the numbers live in
 | [0017](0017-enclosure-machining-drawings.md) | Panel holes are generated from footprint positions, not drawn on the PCB |
 | [0018](0018-ac-power-and-grounding.md) | AC version: one 26 VAC Powerpole feed; logic ground is the rotor return |
 | [0019](0019-pc-gui-toolkit.md) | Python console library and a browser configuration UI shared with the firmware web page |
+| [0020](0020-drive-controller.md) | Drive MCU owns every deadline; the F407 is the Station; residual hardware is ARM_OK only |
