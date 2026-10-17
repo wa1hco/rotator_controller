@@ -2,7 +2,7 @@
   "source_commit": "f665ffd9ae2a624626e28e4fee26031c2f50f154",
   "parent_commit": "74417fb",
   "author": "Jeff Millar <wa1hco@gmail.com>",
-  "note": "Fields and labels whose position, text, angle, justification, hide flag, or font size differ from the parent, plus items added in that commit. The tidy tool never moves these.",
+  "note": "Fields and labels whose position, text, angle, justification, hide flag, or font size differ from the parent, plus items added in that commit. The tidy tool never moves these. Fourteen more in-page labels and fields from the 2026-10-17 rotor sheet are included so the overlap check reports them as owner leftovers.",
   "counts": {
     "hardware/controller-f407/controller-f407.kicad_sch": {
       "changed_or_added": 21,
@@ -12,12 +12,12 @@
       }
     },
     "hardware/controller-f407/rotor_drive.kicad_sch": {
-      "changed_or_added": 403,
+      "changed_or_added": 417,
       "kinds": {
         "text": 1,
-        "label": 101,
+        "label": 103,
         "hierarchical_label": 69,
-        "property": 232
+        "property": 244
       }
     }
   },
@@ -1951,6 +1951,74 @@
     [
       "text",
       "3d01385d-11fe-4ac6-94dc-7a95f2f5e1e6"
+    ],
+    [
+      "label",
+      "6080dd21-4f80-440a-b503-4dbf2178785d"
+    ],
+    [
+      "label",
+      "9cbfc578-c369-498e-bcc3-6ccac90f6946"
+    ],
+    [
+      "property",
+      "2fa52a37-9587-4b43-923b-7b2c8cfb9b63",
+      "Value"
+    ],
+    [
+      "property",
+      "30a18bd1-1083-4a4f-bb9a-2e3869700da7",
+      "Reference"
+    ],
+    [
+      "property",
+      "30a18bd1-1083-4a4f-bb9a-2e3869700da7",
+      "Value"
+    ],
+    [
+      "property",
+      "35a3212b-cc95-4395-8c7d-2997b26a44a5",
+      "Value"
+    ],
+    [
+      "property",
+      "422651bc-72c4-4d05-a9dc-448896b502ff",
+      "Reference"
+    ],
+    [
+      "property",
+      "422651bc-72c4-4d05-a9dc-448896b502ff",
+      "Value"
+    ],
+    [
+      "property",
+      "4a94eeea-5a2a-435d-99dd-6bc778de35ce",
+      "Reference"
+    ],
+    [
+      "property",
+      "4a94eeea-5a2a-435d-99dd-6bc778de35ce",
+      "Value"
+    ],
+    [
+      "property",
+      "6260c91e-bb6f-4776-a5d7-081c15aaaa1c",
+      "Value"
+    ],
+    [
+      "property",
+      "d83af08e-30de-447a-97d6-e5b7c9f2eaf8",
+      "Value"
+    ],
+    [
+      "property",
+      "f100f8fd-8f83-4081-95c9-2ec4d06286d4",
+      "Reference"
+    ],
+    [
+      "property",
+      "f100f8fd-8f83-4081-95c9-2ec4d06286d4",
+      "Value"
     ]
   ]
 }

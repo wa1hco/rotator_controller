@@ -2,6 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-10-11
+- Superseded in part by [ADR 0020](0020-drive-controller.md) (2026-10-17): the combinatorial CW/CCW gates and the RC hold. The ARM relay, brake-defaults-engaged, stuck-on sensing, and a dead time of at least 500 ms remain, enforced by the Drive MCU.
 
 ## Context
 

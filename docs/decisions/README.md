@@ -10,7 +10,7 @@ They are short on purpose. The reasoning and the numbers live in
 | [0002](0002-full-replacement.md) | The box replaces the stock controller |
 | [0003](0003-external-power-supply.md) | Motor and logic power supplies stay outside the box |
 | [0004](0004-discrete-triacs.md) | MOC3023M + BTA16-600SW and snubbers, not CPC1966 |
-| [0005](0005-direction-interlock.md) | Hardware CW/CCW exclusion, ARM relay, firmware dead time |
+| [0005](0005-direction-interlock.md) | ARM relay and dead time remain; the gate and RC hold are superseded by 0020 |
 | [0006](0006-headless-panel.md) | Headless, with STOP / CW / CCW and LEDs |
 | [0007](0007-usb-and-ethernet.md) | USB and Ethernet both required |
 | [0008](0008-two-axes.md) | Two axes at the sensor and MCU |
