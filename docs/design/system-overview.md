@@ -71,7 +71,7 @@ The firmware runs in five layers. Each layer talks to the next through a small i
 |---|---|---|
 | Heading knob (encoder with push) | Point-and-shoot like the RT-21: turn to choose, push or wait to go | **Yes**; the main control. An encoder beats a preset pot (no calibration, unlimited turns) |
 | CW / CCW buttons | Manual jog; hold = run with ramp | **Yes**, like the CDE levers. Keep "release = stop" |
-| STOP | Large, always active, highest priority | **Yes**. Also a hardware stop input on the rear panel |
+| STOP | Large, always active, highest priority | **Yes**. On the Station or the GUI it is a software command. A physical emergency stop is the power switch or the AC feed. The Drive has no STOP pin |
 | Brake release (AC/CDE) | Manual brake for nudging | Only in a "manual mode"; normally automatic |
 | Presets (4–8 buttons or a menu) | EU/JA/W6/park headings, per rotator | Yes, as menu entries; physical buttons optional |
 | Joystick | Az/el jog for satellite/EME | Optional module (K3NG has FEATURE_JOYSTICK_CONTROL) |
@@ -82,7 +82,7 @@ The firmware runs in five layers. Each layer talks to the next through a small i
 
 **Safety interlocks (all of them stop motion and are latched and reported):**
 
-- Hardware STOP input.
+- STOP from the Station or the GUI. It is a software command. A physical emergency stop is the power switch or the AC feed.
 - Optional limit switches.
 - Motor over-current and stall/no-motion timeout.
 - Sensor fault (pot open or out of range, counter stops counting).

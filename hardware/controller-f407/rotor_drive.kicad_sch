@@ -5106,7 +5106,7 @@
 		)
 		(uuid "4d1ef98b-5179-433d-8bac-2e9abf0cfc27")
 	)
-	(text "Drive pins, 3.3 V. A pulldown holds each gate off while the pin is high-Z.\nCW_GATE follows AZ_CW_EN. CCW_GATE follows AZ_CCW_EN. BRK_GATE follows AZ_BRAKE_EN.\nThe relay FET follows ARM_EN. Q9 clamps it off while nRESET is low (ADR 0021)."
+	(text "Drive pins, 3.3 V. A pulldown holds each gate off while the pin is high-Z.\nCW follows AZ_CW_EN. CCW follows AZ_CCW_EN. The brake follows AZ_BRAKE_EN.\nThe relay FET follows ARM_EN. Low or high-Z leaves K1 open and the brake engaged."
 		(exclude_from_sim no)
 		(at 20.574 302.514 0)
 		(effects
@@ -5169,13 +5169,7 @@
 		(color 0 0 0 0)
 		(uuid "1e461eb6-c8ef-43af-830b-dbb238c4caaa")
 	)
-	(junction
-		(at 63.5 241.3)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "1edee804-aa96-441e-8741-69b31e63e69e")
-	)
-	(junction
+		(junction
 		(at 377.19 76.2)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5211,13 +5205,7 @@
 		(color 0 0 0 0)
 		(uuid "3ee3d20b-d595-4e74-a074-03de08dbd595")
 	)
-	(junction
-		(at 63.5 231.14)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "4038c84f-8590-41f0-a664-a7164f1c41fb")
-	)
-	(junction
+		(junction
 		(at 195.58 67.31)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5367,13 +5355,7 @@
 		(color 0 0 0 0)
 		(uuid "cfe2e7b0-1ddf-42ae-8c47-64cdbb44143f")
 	)
-	(junction
-		(at 74.93 246.38)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "d978b304-9044-43c0-bd54-601fb171a9ec")
-	)
-	(junction
+		(junction
 		(at 311.15 132.08)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5417,17 +5399,7 @@
 		)
 		(uuid "02237aa6-af8e-468c-a07e-c08f85518d43")
 	)
-	(wire
-		(pts
-			(xy 63.5 231.14) (xy 63.5 232.41)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0227df40-b575-4e4b-8714-00ca754ed1de")
-	)
-	(wire
+		(wire
 		(pts
 			(xy 255.27 115.57) (xy 255.27 114.3)
 		)
@@ -5547,17 +5519,7 @@
 		)
 		(uuid "15ae8a7f-43bd-48c9-9833-67e64ea25b72")
 	)
-	(wire
-		(pts
-			(xy 63.5 241.3) (xy 63.5 240.03)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "16968e03-8ef6-44c7-87b5-099ecd660e0d")
-	)
-	(wire
+		(wire
 		(pts
 			(xy 223.52 67.31) (xy 214.63 67.31)
 		)
@@ -5607,17 +5569,7 @@
 		)
 		(uuid "1879e7b1-ffce-4f21-9c3f-7f05e69b3eed")
 	)
-	(wire
-		(pts
-			(xy 63.5 231.14) (xy 86.36 231.14)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "19b77db0-cb87-4aa4-80c8-3e1b1f518691")
-	)
-	(wire
+		(wire
 		(pts
 			(xy 330.2 73.66) (xy 330.2 124.46)
 		)
@@ -5837,17 +5789,7 @@
 		)
 		(uuid "312b11b5-408d-4f1e-8aec-75dcbb9982fe")
 	)
-	(wire
-		(pts
-			(xy 34.29 22.86) (xy 34.29 24.13)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "32a77014-7c84-4fb3-8ac8-e4c63c176b3d")
-	)
-	(wire
+		(wire
 		(pts
 			(xy 195.58 72.39) (xy 195.58 67.31)
 		)
@@ -6457,17 +6399,7 @@
 		)
 		(uuid "7a52fa85-7632-4d4b-8d63-06763710cbc3")
 	)
-	(wire
-		(pts
-			(xy 97.79 226.06) (xy 97.79 238.76)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7cc9c645-07e6-4fec-b06a-945cf97cd85b")
-	)
-	(wire
+		(wire
 		(pts
 			(xy 280.67 198.12) (xy 280.67 193.04)
 		)
@@ -6627,17 +6559,7 @@
 		)
 		(uuid "92edbb14-fa1d-42b4-8efb-414e3ebcd2a9")
 	)
-	(wire
-		(pts
-			(xy 74.93 246.38) (xy 76.2 246.38)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9346edba-2a64-4a17-aadf-337696b8c7d0")
-	)
-	(wire
+		(wire
 		(pts
 			(xy 44.45 71.12) (xy 44.45 72.39)
 		)
@@ -6917,17 +6839,7 @@
 		)
 		(uuid "b2dfe749-8066-4557-befc-a72a60459a6b")
 	)
-	(wire
-		(pts
-			(xy 74.93 246.38) (xy 74.93 254)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b2e7390a-bd4d-43f0-a8f4-01e0587e61bf")
-	)
-	(wire
+		(wire
 		(pts
 			(xy 356.87 102.87) (xy 358.14 102.87)
 		)
@@ -7077,17 +6989,7 @@
 		)
 		(uuid "c418b6ce-df68-4fab-80ae-11adce06eaa2")
 	)
-	(wire
-		(pts
-			(xy 59.69 246.38) (xy 74.93 246.38)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c53317b2-2437-434e-b9b3-7d65b6d0d972")
-	)
-	(wire
+		(wire
 		(pts
 			(xy 36.83 163.83) (xy 49.53 163.83)
 		)
@@ -7107,17 +7009,7 @@
 		)
 		(uuid "c77c8153-7f5f-475a-a1c5-e219beac37e3")
 	)
-	(wire
-		(pts
-			(xy 59.69 241.3) (xy 63.5 241.3)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c7fcff9c-3f7b-4f73-964e-ca11c9b8fc0d")
-	)
-	(wire
+		(wire
 		(pts
 			(xy 347.98 135.89) (xy 347.98 142.24)
 		)
@@ -7137,17 +7029,7 @@
 		)
 		(uuid "c8ec91a6-8f1c-48aa-b311-269ca1c54ea2")
 	)
-	(wire
-		(pts
-			(xy 86.36 231.14) (xy 86.36 233.68)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c9626965-38d7-4369-92fd-998a7cec4d7c")
-	)
-	(wire
+		(wire
 		(pts
 			(xy 374.65 41.91) (xy 374.65 43.18)
 		)
@@ -7167,17 +7049,7 @@
 		)
 		(uuid "ca5b2c69-d185-449b-8a81-a21d91aba165")
 	)
-	(wire
-		(pts
-			(xy 96.52 238.76) (xy 97.79 238.76)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ca69d2e9-7e45-43fc-8bbe-fe61136c87a4")
-	)
-	(wire
+		(wire
 		(pts
 			(xy 280.67 102.87) (xy 289.56 102.87)
 		)
@@ -7287,17 +7159,7 @@
 		)
 		(uuid "d448b728-b089-4604-8c2f-eb262c92e7f3")
 	)
-	(wire
-		(pts
-			(xy 59.69 231.14) (xy 63.5 231.14)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d45df4d5-162e-4db9-aa99-f9c8b019e7dd")
-	)
-	(wire
+		(wire
 		(pts
 			(xy 299.72 60.96) (xy 285.75 60.96)
 		)
@@ -7557,17 +7419,7 @@
 		)
 		(uuid "ea3b6fc5-fb12-4a70-b3f6-5e5147b1b3fe")
 	)
-	(wire
-		(pts
-			(xy 62.23 226.06) (xy 97.79 226.06)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ebeb4778-c105-48ca-a1ab-c4820d39c74b")
-	)
-	(wire
+		(wire
 		(pts
 			(xy 386.08 77.47) (xy 386.08 76.2)
 		)
@@ -7727,17 +7579,7 @@
 		)
 		(uuid "fddd74f2-a84e-4c73-8514-e73293495437")
 	)
-	(wire
-		(pts
-			(xy 63.5 241.3) (xy 76.2 241.3)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fe4d7496-f5be-483a-ac5a-46ef9b54c81f")
-	)
-	(wire
+		(wire
 		(pts
 			(xy 121.92 22.86) (xy 121.92 25.4)
 		)
@@ -7987,7 +7829,7 @@
 		)
 		(uuid "e69e3597-abb1-4179-a901-8862fe5055aa")
 	)
-	(label "RELAY_GATE"
+	(label "ARM_EN"
 		(at 345.44 102.87 180)
 		(effects
 			(font
@@ -8083,18 +7925,7 @@
 		)
 		(uuid "4dd3932b-2575-420b-9071-fbbb232537db")
 	)
-	(hierarchical_label "nRESET"
-		(shape output)
-		(at 62.23 226.06 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "50213dec-fc7d-43f3-bc3e-f0d32c1e285e")
-	)
-	(hierarchical_label "AZ_POT_3"
+		(hierarchical_label "AZ_POT_3"
 		(shape bidirectional)
 		(at 369.57 130.81 180)
 		(effects
@@ -8149,29 +7980,7 @@
 		)
 		(uuid "61610a2e-68c1-4177-b51e-4287f69b2d74")
 	)
-	(hierarchical_label "WDI_KICK"
-		(shape input)
-		(at 59.69 246.38 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "78cc20a5-5738-4576-9d28-174987190467")
-	)
-	(hierarchical_label "STOP_N"
-		(shape input)
-		(at 59.69 241.3 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "79a02d9a-3d22-4f24-867d-0e94cd83cf4a")
-	)
-	(hierarchical_label "AC_HOT"
+			(hierarchical_label "AC_HOT"
 		(shape bidirectional)
 		(at 342.9 60.96 180)
 		(effects
@@ -8369,18 +8178,7 @@
 		)
 		(uuid "f1266ec5-ff1e-4fa4-8d13-6e635cbe5f65")
 	)
-	(hierarchical_label "+3V3"
-		(shape input)
-		(at 59.69 231.14 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "f28c61e6-65aa-4e44-9362-5b9f5c1cb1bf")
-	)
-	(hierarchical_label "ROTOR_RETURN"
+		(hierarchical_label "ROTOR_RETURN"
 		(shape bidirectional)
 		(at 137.16 36.83 90)
 		(effects
@@ -8477,83 +8275,7 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "Device:C")
-		(at 34.29 27.94 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "01ea7c3b-3cc3-40a9-9367-2af79605d802")
-		(property "Reference" "C21"
-			(at 39.116 27.178 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "100nF"
-			(at 39.878 29.972 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 34.29 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 34.29 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "TPS3823 VDD bypass, per the datasheet note."
-			(at 34.29 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "TBD"
-			(at 34.29 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "cab18d86-a464-4dae-b3b0-732fb4a42b46")
-		)
-		(pin "2"
-			(uuid "863bc3d2-3518-4e3f-8c41-1d824c2d8e26")
-		)
-		(instances
-			(project "controller-f407"
-				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"
-					(reference "C21")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
+		(symbol
 		(lib_id "Device:R")
 		(at 134.62 142.24 0)
 		(unit 1)
@@ -8628,101 +8350,7 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "controller-f407:TPS3823-33")
-		(at 86.36 243.84 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "061e218a-e8d6-45bb-8767-b34d5a39f081")
-		(property "Reference" "U1"
-			(at 81.788 234.95 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "TPS3823-33DBVR"
-			(at 86.36 252.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-5"
-			(at 86.36 243.84 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 86.36 243.84 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "SOT-23-5 DBV: 1 /RESET, 2 GND, 3 /MR, 4 WDI, 5 VDD. TI SLVS165O."
-			(at 86.36 243.84 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C7719"
-			(at 86.36 243.84 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" "TI TPS3823-33DBVR"
-			(at 86.36 243.84 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "0a11723c-bd80-48e1-9590-4ffe7d30b965")
-		)
-		(pin "2"
-			(uuid "c0a45f6b-dbac-4446-887c-b4f20ce6a50a")
-		)
-		(pin "3"
-			(uuid "276923cb-f7a0-4a15-a236-984d378d80a6")
-		)
-		(pin "4"
-			(uuid "ebd9d220-daee-4dc4-9c34-621713892ae9")
-		)
-		(pin "5"
-			(uuid "4c6a1f9b-640e-4454-b212-9577fc6828f1")
-		)
-		(instances
-			(project "controller-f407"
-				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"
-					(reference "U1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
+		(symbol
 		(lib_id "Device:R")
 		(at 55.88 76.2 0)
 		(unit 1)
@@ -11544,83 +11172,7 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "Device:R")
-		(at 63.5 236.22 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "5abbd1f6-1b5c-4cc6-af96-1392d1f5147b")
-		(property "Reference" "R42"
-			(at 67.056 235.458 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "100k"
-			(at 67.31 237.49 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 63.5 236.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 63.5 236.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "STOP_N pull-up. /MR also has an internal 90k. Active low drops ARM."
-			(at 63.5 236.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "TBD"
-			(at 63.5 236.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b5620af3-21fd-485e-8485-4acecb0340e3")
-		)
-		(pin "2"
-			(uuid "34284d56-90e1-453b-a965-0591ccaf34a7")
-		)
-		(instances
-			(project "controller-f407"
-				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"
-					(reference "R42")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
+		(symbol
 		(lib_id "power:GNDPWR")
 		(at 382.27 152.4 0)
 		(unit 1)
@@ -11917,74 +11469,7 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:GNDPWR")
-		(at 34.29 31.75 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "61e9f315-fb17-4a5a-96e3-4861dfcbbcb4")
-		(property "Reference" "#PWR054"
-			(at 34.29 36.83 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GNDPWR"
-			(at 34.163 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 34.29 33.02 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 34.29 33.02 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GNDPWR\" , global ground"
-			(at 34.29 31.75 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "aa9a3794-c8b8-423d-af38-ac4d994aff4b")
-		)
-		(instances
-			(project "controller-f407"
-				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"
-					(reference "#PWR054")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
+		(symbol
 		(lib_id "Relay:G5LE-1")
 		(at 355.6 81.28 90)
 		(unit 1)
@@ -14059,74 +13544,7 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:GNDPWR")
-		(at 74.93 261.62 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "8cd1e844-e44d-4925-b685-fcfc209e7f62")
-		(property "Reference" "#PWR042"
-			(at 74.93 266.7 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GNDPWR"
-			(at 74.803 265.43 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 74.93 262.89 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 74.93 262.89 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GNDPWR\" , global ground"
-			(at 74.93 261.62 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "e0d7390a-29ae-4996-95c2-418a9cc98e82")
-		)
-		(instances
-			(project "controller-f407"
-				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"
-					(reference "#PWR042")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
+		(symbol
 		(lib_id "Device:Fuse")
 		(at 394.97 76.2 270)
 		(unit 1)
@@ -15136,74 +14554,7 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:GNDPWR")
-		(at 86.36 254 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "a9fa3462-d076-4cec-a7b3-6e9de5c01cf3")
-		(property "Reference" "#PWR041"
-			(at 86.36 259.08 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GNDPWR"
-			(at 86.233 257.81 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 86.36 255.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 86.36 255.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GNDPWR\" , global ground"
-			(at 86.36 254 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "7d5ec394-5fec-47b8-83c3-7c798fd90aff")
-		)
-		(instances
-			(project "controller-f407"
-				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"
-					(reference "#PWR041")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
+		(symbol
 		(lib_id "power:GNDPWR")
 		(at 271.78 212.09 0)
 		(unit 1)
@@ -16898,83 +16249,7 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "Device:R")
-		(at 74.93 257.81 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "d9d5b394-a113-49ea-b6f0-5444ee441b96")
-		(property "Reference" "R41"
-			(at 78.232 256.794 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "100k"
-			(at 78.74 259.08 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 74.93 257.81 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 74.93 257.81 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "WDI pulldown. A floating WDI disables the watchdog (TI SLVS165O)."
-			(at 74.93 257.81 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "TBD"
-			(at 74.93 257.81 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "0dff871c-441b-4906-b171-7af229d9f994")
-		)
-		(pin "2"
-			(uuid "6e174339-3630-47f2-9342-a2628757b4c5")
-		)
-		(instances
-			(project "controller-f407"
-				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"
-					(reference "R41")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
+		(symbol
 		(lib_id "Device:R")
 		(at 73.66 128.27 0)
 		(unit 1)
@@ -18766,555 +18041,7 @@
 		)
 		(uuid "d5f9b2c3-8e74-401f-8b66-3c7e1f802954")
 	)
-	(symbol
-		(lib_id "Device:R")
-		(at 152.4 226.06 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "12ccd024-c683-4494-9d39-35c12771dcf1")
-		(property "Reference" "R55"
-			(at 152.4 221.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "10k"
-			(at 152.4 223.0 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 152.4 226.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 152.4 226.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Base resistor. nRESET high turns Q8 on."
-			(at 152.4 226.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "TBD"
-			(at 152.4 226.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "43245fb5-3a2b-4179-9f74-f0e13e8b3f6d")
-		)
-		(pin "2"
-			(uuid "ab678cfb-722a-4ace-af68-a61999bd7eaf")
-		)
-		(instances
-			(project "controller-f407"
-				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"
-					(reference "R55")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Transistor_BJT:MMBT3904")
-		(at 165.1 226.06 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "f8c39c96-c219-4625-822d-bc9b906da27c")
-		(property "Reference" "Q8"
-			(at 171.4 225.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "MMBT3904"
-			(at 174.0 231.8 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
-			(at 165.1 226.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 165.1 226.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Inverts nRESET so Q9 clamps the relay gate while the supervisor is in reset."
-			(at 165.1 226.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C20526"
-			(at 165.1 226.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" "JSCJ MMBT3904"
-			(at 165.1 226.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "dd686085-7e7d-4cfc-8a66-1db58fd8c042")
-		)
-		(pin "2"
-			(uuid "dfa0f8f0-7b4a-405f-962b-3c73fd5602c7")
-		)
-		(pin "3"
-			(uuid "a73b625b-965f-4995-9ac5-adb05289fe7d")
-		)
-		(instances
-			(project "controller-f407"
-				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"
-					(reference "Q8")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Transistor_FET:2N7002")
-		(at 180.34 220.98 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "34fa5728-21de-4832-9c69-2866c6c20b4b")
-		(property "Reference" "Q9"
-			(at 186.64 219.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "2N7002"
-			(at 190.5 224.0 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
-			(at 180.34 220.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 180.34 220.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Clamps the relay FET gate to ground while nRESET is low."
-			(at 180.34 220.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C8545"
-			(at 180.34 220.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" "JSCJ 2N7002"
-			(at 180.34 220.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "d2e616db-4ff4-4a98-be6b-6b27010e952e")
-		)
-		(pin "2"
-			(uuid "a70d3986-d9ff-44ec-bcf4-d0e9ae0e80bf")
-		)
-		(pin "3"
-			(uuid "04e219cb-3596-46be-89d5-8e5f02a9161a")
-		)
-		(instances
-			(project "controller-f407"
-				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"
-					(reference "Q9")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 175.26 217.17 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "697c6902-478c-41f5-b863-cad6eafdcff7")
-		(property "Reference" "R56"
-			(at 171.0 215.67 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "100k"
-			(at 171.0 218.37 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 175.26 217.17 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 175.26 217.17 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Pulls the clamp FET on when Q8 is off."
-			(at 175.26 217.17 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "TBD"
-			(at 175.26 217.17 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "f00d6c2b-09b1-47d1-9197-92fe83fb49d1")
-		)
-		(pin "2"
-			(uuid "d4cb63ce-4df8-420d-9a41-26b4c165c969")
-		)
-		(instances
-			(project "controller-f407"
-				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"
-					(reference "R56")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 193.04 215.9 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "fd943d20-fc59-43f9-b1b8-3329e69e6d93")
-		(property "Reference" "R54"
-			(at 200.66 213.36 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "1k"
-			(at 203.2 219.0 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 193.04 215.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 193.04 215.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Limits Drive pin current while Q9 clamps the relay gate."
-			(at 193.04 215.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "TBD"
-			(at 193.04 215.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "65bec936-512d-4c13-9c9f-928dfecf60e9")
-		)
-		(pin "2"
-			(uuid "122e19cf-2f23-4222-b80e-3dad1995621b")
-		)
-		(instances
-			(project "controller-f407"
-				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"
-					(reference "R54")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GNDPWR")
-		(at 167.64 231.14 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "73d7821f-edc1-4ab6-96ab-e5df568b428c")
-		(property "Reference" "#PWR070"
-			(at 167.64 236.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GNDPWR"
-			(at 167.64 234.95 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 167.64 232.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 167.64 232.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name GNDPWR"
-			(at 167.64 231.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "e3e54763-38fd-48dc-8cfb-a3629f662f41")
-		)
-		(instances
-			(project "controller-f407"
-				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"
-					(reference "#PWR070")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GNDPWR")
-		(at 182.88 226.06 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "0e48c011-8b98-47d1-b761-ee000206c680")
-		(property "Reference" "#PWR071"
-			(at 182.88 231.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GNDPWR"
-			(at 182.88 229.87 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 182.88 227.33 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 182.88 227.33 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name GNDPWR"
-			(at 182.88 226.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b58d7638-4aaa-49e8-b914-65a5e8afd062")
-		)
-		(instances
-			(project "controller-f407"
-				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"
-					(reference "#PWR071")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(label "nRESET"
-		(at 148.59 226.06 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "68cc078d-d0cc-4b2f-834d-19669970533a")
-	)
-	(label "ARM_EN"
+									(label "ARM_EN"
 		(at 189.23 205.74 0)
 		(effects
 			(font
@@ -19324,7 +18051,7 @@
 		)
 		(uuid "ff9aedd9-c8d9-4cb2-9730-c36b99846619")
 	)
-	(label "RELAY_GATE"
+	(label "ARM_EN"
 		(at 210.82 215.9 0)
 		(effects
 			(font
@@ -19334,57 +18061,7 @@
 		)
 		(uuid "882d7d9e-0ce2-453e-bad6-b23f852c19d7")
 	)
-	(label "RELAY_GATE"
-		(at 172.72 205.74 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "d6d3dc69-5c6a-4391-913f-51cc6f46705c")
-	)
-	(label "+3V3"
-		(at 175.26 213.36 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "d36d1580-b628-446c-81d0-a93c9d6e095f")
-	)
-	(wire
-		(pts
-			(xy 156.21 226.06) (xy 160.02 226.06)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b6730693-8e1a-4aab-9fdf-0371e32f55ea")
-	)
-	(wire
-		(pts
-			(xy 182.88 215.9) (xy 182.88 205.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b7e2c1a0-4d55-4a18-8f60-1c2b3d4e5f60")
-	)
-	(wire
-		(pts
-			(xy 182.88 205.74) (xy 172.72 205.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c8f3d2b1-5e66-4b29-9071-2d3c4e5f6071")
-	)
-	(wire
+						(wire
 		(pts
 			(xy 189.23 215.9) (xy 189.23 205.74)
 		)
@@ -19404,14 +18081,14 @@
 		)
 		(uuid "a1c0b7e4-6d22-4f58-9c31-0e5a7b4d2c18")
 	)
-	(wire
+		(wire
 		(pts
-			(xy 167.64 220.98) (xy 175.26 220.98)
+			(xy 189.23 215.9) (xy 196.85 215.9)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "5e9af73b-a2dc-4059-9301-7dbf844591bb")
+		(uuid "811a8936-fc94-4b59-8a2a-58a8508e554e")
 	)
 )

@@ -1,12 +1,12 @@
 # Drive controller
 
-Design note, 2026-10-17, with the startup and brownout section added 2026-10-18. The decision records are [ADR 0020](../decisions/0020-drive-controller.md), status Accepted, and [ADR 0021](../decisions/0021-drive-startup-brownout.md), status Proposed. The 2026-10-18 schematic edit follows ADR 0021. Firmware is unchanged.
+Design note, 2026-10-17, with the startup and brownout section added 2026-10-18. The decision records are [ADR 0020](../decisions/0020-drive-controller.md), status Accepted, and [ADR 0021](../decisions/0021-drive-startup-brownout.md), status Accepted. The 2026-10-18 schematic edit follows ADR 0021. Firmware is unchanged.
 
 The board gains a second MCU, the Drive. It is the virtual rotator: a short command interface, every deadline, and the same behavior when the STM32F407 is off, busy, or in the middle of an update. The F407 becomes the Station. It keeps the web UI, USB, Ethernet, GS-232, Hamlib, Easycom, the operator preset catalog, logging, parking schedules, multi-rotator, and firmware updates for both chips.
 
 The principle for the split is: deadlines live in the Drive.
 
-Decided in ADR 0020: the names Drive and Station; an AC axis is on or off, so its ramp time is 0; K1 stays, one ARM relay on the first board, because it is the only way to take a shorted triac off the bus; TR1, the ZMCT103C, stays as drawn; the heartbeat default is 5 seconds (allowed 2–30) and the default loss policy is stop; the Drive MCU is the STM32G431RBT6, LCSC C431633. ADR 0020 left ARM_OK as the residual gate. ADR 0021 proposes removing those AND gates, BOR level 4, a hardware IWDG, and a supervisor clamp on the relay only. The rotor sheet matches that proposal. Section 8 is what is still open.
+Decided in ADR 0020: the names Drive and Station; an AC axis is on or off, so its ramp time is 0; K1 stays, one ARM relay on the first board, because it is the only way to take a shorted triac off the bus; TR1, the ZMCT103C, stays as drawn; the heartbeat default is 5 seconds (allowed 2–30) and the default loss policy is stop; the Drive MCU is the STM32G431RBT6, LCSC C431633. ADR 0020 left ARM_OK as the residual gate. ADR 0021 accepts direct Drive pins, BOR level 4, and a hardware IWDG, and takes the supervisor and the Drive STOP pin off the rotor sheet. The rotor sheet matches that record. Section 8 is what is still open.
 
 ## 1. Names
 
@@ -139,7 +139,7 @@ READ_STATUS returns the record below. The Drive also sends it unsolicited. Assum
 
 Per axis: state, parked flag, direction, heading and a valid flag, target, held target (set when hold-on-loss abandons a goto), speed, dead time remaining, brake time remaining, ramp time remaining, CW and CCW limit flags, fault bits, `host_lost`, the loss policy, and a present flag.
 
-Shared: current-transformer reading as raw ADC counts and as milliamps using the burden equation; config CRC-32; firmware major, minor, patch, and build id; protocol version; `last_seq`; the sampled supervisor reset line; FLASH_OPTR, so the Station can check the option bytes in ADR 0021.
+Shared: current-transformer reading as raw ADC counts and as milliamps using the burden equation; config CRC-32; firmware major, minor, patch, and build id; protocol version; `last_seq`; FLASH_OPTR, so the Station can check the option bytes in ADR 0021.
 
 DESIGN-NOTES already flags CT saturation at motor-plus-brake current. The milliamp field inherits that limit.
 
@@ -155,7 +155,7 @@ Latched fault bits. `clear_fault` clears a bit only when its cause is gone, and 
 | `RUN_TIMEOUT` | This move has exceeded the configured maximum run. |
 | `SENSOR` | The pot sample is outside the calibrated range, or the pulse input fails its check. |
 | `STUCK_TRIAC` | Stuck-on sense says that triac is conducting after its gate has been off for 20 ms. That interval is the one already in DESIGN-NOTES. |
-| `STOP` | The STOP input is sampled while the core is running. |
+| `STOP` | A STOP command from the Station is accepted while the core is running. |
 | `BOTH_ON` | The output step was asked for CW and CCW together. The state table does not ask for that. The check is defensive. |
 | `OPTION_BYTES` | FLASH_OPTR disagrees with ADR 0021. The Drive leaves the outputs safe and the Station does not arm. |
 
@@ -165,7 +165,7 @@ Flags, which are not faults: `HOST_LOST`, the two soft-limit flags, and `PARKED`
 
 ## 4. Heartbeat and the axis machine
 
-The host heartbeat is a deadline of seconds. It is a different timer from the TPS3823, which the Drive kicks faster than 0.9 s, and from the Drive's independent watchdog.
+The host heartbeat is a deadline of seconds. The Drive's hardware independent watchdog is the separate, faster timer (about 100 ms once firmware has written the reload). A stuck Drive is that watchdog.
 
 The heartbeat default is 5 seconds, set per rotor, allowed range 2 to 30 seconds. The default loss policy is stop. Hold and complete-the-move stay available as per-rotor settings.
 
@@ -564,8 +564,6 @@ Assumption: the first board pins both axes. Elevation power parts can stay off t
 | Optional limit inputs | 2 | 2 | |
 | Zero-cross | | | 1 |
 | Current transformer, ADC | | | 1 |
-| WDI to the TPS3823 | | | 1 |
-| STOP, as a readable pin in addition to `/MR` | | | 1, optional |
 | UART TX and RX to the Station | | | 2 |
 | PB8 / BOOT0. With nSWBOOT0 = 0 (ADR 0021) the boot selection is the option bit. PB8 is not a gate. | | | 1, spare |
 | Status LED | | | 1, optional |
@@ -581,25 +579,25 @@ Sensor kinds to pin now, from ADR 0008: dual-end pot, single-ended pot with an e
 
 A Drive that is held in reset, or whose pins are high-Z, has to drop the triac gates and the ARM relay with no firmware running. The brake stays fail-engaged: gate low, solenoid open, wedge in.
 
-ADR 0020 chose pulldowns plus an ARM_OK gate. ADR 0021 proposes the pulldowns alone on the triac gates, and a supervisor clamp on the relay FET only. The direction lockout and the RC hold are already off the sheet. The both-on window that remains is the hardware IWDG period while the core is still executing: about 100 ms after the reload is programmed, and about 0.5 s from a cold power-on until that write. Dead time stays in `DEAD_TIME`.
+ADR 0020 chose pulldowns plus an ARM_OK gate. ADR 0021 accepts the pulldowns alone on the triac gates and on the relay FET. The direction lockout, the RC hold, the TPS3823, and the STOP pin are off the sheet. The both-on window that remains is the hardware IWDG period while the core is still executing: about 100 ms after the reload is programmed, and about 0.5 s from a cold power-on until that write. Dead time stays in `DEAD_TIME`.
 
-The triac pins are plain GPIO. Reset makes them analog (DS12589 §3.11.5, RM0440 §9.4.1), and R2G, R3G, R4G, R50, R51, and R52 hold the 2N7002 gates down. A short from a gate net to 3.3 V can still hold that triac on. Reset does not clear a short on the far side of the pin.
+The triac pins are plain GPIO. Reset makes them analog (DS12589 §3.11.5, RM0440 §9.4.1), and R2G, R3G, R4G, R50, R51, and R52 hold the 2N7002 gates down. With the pin high-Z, that holds while +5 V is still up and 3.3 V is below POR. A short from a gate net to 3.3 V or to 5 V, or a bootloader pin AN2606 Table 115 drives high, still holds that triac on. The IWDG returns the MCU pin to analog. It does not clear a short on the far side of the pin.
 
-A shorted power triac is the stuck-on sense plus K1. Opening K1 is the only way off the 26 VAC bus. The TPS3823 clamp opens K1 when `nRESET` falls, including while `ARM_EN` is driven high. A relay FET that is itself shorted on leaves the bus live.
+A shorted power triac is the stuck-on sense plus K1. Opening K1 is the only way off the 26 VAC bus. `ARM_EN` low or high-Z opens K1 through R40 and R53. Q1 is an AO3400A, VGS(th) minimum 0.65 V, so a gate that sits above that while +5 V is up can start to conduct. A relay FET that is itself shorted on leaves the bus live.
 
-STOP_N stays on the TPS3823 `/MR`. Holding the button clamps the relay off and leaves the Drive running. It does not return the triac pins to analog. A GPIO copy of STOP is still open (section 8). Until that pin exists, releasing STOP can reclose K1 onto gates the core is still driving.
+STOP is a software command from the Station or the GUI. The Drive has no STOP pin. While the core is running, the command drops the gates, engages the brake, and opens K1. A stuck Drive is the hardware IWDG. A physical emergency stop is the user's power switch or the AC feed.
 
 ### Startup and brownout
 
 The citations are ADR 0021. This is the sequence the sheet and the firmware follow.
 
-1. Below POR, and below VBOR0, DS12589 does not guarantee the pins. The pulldowns hold a high-Z gate off. K1 is open because the coil is not driven. This region is the residual risk of taking the AND gates off.
+1. Below POR, and below VBOR0, DS12589 does not guarantee the pins. With the pin high-Z, the pulldowns hold each 2N7002 off (VGS(th) minimum 1 V) even while +5 V is still up, and R40 and R53 hold Q1 off. A gate driven high by something other than the MCU is the case that fails, on the triacs and on the relay. Q1 can also begin to conduct above its 0.65 V VGS(th) minimum if the pin is not high-Z. K1's open contact covers an unpowered coil.
 2. BOR level 4 (option byte `BOR_LEV` = 100) holds reset until VDD rises through VBOR4, 2.85 / 2.90 / 2.95 V (DS12589 Table 19). Falling, reset returns at 2.76 / 2.81 / 2.86 V. That is above the 2.7 V at which Table 54 guarantees VOL and VOH at 8 mA, so the pins go analog before the 8 mA drive specification is left behind. Non-debug pins are floating inputs (Table 11). The external pulldowns define them.
-3. Option bytes load. The proposed word is 0xFBEEFCAA, from production 0xFFEFF8AA with IWDG_SW = 0, nSWBOOT0 = 0, and BOR_LEV = 100. nBOOT0 stays 1, so main flash is selected (RM0440 Table 5). The hardware IWDG is already counting. At the power-on reload (PR = /4, RL = 0xFFF) the timeout is 512 ms at 32 kHz, about 482 ms at 34 kHz, and about 555 ms at 29.5 kHz (DS12589 Tables 44 and 79).
+3. Option bytes load. The accepted word is 0xFBEEFCAA, from production 0xFFEFF8AA with IWDG_SW = 0, nSWBOOT0 = 0, and BOR_LEV = 100. nBOOT0 stays 1, so main flash is selected (RM0440 Table 5). The hardware IWDG is already counting. At the power-on reload (PR = /4, RL = 0xFFF) the timeout is 512 ms at 32 kHz, about 482 ms at 34 kHz, and about 555 ms at 29.5 kHz (DS12589 Tables 44 and 79).
 4. Firmware pets the IWDG, writes PR = /4 and RL = 799, and pets again. The running timeout is (800 × 4) / fLSI: 100 ms at 32 kHz, about 94 ms at 34 kHz, about 109 ms at 29.5 kHz. It dummy-reads SRAM before the first write (ES0431 §2.2.7). It checks FLASH_OPTR and, on a mismatch, sets `OPTION_BYTES` and never enables an output.
-5. The TPS3823 releases `nRESET` when the 3.3 V rail and the WDI kick are both all right. Q8 turns on, Q9 turns off, and `ARM_EN` can raise the relay gate through R54. Until then Q9 holds Q1 off.
-6. A falling VIN_RECT, divided and clamped into a comparator, interrupts while the core is still up. Firmware drives CW and CCW low, the brake gate low, and `ARM_EN` low. The PVD watches VDD. VPVD6 falling (min 2.84 V) overlaps VBOR4 falling (max 2.86 V), so the PVD is not this warning. The divider is not on the sheet.
-7. An IWDG timeout returns the pins to analog. The pulldowns turn the triacs off and engage the brake. If WDI has also stopped, the TPS3823 clamps the relay. A core that pets the IWDG and stops petting WDI still loses the relay, on the TPS3823's 0.9 to 2.5 s window.
+5. `ARM_EN` is Q1's gate. Low or high-Z leaves K1 open. Firmware raises it only after the option-byte check passes.
+6. A falling VIN_RECT, divided and clamped into a comparator, interrupts while the core is still up. Firmware drives CW and CCW low, the brake gate low, and `ARM_EN` low. The PVD watches VDD. VPVD6 falling (min 2.84 V) overlaps VBOR4 falling (max 2.86 V), so the VIN_RECT warning is the comparator. The divider is not on the sheet.
+7. An IWDG timeout returns the pins to analog. The pulldowns turn the triacs off, engage the brake, and open K1. That is how a stuck Drive is handled.
 
 Gate pins, when assigned, avoid the reset-time debug pins (PA13, PA14, PA15, PB3, PB4), PG10-NRST, PB8, and every pin AN2606 Table 115 configures. That table drives PA6 and PB14 to 3.3 V during system-memory boot, and it pulls several USART and I2C pins up. nSWBOOT0 = 0 keeps a floating PB8 from entering that boot.
 
@@ -619,32 +617,32 @@ U2, the direction AND gates, and the hold RC left in the ARM_OK schematic edit. 
 
 The 2026-10-17 netlist, taken before those edits, had an open CCW hold (`/HOLD_CCW` was only U2 pin 9). That network is gone. It was not repaired.
 
-Stays, and what this edit adds:
+Stays:
 
 - MOC3023 optos, triacs, gate resistors, and snubbers (ADR 0004). Q2, Q3, and Q4 still switch the LEDs from +5 V. The Drive pin drives the FET gate.
-- K1, one relay, plus Q1 (AO3400A, LCSC C20917) and the flyback diode. Coil off, the rotator is dark. K1 stays because it is the only way to end a shorted-triac fault. The G5LE-1A4 5 A inductive rating against about 7.3 A motor-plus-brake overlap stays open.
-- Q8, MMBT3904, LCSC C20526, and Q9, 2N7002, LCSC C8545, with R54 (1 kΩ), R55 (10 kΩ), and R56 (100 kΩ). They clamp the relay gate while `nRESET` is low. R54, R55, and R56 have no LCSC number yet.
-- U1, TPS3823-33, LCSC C7719, with STOP_N on `/MR` and the WDI pulldown R41. It clamps the relay. It does not reset the Drive.
+- K1, one relay, plus Q1 (AO3400A, LCSC C20917) and the flyback diode. `ARM_EN` drives Q1 through R40 and R53. Coil off, the rotator is dark. K1 stays because it is the only way to end a shorted-triac fault. The G5LE-1A4 5 A inductive rating against about 7.3 A motor-plus-brake overlap stays open.
 - U14, U15, and U16 stuck-on sense; U17 zero-cross; TR1, the Zeming ZMCT103C, and the `I_SENSE` bias and clamps. TR1 stays as drawn. Its 5 A rating and saturation stay open.
 - Pot clamps, the SMAJ90CA parts, the fuse, and the MOV.
 - The F407, the ADuM4160, and the MagJack.
-- Pulldowns R50–R53 and R2G, R3G, R4G, on the Drive pins and the FET gates.
+- Pulldowns R40, R50–R53, and R2G, R3G, R4G, on the Drive pins and the FET gates.
+
+Leaves with this edit, on top of the AND gates: U1 (TPS3823-33, LCSC C7719), C21, R41, R42, Q8 (MMBT3904, LCSC C20526), Q9, R54, R55, R56, and the sheet pins `STOP_N`, `WDI_KICK`, and `nRESET`.
 
 ## 6. Where the current interlock goes
 
 | Rule today (DESIGN-NOTES, ADR 0005) | In this design |
 | --- | --- |
-| `ARM_OK = ARM_EN AND nRESET` | Removed (ADR 0021). The relay clamp is Q9 while `nRESET` is low. The triac gates follow the Drive pins, with pulldowns. |
+| `ARM_OK = ARM_EN AND nRESET` | Removed (ADR 0021). The triac gates and the relay FET follow the Drive pins, with pulldowns. |
 | `CW_GATE = AZ_CW_EN AND NOT AZ_CCW_EN AND ARM_OK AND NOT HOLD_CCW`, and the CCW mirror | One direction gate, and only in `RAMP_UP`, `RUN`, `CREEP`, and the gated part of `RAMP_DOWN`. The pin is the gate. |
 | U4 is `AZ_CW_EN AND nCCW`, because ANDing a signal with its own inversion would never turn on | The running direction and the pending direction are data in the machine. The eight-gate network leaves. |
 | RC hold, calculated near 92 ms, design window 70–110 ms | Removed. `DEAD_TIME` is the gap, floor 500 ms. |
 | Firmware dead time at least 500 ms, longer than the hardware gap | The Drive timer is that gap. There is no shorter RC behind it. |
 | `BRK_GATE = AZ_BRAKE_EN AND ARM_OK`, high = release | `BRAKE_RELEASE` and the released states drive the brake pin high. Low, or a high-Z pin, engages the wedge. |
-| Watchdog, brownout, or `STOP_N` drops the brake gate and the wedge engages | An IWDG reset or BOR returns the brake pin to analog and the pulldown engages the wedge. `STOP_N` opens K1 through the TPS3823 and drops the brake gate when firmware samples STOP. |
+| Watchdog, brownout, or STOP drops the brake gate and the wedge engages | An IWDG reset or BOR returns the brake pin to analog and the pulldown engages the wedge. A STOP command from the Station, while the core is running, drives the brake gate low and opens K1. |
 | 100 kΩ pulldowns on the four request pins | Pulldowns on the Drive outputs. |
 | ARM relay in series with the triac bus. Normal motion does not break load current in that contact. It opens on a fault. | K1 stays, one relay on the first board. It is the only way to end a shorted-triac fault. `FAULT` and reset open it. The 5 A versus about 7.3 A overlap rating stays open. |
 | Stuck-on sense: armed, that gate off, no pulse for 20 ms | `STUCK_TRIAC`, same 20 ms, then ARM off. |
-| WDI kicked faster than 0.9 s. R41 makes a floating WDI time out. | The Drive kicks WDI. The host heartbeat is the slower, separate deadline. |
+| WDI kicked faster than 0.9 s. R41 makes a floating WDI time out. | The hardware IWDG replaces that kick. The host heartbeat is the slower, separate deadline. |
 | Current `MotionController`: direction outputs off except in the two Running states, which are never active together | Kept, and applied to every state in the output table. |
 
 The code in the tree uses a smaller state set. The later software change maps it like this:
@@ -669,7 +667,7 @@ The state machine is shared C++17. One function takes the state, the context, th
 
 It lives in `software/firmware`, next to `rotator::motion::MotionController`. Suggested name: `rotator::motion::AxisFsm`. The current controller stays in the tree until `AxisFsm` replaces it. This proposal does not edit those sources.
 
-The Drive firmware is the platform layer around that function: ADC, GPIO, UART, flash, the independent watchdog, and the TPS3823 kick. It calls `AxisFsm` on a tick. The PC test binary calls the same function. The Station firmware does not. It translates GS-232, Hamlib, Easycom, the web UI, and schedules into the opcodes in section 3.
+The Drive firmware is the platform layer around that function: ADC, GPIO, UART, flash, and the independent watchdog. It calls `AxisFsm` on a tick. The PC test binary calls the same function. The Station firmware does not. It translates GS-232, Hamlib, Easycom, the web UI, and schedules into the opcodes in section 3.
 
 `software/sim` is the physics side of the hardware-in-loop plan in section 4. It is still a separate program, copied from the K3NG-derived simulator, and it is not linked to `software/firmware` today. The later adapter feeds the simulator's heading and current in as sensor samples and applies the gate command as the simulator's motor request. Stall, backlash, and a stuck relay are already behaviors of that model.
 
@@ -701,24 +699,23 @@ None of that code is in this change.
 
 ## 8. Open questions
 
-Settled, and removed from this list: the names Drive and Station; AC axes on or off with ramp time 0; K1 stays, one relay on the first board; TR1 stays as drawn; heartbeat default 5 seconds (range 2–30) with loss policy stop; Drive MCU STM32G431RBT6, LCSC C431633. Proposed in ADR 0021, and drawn on the rotor sheet: direct Drive pins, BOR level 4, hardware IWDG with PR = /4 and RL = 799, option word 0xFBEEFCAA, and the Q8/Q9 relay clamp.
+Settled, and removed from this list: the names Drive and Station; AC axes on or off with ramp time 0; K1 stays, one relay on the first board; TR1 stays as drawn; heartbeat default 5 seconds (range 2–30) with loss policy stop; Drive MCU STM32G431RBT6, LCSC C431633. Accepted in ADR 0021, and drawn on the rotor sheet: direct Drive pins, BOR level 4, hardware IWDG with PR = /4 and RL = 799, option word 0xFBEEFCAA. The supervisor, the relay clamp, and the Drive STOP pin are off the sheet. A stuck Drive is the hardware IWDG. A physical emergency stop is the power switch or the AC feed.
 
 1. A jog under the complete policy takes the stop path, because a jog has no target.
 2. A command on a healthy link counts as a heartbeat. After `host_lost`, only HEARTBEAT or READ_STATUS clears the flag.
 3. Dead-time floor of 500 ms, brake released through the reversal, and brake-release and brake-engage times (values TBD).
-4. Drive independent-watchdog period. ADR 0021 sets PR = /4 and RL = 799, about 94 to 109 ms across the LSI range in DS12589 Table 44. The power-on reload stays 0xFFF, about 0.5 s, until firmware writes 799. The TPS3823, 0.9–2.5 s, stays the relay backstop.
+4. Drive independent-watchdog period. ADR 0021 sets PR = /4 and RL = 799, about 94 to 109 ms across the LSI range in DS12589 Table 44. The power-on reload stays 0xFFF, about 0.5 s, until firmware writes 799. That watchdog is the stuck-Drive response.
 5. K1 rating. The relay stays. The G5LE-1A4 5 A inductive rating against about 7.3 A motor-plus-brake overlap is still open, as in DESIGN-NOTES.
 6. Pot reference: the G4 VREFBUF (2.048 V, 2.5 V, or 2.95 V), or the separate filtered 3.3 V ADR 0018 left TBD.
 7. Which sense interfaces get connector pins on the first board, beyond the dual-end pot.
-8. STOP_N stays on `/MR`. Whether the Drive also gets a readable copy.
-9. Front-panel CW and CCW, if the headless panel of ADR 0006 is fitted: Drive inputs, so they become jog and stop events while the Station is busy.
-10. Field update. ADR 0021 sets nSWBOOT0 = 0, so the Station does not enter the ROM bootloader by driving PB8. Still open: the `ENTER_BOOTLOADER` magic, and whether a later acceptance restores pin boot. The bootloader pin list in AN2606 Table 115 stays forbidden for gates either way.
-11. The CCW hold network is gone, along with U2 and the direction gates, and this edit removes the remaining AND gates U3, U6, U9, and U10. A repair of the discrete hold would be a different change.
-12. D2, the SMAJ90CA, pending the owner's push. Section 6 still records the discrepancy already in this tree: DESIGN-NOTES says `AC_BUS`; the 2026-10-17 netlist has pin 2 on `AC_FUSED`. The local schematic, not yet pushed, places D2 after the fuse and before the relay. This tree is not edited to match until that push.
-13. TR1, the ZMCT103C, stays. Still open: the 5 A rating versus about 7.3 A motor-plus-brake, and saturation.
-14. Heading unit of 0.01° and speed in permille.
-15. Drive flash stores park, limits, calibration, ramps, and deadlines. The preset catalog and the parking schedules stay on the Station.
-16. Duty-cycle rest (the CDE 10% and Yaesu three-minute notes in the system overview). This machine enforces max run as `RUN_TIMEOUT` and leaves a minimum off time out until a preset needs it.
+8. Front-panel CW and CCW, if the headless panel of ADR 0006 is fitted: Drive inputs, so they become jog events while the Station is busy. A front-panel STOP, if fitted, is a Station input and sends the Drive protocol STOP. The Drive has no STOP pin.
+9. Field update. ADR 0021 sets nSWBOOT0 = 0. Field update is a command the running Drive accepts, or SWD. Still open: the `ENTER_BOOTLOADER` magic, and whether a later change restores pin boot. The bootloader pin list in AN2606 Table 115 stays forbidden for gates either way.
+10. The CCW hold network is gone, along with U2 and the direction gates, and this edit removes the remaining AND gates U3, U6, U9, and U10. A repair of the discrete hold would be a different change.
+11. D2, the SMAJ90CA, pending the owner's push. Section 6 still records the discrepancy already in this tree: DESIGN-NOTES says `AC_BUS`; the 2026-10-17 netlist has pin 2 on `AC_FUSED`. The local schematic, not yet pushed, places D2 after the fuse and before the relay. This tree is not edited to match until that push.
+12. TR1, the ZMCT103C, stays. Still open: the 5 A rating versus about 7.3 A motor-plus-brake, and saturation.
+13. Heading unit of 0.01° and speed in permille.
+14. Drive flash stores park, limits, calibration, ramps, and deadlines. The preset catalog and the parking schedules stay on the Station.
+15. Duty-cycle rest (the CDE 10% and Yaesu three-minute notes in the system overview). This machine enforces max run as `RUN_TIMEOUT` and leaves a minimum off time out until a preset needs it.
 
 ## Developer
 

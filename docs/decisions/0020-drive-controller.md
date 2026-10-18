@@ -3,7 +3,7 @@
 - Status: Accepted
 - Date: 2026-10-17
 
-[ADR 0021](0021-drive-startup-brownout.md) (Proposed) removes the residual ARM_OK AND gates and records startup and brownout. This record stays accepted for the Drive and Station split, the heartbeat, K1, TR1, and the STM32G431RBT6.
+[ADR 0021](0021-drive-startup-brownout.md) (Accepted) removes the residual ARM_OK AND gates, the TPS3823, and the Drive STOP pin, and records startup and brownout. This record stays accepted for the Drive and Station split, the heartbeat, K1, TR1, and the STM32G431RBT6.
 
 ## Context
 

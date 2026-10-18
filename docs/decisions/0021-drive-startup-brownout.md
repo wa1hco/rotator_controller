@@ -1,11 +1,11 @@
 # ADR 0021: Drive startup, brownout, and direct gate drive
 
-- Status: Proposed
+- Status: Accepted
 - Date: 2026-10-18
 
 ## Context
 
-ADR 0020 leaves one hardware gate: `ARM_OK = ARM_EN AND nRESET`, fanned out by 74LVC1G08s so a supervisor reset forces the triac gates and the relay off. The owner asked to lean on the Drive MCU (STM32G431RBT6) for brownout, reset, and startup, and to take the remaining AND gates off the rotor sheet.
+ADR 0020 leaves one hardware gate: `ARM_OK = ARM_EN AND nRESET`, fanned out by 74LVC1G08s so a supervisor reset forces the triac gates and the relay off. The owner asked to lean on the Drive MCU (STM32G431RBT6) for brownout, reset, and startup, and to take the remaining AND gates off the rotor sheet. The owner then asked to drop the TPS3823, the relay clamp, and the STOP pin, and to trust the hardware independent watchdog for a stuck Drive.
 
 The numbers below are from the documents named in each paragraph, read for this record. The long sequence and the sheet change are also in `docs/design/drive-controller.md` and `hardware/controller-f407/DESIGN-NOTES.md`.
 
@@ -16,6 +16,7 @@ Documents:
 - ES0431 Rev 9, June 2024, STM32G431xx/441xx errata. Revisions Z (REV_ID 0x2001), Y (0x2002), X (0x2003).
 - AN2606 Rev 70, February 2026, system-memory boot mode. The G431/G441 bootloader is section 52.
 - AOS AO3400A Rev 3.1, July 2023, for the relay FET threshold.
+- onsemi NDS7002A/D Rev 11, March 2025, for the 2N7002 gate threshold. Q2, Q3, and Q4 are the JSCJ part, LCSC C8545. The threshold cited is the onsemi table. A separate JSCJ electrical table was not opened.
 
 ## What the STM32G431 documents say
 
@@ -153,7 +154,7 @@ BOR level 4 holds the device in reset, pins analog, before VDD falls through the
 ES0431 Rev 9. No erratum says a GPIO is driven during reset, or that BOR, the IWDG, or the PVD fails.
 
 - §2.2.1: full 4-wire JTAG without NJTRST cannot be used. Use SWD. The bench header is SWD.
-- §2.2.3: LSI can run far above 32 kHz when it clocks the RTC or the CSS on LSE, and VDD resets while the backup domain does not (Shutdown exit, a separate VBAT, or VBAT tied to VDD with a drop under VDD min shorter than 1 ms). That would stretch or shrink the IWDG. Workaround: clock the RTC from LSE or HSE/32 and leave LSECSSON clear, or reset the backup domain on every BORRSTF. This proposal takes the first workaround. Arming state does not live in backup registers.
+- §2.2.3: LSI can run far above 32 kHz when it clocks the RTC or the CSS on LSE, and VDD resets while the backup domain does not (Shutdown exit, a separate VBAT, or VBAT tied to VDD with a drop under VDD min shorter than 1 ms). That would stretch or shrink the IWDG. Workaround: clock the RTC from LSE or HSE/32 and leave LSECSSON clear, or reset the backup domain on every BORRSTF. This record takes the first workaround. Arming state does not live in backup registers.
 - §2.2.6: a backup-domain power-on reset can be missed if VBAT/VDD falls through a window a few millivolts wide, somewhere between 100 mV and 700 mV. One effect is a spurious LSCO on PA2. Workaround: let VDD and VBAT fall below 100 mV for more than 200 ms, or software-reset the backup domain when BORRSTF is set. PA2 is already excluded as USART2_TX. Output state does not live in backup registers.
 - §2.2.7: a system reset at a rare instant can make the first SRAM write fail. Dummy-read each SRAM instance the part has before the first write. The workaround in the erratum names SRAM1 at 0x20000000, an SRAM2 instance at 0x20004000, and CCM SRAM at 0x10000000.
 - §2.5.4: ADC watchdog output, above. Prefer the comparator.
@@ -162,26 +163,27 @@ ES0431 Rev 9. No erratum says a GPIO is driven during reset, or that BOR, the IW
 
 ## Decision
 
-Take U3, U6, U9, and U10 off `rotor_drive.kicad_sch`, and the four 100 nF bypasses that belonged to them (C3, C6, C9, C10). The Drive pins drive the three opto FETs and the relay FET directly.
+Take U3, U6, U9, and U10 off `rotor_drive.kicad_sch`, and the four 100 nF bypasses that belonged to them (C3, C6, C9, C10). Take U1 (TPS3823-33DBVR, LCSC C7719), C21, R41, R42, Q8 (MMBT3904, LCSC C20526), Q9, R54, R55, and R56 off the same sheet. The Drive pins drive the three opto FETs and the relay FET directly. There is no supervisor and no STOP pin on the Drive.
 
-`AZ_CW_EN`, `AZ_CCW_EN`, and `AZ_BRAKE_EN` connect to the gates of Q2, Q3, and Q4. `R2G`, `R3G`, and `R4G` stay, 100 kΩ to GNDPWR, and R50, R51, and R52 stay on the same nets. A high-Z pin, which is the reset and boot state of a non-debug GPIO, leaves each opto FET off. `AZ_BRAKE_EN` high means release. Low, or high-Z with the pulldown, leaves the wedge engaged. K1 stays SPST-NO. Coil off, the contact is open.
+`AZ_CW_EN`, `AZ_CCW_EN`, and `AZ_BRAKE_EN` connect to the gates of Q2, Q3, and Q4. `R2G`, `R3G`, and `R4G` stay, 100 kΩ to GNDPWR, and R50, R51, and R52 stay on the same nets. A high-Z pin, which is the reset and boot state of a non-debug GPIO, leaves each opto FET off. `AZ_BRAKE_EN` high means release. Low, or high-Z with the pulldown, leaves the wedge engaged. K1 stays SPST-NO. Coil off, the contact is open. `ARM_EN` connects to the gate of Q1. R53 and R40, both 100 kΩ to GNDPWR, stay on that net.
 
-The MOC3023 LED stays on the +5 V rail through the existing 180 Ω and the existing 2N7002 (Q2, Q3, Q4, LCSC C8545). The Drive pin drives that FET's gate. Steady pin current into the gate and the 100 kΩ pulldown is 3.3 V / 100 kΩ = 33 µA, inside the ±8 mA VOH/VOL specification and the 20 mA absolute maximum. No added buffer on the triac path. Driving the LED from the MCU pin would put the pin on the +5 V LED string; that current is past the 8 mA specification, so the 2N7002 stays.
+The MOC3023 LED stays on the +5 V rail through the existing 180 Ω, the indicator LED, and the existing 2N7002 (Q2, Q3, Q4, LCSC C8545). The root netlist after this edit is the same on all three channels: `+5V` is R70, R80, and R90 pin 1; each gate net is only the Drive pin plus the two 100 kΩ pulldowns. Nothing on those gate nets ties them to +5 V. The Drive pin drives the FET gate. Steady pin current into the gate and the 100 kΩ pulldown is 3.3 V / 100 kΩ = 33 µA, inside the ±8 mA VOH/VOL specification and the 20 mA absolute maximum. No added buffer on the triac path. Driving the LED from the MCU pin would put the pin on the +5 V LED string; that current is past the 8 mA specification, so the 2N7002 stays.
 
-The TPS3823-33DBVR (U1, LCSC C7719) stays, and only on the relay path. The datasheet review does not show a problem with the triac pulldowns: analog GPIO plus the external pulldown holds those gates off through reset, boot, and BOR. The supervisor still has a job the pulldown cannot do. Its `/RESET` is push-pull and active low (DESIGN-NOTES, TI SLVS165O). It cannot be wire-ANDed onto a GPIO the MCU is driving high. A diode from the relay gate to `/RESET` is a bad clamp: AO3400A VGS(th) is 0.65 V min, 1.05 V typ, 1.45 V max at VDS = VGS (AOS Rev 3.1; the test current is 250 µA, and text extraction of that PDF renders the micro prefix as milli on this row and on the breakdown-voltage row). A silicon diode drop sits on top of that 0.65 V minimum, so Q1 can still conduct. The clamp is a hard short to ground:
+Below-POR check, against that netlist. onsemi NDS7002A/D Rev 11 (March 2025), the 2N7002 / NDS7002A row: VGS(th) minimum 1 V, typical 2.1 V, maximum 2.5 V, at VDS = VGS. Text extraction of that PDF renders the test current as 250 mA. The same extraction renders the AO3400A 250 µA test current as 250 mA, so the milliamp figure is not used. The 1 V minimum is the off-state check.
 
-- R54, 1 kΩ, between `ARM_EN` and the relay-gate net `RELAY_GATE`. A pin driven to 3.3 V into a grounded clamp sources about 3.3 mA, inside the 8 mA VOH specification at VDD ≥ 2.7 V.
-- Q8, MMBT3904, JSCJ, SOT-23, LCSC C20526. Base from `nRESET` through R55, 10 kΩ. Emitter at GNDPWR.
-- Q9, 2N7002, LCSC C8545, the same part as Q2–Q4. Gate pulled to +3V3 by R56, 100 kΩ. Collector of Q8 holds that gate down while `nRESET` is high. Drain of Q9 shorts `RELAY_GATE` to GNDPWR while `nRESET` is low.
-- R40, 100 kΩ, stays on the FET side of R54. R53 stays on `ARM_EN`. A floating `ARM_EN` holds Q1 off even when the supervisor has released the clamp.
+The case that holds, on all three triac channels: 3.3 V below POR while +5 V is still up, and the gate pin high-Z (or unable to rise above a collapsed VDD). The pulldown holds the gate at 0. The 2N7002 stays off below its 1 V minimum, so the MOC3023 LED has no path to GNDPWR and the triac cannot fire. A BOR or an IWDG reset puts a non-debug pin in analog (DS12589 §3.11.5). The owner trusts that hardware IWDG. It is what returns a stuck Drive's pins to analog. After that, the pulldowns hold the gates off.
 
-`nRESET` is not tied to the MCU NRST pin. The hardware IWDG is what resets the core. The supervisor can open K1 while the core is still executing, including the case where firmware keeps petting the IWDG and stops petting WDI, and the case where `ARM_EN` is stuck high.
+The case that fails, on all three triac channels and on the relay: the gate net driven high by something other than a high-Z MCU pin. A short to 3.3 V or to 5 V, or a bootloader pin that AN2606 Table 115 drives high, overcomes a 100 kΩ pulldown. The IWDG returns the MCU pin to analog. It does not clear a short on the far side of the pin. Gate pins still avoid PA13, PA14, PA15, PB3, PB4, PG10, and PB8, and every pin in the AN2606 Table 115 list. That table drives PA6 and PB14 (MISO) to 3.3 V during system-memory boot, and it drives USART TX and pulls I2C pins up.
 
-Q1 stays the AO3400A (LCSC C20917). The coil is 80 mA. Q9 only clamps a gate.
+The relay FET is a narrower case of the same topology, and it does not match the 2N7002 claim all the way down. Q1 is an AO3400A (LCSC C20917). AOS Rev 3.1, July 2023: VGS(th) minimum 0.65 V, typical 1.05 V, maximum 1.45 V, at VDS = VGS (the published test current is 250 µA; text extraction renders the micro prefix as milli). Coil from +5 V, source at GNDPWR, gate on `ARM_EN` with R40 and R53 to GNDPWR. A high-Z `ARM_EN` leaves Q1 off and K1 open, including while +5 V is still up and 3.3 V is below POR. A pin that sits between 0.65 V and the POR/BOR threshold, while +5 V is up, can start to turn Q1 on. K1's open contact still covers an unpowered coil. The hardware IWDG is the stuck-core response: pins return to analog, and the pulldowns open the coil.
+
+STOP is a software command from the Station or the GUI (the Drive protocol STOP). The rotor sheet has no STOP input, no STOP connector pin, and no `STOP_N` net. A stuck Drive is the hardware IWDG. A physical emergency stop is the user's power switch or the AC feed. A front-panel STOP, if ADR 0006's panel is fitted, is a Station input that sends that software command.
+
+Q1 stays the AO3400A. The coil is 80 mA.
 
 Option bytes. Copy production 0xFFEFF8AA and change three fields. The resulting word is 0xFBEEFCAA.
 
-| Field | Production | This proposal |
+| Field | Production | Accepted |
 | --- | --- | --- |
 | IWDG_SW | 1, software | 0, hardware |
 | nSWBOOT0 | 1, BOOT0 from PB8 | 0, BOOT0 from the nBOOT0 bit |
@@ -199,26 +201,24 @@ Bring-up order: the factory word has IWDG_SW = 1, so the first image can be prog
 
 The Station reads FLASH_OPTR in the status record at link-up. It refuses to arm when BOR_LEV, IWDG_SW, IWDG_STOP, IWDG_STDBY, nSWBOOT0, or nBOOT0 disagree with this table. The Drive does the same check and, on a mismatch, sets fault `OPTION_BYTES` and leaves the outputs at the safe level: direction gates low, brake engaged, relay open. Pins that firmware has not configured stay analog, and the pulldowns hold the gates off.
 
-Early warning of a failing 26 VAC feed is a divided, clamped sample of VIN_RECT into a comparator, with the threshold set below the crest by enough to cover the ES0431 §2.6.1 offset and the divider tolerance. The interrupt, while the core is still running, drives CW and CCW off, the brake engaged (gate low), and the relay off. The divider and the pin are not on this sheet. The PVD stays available as a VDD monitor. It is not the VIN_RECT warning.
+Early warning of a failing 26 VAC feed is a divided, clamped sample of VIN_RECT into a comparator, with the threshold set below the crest by enough to cover the ES0431 §2.6.1 offset and the divider tolerance. The interrupt, while the core is still running, drives CW and CCW off, the brake engaged (gate low), and the relay off. The divider and the pin are not on this sheet. The PVD stays available as a VDD monitor. It is a VDD monitor, and the VIN_RECT warning is the comparator.
 
 RTC clock is LSE or HSE/32. LSECSSON stays clear, so ES0431 §2.2.3 does not apply to the IWDG's LSI. Firmware dummy-reads SRAM after each system reset (ES0431 §2.2.7) before the first write.
 
-Gate pins, when they are assigned, avoid PA13, PA14, PA15, PB3, PB4, PG10, and PB8, and avoid every pin in the AN2606 Table 115 list above. PB8 is an input until the option bytes load when nSWBOOT0 = 0, then analog. It is not a gate.
+Gate pins, when they are assigned, avoid PA13, PA14, PA15, PB3, PB4, PG10, and PB8, and avoid every pin in the AN2606 Table 115 list above. PB8 is an input until the option bytes load when nSWBOOT0 = 0, then analog. It is spare, and it is not a gate.
 
 ## Consequences
 
-The rotor sheet matches this proposal: the four AND gates and their bypasses are gone, Q8, Q9, R54, R55, and R56 are on the relay path, and the triac gates are the Drive request nets. Firmware is not in this change. The option bytes are programmed when the Drive firmware exists.
+The rotor sheet matches this record. The four AND gates and their bypasses are gone. U1, C21, R41, R42, Q8, Q9, R54, R55, and R56 are gone, and so are the sheet pins `STOP_N`, `WDI_KICK`, and `nRESET`. The triac gates are the Drive request nets. `ARM_EN` is Q1's gate. Firmware is not in this change. The option bytes are programmed when the Drive firmware exists.
 
-STOP_N still enters the TPS3823 `/MR`, so holding STOP drops `nRESET` and Q9 clamps the relay off. STOP does not reset the Drive, and it does not by itself drop a triac gate. The bus is open while the button is held. A readable STOP pin, still open in the design note, is what makes the Drive drop the gates and engage the brake before the button is released. Until that pin exists, releasing STOP can reclose K1 onto gates firmware is still holding on, for as long as the core is healthy and petting the IWDG.
+STOP from the Station or the GUI drops the gates and opens K1 when the core is running and accepts the command. A core that is stuck and still executing is the hardware IWDG: the timeout returns the pins to analog, the pulldowns turn the triacs off, engage the brake, and open K1. Removing power is the power switch or the AC feed.
 
-nSWBOOT0 = 0 means the Station cannot force the ROM bootloader by driving PB8. Field update is a command the running Drive accepts, or SWD. The alternative, nSWBOOT0 = 1 with a pulldown on PB8, restores that path and reopens the bootloader pin list as a live hazard. This proposal takes the option-bit boot.
+nSWBOOT0 = 0 means the Station cannot force the ROM bootloader by driving PB8. Field update is a command the running Drive accepts, or SWD. The alternative, nSWBOOT0 = 1 with a pulldown on PB8, restores that path and reopens the bootloader pin list as a live hazard. This record takes the option-bit boot.
 
-Below POR, and below VBOR0, the pin state is not guaranteed. The pulldowns define the gates while the pin is high-Z. K1's open contact defines an unpowered coil. A pin that actively drives high in that region is outside what the datasheet covers. That is the residual risk of removing the AND gates.
+Below POR, and below VBOR0, the pin state is not guaranteed. The pulldowns define the gates while the pin is high-Z, which is the case that holds above. K1's open contact defines an unpowered coil. A gate driven high by something other than the MCU is the case that fails, and it is the residual risk of this record.
 
 ## Open questions
 
 1. VIN_RECT divider ratio, clamp, and comparator input pin. Not drawn here.
-2. A Drive GPIO for STOP, so the gates drop while the button is held and the core is still running.
-3. Whether a later acceptance restores PB8 boot for field update. This proposal leaves it off.
-4. Resistor LCSC numbers for R54, R55, and R56. The sheet marks them TBD, like the other passives.
-5. K1's 5 A inductive rating against about 7.3 A of motor-plus-brake overlap, and TR1 saturation. Unchanged from ADR 0020.
+2. Whether a later change restores PB8 boot for field update. This record leaves it off.
+3. K1's 5 A inductive rating against about 7.3 A of motor-plus-brake overlap, and TR1 saturation. Unchanged from ADR 0020.

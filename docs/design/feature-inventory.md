@@ -138,7 +138,7 @@ compile-time `#define`s as the way to configure.
 
 | Feature | Sources | Class | This project |
 |---|---|---|---|
-| STOP, CW, CCW | ADR 0006. DCU-3 and RT-21 have the same three actions on a richer panel | Operate | **In, phase 2.** The buttons are direct motion inputs. STOP is already reserved on the PC window. They are not settings |
+| STOP, CW, CCW | ADR 0006. DCU-3 and RT-21 have the same three actions on a richer panel | Operate | **In, phase 2.** If the panel is fitted, the buttons are Station inputs. STOP on the panel and the STOP already reserved on the PC window both send the Drive protocol STOP. The Drive has no STOP pin. They are not settings |
 | Point-and-shoot knob | RT-21 front-panel knob. DCU-3 encoder. K3NG `FEATURE_AZ_PRESET_ENCODER` | Operate | **Out.** ADR 0006: no knob. Heading entry is on the host |
 | LCD, OLED, Nextion | K3NG `FEATURE_4_BIT_LCD_DISPLAY`, the I2C LCD flags, and `FEATURE_NEXTION_DISPLAY`. RT-21 FSTN display. DCU-3 LCD | Operate | **Out of the baseline.** ADR 0006. A later front end can subscribe to the same state. Display layout, language, and splash flags in K3NG go out with the panel |
 | Joystick and extra button boards | K3NG `FEATURE_JOYSTICK_CONTROL`, `FEATURE_ADAFRUIT_BUTTONS` | Operate | **Out.** The panel is STOP, CW, and CCW |

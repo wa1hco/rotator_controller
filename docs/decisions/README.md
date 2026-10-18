@@ -25,5 +25,5 @@ They are short on purpose. The reasoning and the numbers live in
 | [0017](0017-enclosure-machining-drawings.md) | Panel holes are generated from footprint positions, not drawn on the PCB |
 | [0018](0018-ac-power-and-grounding.md) | AC version: one 26 VAC Powerpole feed; logic ground is the rotor return |
 | [0019](0019-pc-gui-toolkit.md) | Python console library and a browser configuration UI shared with the firmware web page |
-| [0020](0020-drive-controller.md) | Drive MCU owns every deadline; the F407 is the Station. The ARM_OK gates are revisited by 0021 |
-| [0021](0021-drive-startup-brownout.md) | Proposed: direct Drive pins, BOR level 4, hardware IWDG, relay-only supervisor clamp |
+| [0020](0020-drive-controller.md) | Drive MCU owns every deadline; the F407 is the Station. ADR 0021 removes the ARM_OK gates, the supervisor, and the Drive STOP pin |
+| [0021](0021-drive-startup-brownout.md) | Accepted: direct Drive pins, BOR level 4, hardware IWDG. STOP is a Station command |

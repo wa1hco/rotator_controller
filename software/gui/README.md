@@ -165,7 +165,7 @@ Milestones, in `rotatorctl.phases`, taken from the in-scope Operate rows of [fea
 - Heading display per axis, from `status`
 - Go to bearing
 - CW / CCW jog
-- STOP, always on screen. The line it will send is GS-232 `S` (`rotatorctl.operate.stop_line`), on the same port, with no mode switch
+- STOP, always on screen. The line it will send is GS-232 `S` (`rotatorctl.operate.stop_line`), on the same port, with no mode switch. That is a software command. The Drive has no STOP pin. Removing power is the power switch or the AC feed
 - Park, and auto-park from `park.idle_min`
 - Heading preset recall (the six `preset.N` memories)
 - Soft limits, coast, creep, and the stall stop, using the settings already stored
