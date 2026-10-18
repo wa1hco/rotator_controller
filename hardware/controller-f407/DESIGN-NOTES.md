@@ -2,9 +2,9 @@
 
 Azimuth, AC version. The processor sheet and the power sheet are later. MCU pins are not assigned.
 
-Nets on this sheet join by name. A label on a pin is the connection. Hierarchical labels are the ones that leave the sheet. `+5V`, `+3V3`, and `ROTOR_RETURN` are marked with a power flag because the supplies that drive them are on the power sheet, which is not drawn yet. The root sheet no-connects every sheet pin for the same reason. ERC on KiCad 9.0.9 with the standard symbol libraries on the path is 0 errors and 0 warnings.
+Nets on this sheet join by name. A label on a pin is the connection. Hierarchical labels are the ones that leave the sheet. `+5V` and `+3V3` are hierarchical labels with a power flag, because those supplies are on the power sheet, which is not drawn yet. Logic ground is the `GNDPWR` power symbol, and it is flagged too. The root sheet no-connects every sheet pin for the same reason.
 
-Logic ground is `ROTOR_RETURN`, CDE terminal 1 (ADR 0018). Do not put a current shunt in that net. The pot measurement uses it as the ADC reference.
+Logic ground is `ROTOR_RETURN`, and that hierarchical label is tied to the `GNDPWR` power symbol, so they are one net. CDE terminal 1 lands on it (ADR 0018). Do not put a current shunt in it. The pot measurement uses it as the ADC reference. The parent-sheet pin `ROTOR_RETURN` is that same net. The root sheet no-connects the pin, the same waiver as the other sheet pins, because the power sheet is not drawn yet.
 
 ## Rotor connector
 
@@ -14,7 +14,7 @@ CDE HAM-IV / HAM-M / CD-45, terminals 1 to 8, matching the catalog drawing and t
 
 | J1 | CDE | Role on this sheet |
 | --- | --- | --- |
-| 1 | common | `ROTOR_RETURN`. Motor, brake, and pot wiper. |
+| 1 | common | `GNDPWR`. Motor, brake, and pot wiper. |
 | 2 | brake | `BRK_OUT`. Solenoid. Energized releases the wedge. Off, the wedge is engaged. |
 | 3 | pot end + | `AZ_POT_3` |
 | 4 | winding / cap | `TB4`. Run cap for a CDE rotor. |
@@ -50,7 +50,7 @@ Both footprints are the ones from the Hammond outline: lead pitch 37.5 mm, hole 
 
 Three copies: CW (`Q5`), CCW (`Q6`), brake (`Q7`). Each one is:
 
-`+5V` — 180 Ω — red LED — MOC3023SM LED — 2N7002 — `ROTOR_RETURN`
+`+5V` — 180 Ω — red LED — MOC3023SM LED — 2N7002 — `GNDPWR`
 
 MOC pin 6 — 100 Ω — triac gate. Gate — 1 kΩ — MT1. MT2 is `AC_BUS`. MT1 is the load (`CW_OUT`, `CCW_OUT`, or `BRK_OUT`). Snubber 68 Ω + 0.1 µF X2 from `AC_BUS` to the load. LTV-814 across the triac for stuck-on sense.
 
@@ -78,23 +78,21 @@ Snubber 68 Ω in series with 0.1 µF, across MT2-MT1. Time constant `68 × 0.1 �
 
 ## Hardware interlock
 
-All of this is 3.3 V logic. Firmware dead time of at least 500 ms is separate and is not a substitute for this.
+All of this is 3.3 V logic. The only residual gate on this sheet is `ARM_OK` (ADR 0020). Direction exclusion and the dead time of at least 500 ms are the Drive's job. This sheet does not implement them.
 
 `ARM_OK = ARM_EN AND nRESET`
 
-`CW_GATE = AZ_CW_EN AND NOT AZ_CCW_EN AND ARM_OK AND NOT HOLD_CCW`
+`CW_GATE = AZ_CW_EN AND ARM_OK`
 
-`CCW_GATE = AZ_CCW_EN AND NOT AZ_CW_EN AND ARM_OK AND NOT HOLD_CW`
+`CCW_GATE = AZ_CCW_EN AND ARM_OK`
 
 `BRK_GATE = AZ_BRAKE_EN AND ARM_OK`
 
-`U4` is `AZ_CW_EN AND nCCW`, not `AZ_CW_EN AND nCW`. ANDing a signal with its own inversion would never turn the channel on. The same swap is on the CCW side. `nCW` and `nCCW` come from `U2`, a 74LVC14. The symbol is the standard '14 pinout (KiCad's 74HC14 drawing). The part is TI SN74LVC14APWR, LCSC C7663, TSSOP-14. Spare inputs are tied to `ROTOR_RETURN`. The AND gates are Nexperia 74LVC1G08GW,125, LCSC C12512, eight of them, each with 100 nF.
+`U3` is `ARM_EN AND nRESET`. `U6` is `AZ_CW_EN AND ARM_OK`. `U9` is `AZ_CCW_EN AND ARM_OK`. `U10` is `AZ_BRAKE_EN AND ARM_OK`. The parts are Nexperia 74LVC1G08GW,125, LCSC C12512, four of them. Each has 100 nF: `C3` on `U3`, `C10` on `U6`, `C6` on `U9`, `C9` on `U10`.
 
-`AZ_CW_EN`, `AZ_CCW_EN`, `AZ_BRAKE_EN`, and `ARM_EN` each have a 100 kΩ pulldown, so an unprogrammed or high-Z pin leaves the gates off.
+A low `ARM_OK` forces `CW_GATE`, `CCW_GATE`, and `BRK_GATE` off, and it turns off the relay FET. `R2G`, `R3G`, and `R4G` are 100 kΩ from those gates to `GNDPWR`, so an open gate output leaves the opto FETs off. `AZ_CW_EN`, `AZ_CCW_EN`, `AZ_BRAKE_EN`, and `ARM_EN` each have a 100 kΩ pulldown, so an unprogrammed or high-Z pin leaves the gates off.
 
-Hold: while a gate is high, a BAT54 charges 1 µF through 1 kΩ (about 1 ms). When the gate drops, 100 kΩ discharges the capacitor. The other direction stays blocked until that inverter input falls through its threshold.
-
-`t = 100 kΩ × 1 µF × ln(3.0 / 1.2) ≈ 92 ms`, using 1.2 V as a stand-in for the 74LVC14 negative threshold. The triac-change note's 70–110 ms window is this network. The exact TI VT− at 3.3 V was not re-measured for this sheet, so treat 92 ms as the calculation, not a lab result.
+The 74LVC14 (`U2`), the direction AND gates, and the hold network (BAT54, 1 µF, 100 kΩ, `HOLD_CW` / `HOLD_CCW`) are not on this sheet. The Drive keeps both direction outputs off for at least 500 ms before a reversal.
 
 ### Brake defaults to engaged
 
@@ -123,7 +121,7 @@ The coil transistor is an AO3400A (LCSC C20917, AOS, SOT-23, about 5.7 A, 48 mΩ
 
 `/MR` has an internal pull-up around 90 kΩ. `R42` is another 100 kΩ to 3.3 V, and `STOP_N` is active low into `/MR`. Either one drops the reset.
 
-WDI clears on a falling edge. Timeout is 0.9 to 2.5 s, 1.6 s typical. Firmware must kick faster than 0.9 s. A floating WDI is not a timeout: the datasheet says a floating WDI is pulsed inside the chip so the watchdog does not fire. `R41`, 100 kΩ to `ROTOR_RETURN`, is what makes an unconnected MCU pin time out. 100 nF on VDD, as the datasheet note requires.
+WDI clears on a falling edge. Timeout is 0.9 to 2.5 s, 1.6 s typical. Firmware must kick faster than 0.9 s. A floating WDI is not a timeout: the datasheet says a floating WDI is pulsed inside the chip so the watchdog does not fire. `R41`, 100 kΩ to `GNDPWR`, is what makes an unconnected MCU pin time out. 100 nF on VDD, as the datasheet note requires.
 
 `ARM_OK` gates the relay FET and all three triac gates. Brownout (the -33 threshold is 2.93 V nominal, 2.86 to 3.00 V), watchdog, or `STOP_N` drops the relay and the gates together.
 
@@ -133,11 +131,11 @@ Grey and black Powerpoles on a pigtail, the V2 keying, so the connector cannot b
 
 `AC_HOT` — fuse `F1` — `AC_FUSED`. The fuse is a T6.3 A 250 V slow-blow 5×20 cartridge in Keystone 3512 class clips, ahead of the MOV and the relay. Nameplate motor plus brake is about 7.3 A and intermittent. If the brake inrush opens T6.3 A, the next step is T8 A, which is the number already in the triac-change note. Clip and cartridge Mouser numbers are TBD.
 
-`RV1` is across `AC_FUSED` to `ROTOR_RETURN`, after the fuse. It is a 35 VAC continuous disc, for example a 14D560K (56 V varistor, about 35 VAC working), not a mains MOV. Footprint is the nearest library 15.5 mm disc. Mouser MPN TBD.
+`RV1` is across `AC_FUSED` to `GNDPWR`, after the fuse. It is a 35 VAC continuous disc, for example a 14D560K (56 V varistor, about 35 VAC working), not a mains MOV. Footprint is the nearest library 15.5 mm disc. Mouser MPN TBD.
 
 `D1` is a half-wave diode from `AC_FUSED` to `VIN_RECT`, before the ARM contact, so the logic stays up when the relay opens. Crest is `26 × √2 ≈ 37 V`. Reverse voltage is about two crests, 74 V, so the diode is a 1 A, at least 200 V SMA (S1M or US1M), not a 1N4148. LCSC number TBD. The bulk capacitor and the buck are on the power sheet. Do not half-wave the motor or the brake.
 
-`D2` is an SMAJ90CA on `AC_BUS`, after the relay.
+`D2` is an SMAJ90CA from `AC_FUSED` to `GNDPWR`, after the fuse and before the relay. `D1`, the power-supply tap, is on that same fused node, so the logic supply and the clamp both see the line while the relay is open.
 
 ## Protection
 
@@ -145,33 +143,33 @@ FOSAN SMAJ90CA, LCSC C5353147, SMA, 90 V standoff, 146 V clamp. This is not the 
 
 | Ref | Where |
 | --- | --- |
-| D3 | `CW_OUT` to `ROTOR_RETURN` |
-| D4 | `CCW_OUT` to `ROTOR_RETURN` |
-| D5 | `BRK_OUT` to `ROTOR_RETURN` |
-| D2 | `AC_BUS` to `ROTOR_RETURN` |
+| D3 | `CW_OUT` to `GNDPWR` |
+| D4 | `CCW_OUT` to `GNDPWR` |
+| D5 | `BRK_OUT` to `GNDPWR` |
+| D2 | `AC_FUSED` to `GNDPWR` |
 | D6, D7 | pot ends `AZ_POT_3` and `AZ_POT_7` |
 
 The line crest, about 37 V and not more than about 48 V with a high secondary, is under the 90 V standoff, so the parts do not conduct on a normal cycle. `D6` and `D7` are cable-fault clamps. They do not protect a 3.3 V ADC. That clamp belongs on the processor sheet.
 
-The chassis RF capacitor and TVS from `ROTOR_RETURN` are ADR 0018 and are not on this sheet.
+The chassis RF capacitor and TVS from `GNDPWR` are ADR 0018 and are not on this sheet.
 
 ## Zero-cross sense
 
 `U17`, LITEON LTV-814S-TA1, LCSC C125118, across `AC_FUSED` (before the relay, so the sense still works with the ARM open). Two 7.5 kΩ 1206 in series, 15 kΩ total. The LTV-814 input is bidirectional, so both half-cycles conduct and a 60 Hz line produces pulses at 120 Hz.
 
-Peak LED current `37 V / 15 kΩ ≈ 2.5 mA`. Dissipation `(26 V)² / 15 kΩ ≈ 45 mW` for the pair, about 22 mW each. Emitter at `ROTOR_RETURN`, collector `ZC_SENSE` with 10 kΩ to 3.3 V. `ZC_SENSE` is high near the zero crossing and low while the opto is lit. The edge the firmware wants is the high gap, not a low pulse.
+Peak LED current `37 V / 15 kΩ ≈ 2.5 mA`. Dissipation `(26 V)² / 15 kΩ ≈ 45 mW` for the pair, about 22 mW each. Emitter at `GNDPWR`, collector `ZC_SENSE` with 10 kΩ to 3.3 V. `ZC_SENSE` is high near the zero crossing and low while the opto is lit. The edge the firmware wants is the high gap, not a low pulse.
 
 The SMDIP-4_W7.62 land is the library guess for the Lite-On gullwing. Check it against the Lite-On drawing before the board is ordered.
 
 ## Current sense
 
-A shunt in `ROTOR_RETURN` would move the pot reference (ADR 0018). The sense is a current transformer on the fused hot instead.
+A shunt in `GNDPWR` would move the pot reference (ADR 0018). The sense is a current transformer on the fused hot instead.
 
 `TR1` is a Zeming ZMCT103C, 1000:1, through-hole. One turn of `AC_FUSED` goes through the bore. That primary is not a pad. LCSC C94571 is the catalog page that was checked. The part is through-hole, so the symbol has a Mouser field (TBD) and no LCSC field. JLCPCB would otherwise try to place it.
 
 Burden `R20` is 100 Ω, 0805. At the 5 A rating, secondary current is 5 mA and the burden voltage is `5 mA × 100 Ω = 0.50 V rms`, 0.71 V peak.
 
-Bias is 10 kΩ / 10 kΩ from 3.3 V, 1.65 V, with 100 nF to `ROTOR_RETURN`. The ADC net `I_SENSE` is the other end of the secondary through 1 kΩ. At 5 A the pin sits at `1.65 ± 0.71 V`. Two BAT54s clamp it to 3.3 V and to `ROTOR_RETURN`.
+Bias is 10 kΩ / 10 kΩ from 3.3 V, 1.65 V, with 100 nF to `GNDPWR`. The ADC net `I_SENSE` is the other end of the secondary through 1 kΩ. At 5 A the pin sits at `1.65 ± 0.71 V`. Two BAT54s clamp it to 3.3 V and to `GNDPWR`.
 
 Nameplate motor plus brake, about 7.3 A, is past the 5 A rating. If the CT stayed linear, 7.3 A would be 0.73 V rms and 1.03 V peak, still inside 0 to 3.3 V (`1.65 ± 1.03`). Saturation, not the ADC window, is the open question. Stall detection can use a lower threshold than the overlap current. The overlap is short.
 
@@ -180,7 +178,7 @@ Nameplate motor plus brake, about 7.3 A, is past the 5 A rating. If the CT staye
 | Label | Direction | Meaning |
 | --- | --- | --- |
 | `+5V`, `+3V3` | in | From the power sheet. |
-| `ROTOR_RETURN` | both | Logic ground and CDE terminal 1. |
+| `ROTOR_RETURN` | both | Logic ground, tied to `GNDPWR`. CDE terminal 1. Parent-sheet pin. |
 | `AC_HOT` | both | Powerpole hot, before the fuse. |
 | `VIN_RECT` | out | Half-wave raw dc into the power sheet. |
 | `AZ_CW_EN`, `AZ_CCW_EN`, `AZ_BRAKE_EN`, `ARM_EN` | in | MCU requests. Brake high releases. |
@@ -190,7 +188,7 @@ Nameplate motor plus brake, about 7.3 A, is past the 5 A rating. If the CT staye
 | `ZC_SENSE` | out | High in the zero-cross gap. |
 | `I_SENSE` | out | CT, biased at 1.65 V. |
 | `AZ_CW_SNS`, `AZ_CCW_SNS`, `AZ_BRAKE_SNS` | out | Low while that triac is on. Stuck-on is armed, not gated, and no pulse for 20 ms. |
-| `AZ_POT_3`, `AZ_POT_7` | both | Pot ends. The wiper is terminal 1, which is `ROTOR_RETURN`. |
+| `AZ_POT_3`, `AZ_POT_7` | both | Pot ends. The wiper is terminal 1, on `GNDPWR`. |
 
 ## Bill of materials
 
@@ -204,8 +202,7 @@ LCSC numbers were checked on the product page on 2026-10-12. Stock is not a prom
 | 1 | Q1 | AOS AO3400A, SOT-23 | C20917 |
 | 3 | U11 U12 U13 | onsemi MOC3023SM | C899792 |
 | 1 | U1 | TI TPS3823-33DBVR | C7719 |
-| 8 | U3–U10 | Nexperia 74LVC1G08GW,125 | C12512 |
-| 1 | U2 | TI SN74LVC14APWR | C7663 |
+| 4 | U3 U6 U9 U10 | Nexperia 74LVC1G08GW,125 | C12512 |
 | 4 | U14 U15 U16 U17 | LITEON LTV-814S-TA1 | C125118 |
 | 6 | D2–D7 | FOSAN SMAJ90CA (not Littelfuse) | C5353147 |
 
@@ -218,15 +215,14 @@ No C-number is filled in for these. Do not guess one.
 | 3 | 180 Ω | 0603 | R70 R80 R90 |
 | 1 | 100 Ω | 0805 | R20 burden |
 | 3 | 100 Ω | 0603 | R71 R81 R91 |
-| 6 | 1 kΩ | 0603 | R23 R60 R62 R72 R82 R92 |
+| 4 | 1 kΩ | 0603 | R23 R72 R82 R92 |
 | 8 | 7.5 kΩ | 1206 | R30 R31 R74 R75 R84 R85 R94 R95 |
 | 3 | 68 Ω | 1206 | R73 R83 R93 |
 | 6 | 10 kΩ | 0603 | R21 R22 R32 R76 R86 R96 |
-| 12 | 100 kΩ | 0603 | R40 R41 R42 R50 R51 R52 R53 R61 R63 R2G R3G R4G |
-| 12 | 100 nF | 0603 | C3–C10, C20 C21 C22 C23 |
-| 2 | 1 µF | 0805 | C60 C61 |
+| 10 | 100 kΩ | 0603 | R40 R41 R42 R50 R51 R52 R53 R2G R3G R4G |
+| 8 | 100 nF | 0603 | C3 C6 C9 C10 C20 C21 C22 C23 |
 | 3 | red LED | 0603 | D70 D71 D72 |
-| 4 | BAT54 | SOD-123 | D20 D21 D60 D61 |
+| 2 | BAT54 | SOD-123 | D20 D21 |
 | 1 | 1N4148W | SOD-123 | D8 |
 | 1 | S1M or US1M, ≥ 200 V | SMA | D1 |
 
@@ -259,7 +255,6 @@ No C-number is filled in for these. Do not guess one.
 7. SMAJ90CA on the sheet is FOSAN C5353147, not Littelfuse.
 8. ZMCT103C is through-hole and was confirmed on LCSC, not on Mouser. The 5 A rating against a 7.3 A motor-plus-brake overlap, and whether stall detection still works if the CT saturates.
 9. G5LE-1A4 inductive rating is 5 A. The overlap is about 7.3 A. G5LE-1A-E is the 16 A alternative. This sheet keeps the part the design note named. Confirm pin 3 is NO on the figure before stuffing.
-10. 74LVC14 VT− for the 70–110 ms hold claim. The 92 ms figure uses 1.2 V.
-11. HDR-300 cable adapter. Elevation is a second copy of this sheet, not drawn.
-12. Chassis RF capacitor and TVS from `ROTOR_RETURN` (ADR 0018), and the ADC clamp on the pot, belong on later sheets.
+10. HDR-300 cable adapter. Elevation is a second copy of this sheet, not drawn.
+11. Chassis RF capacitor and TVS from `GNDPWR` (ADR 0018), and the ADC clamp on the pot, belong on later sheets.
 13. Vertical TO-220 footprint versus the bar lead row is a placement note. The footprint itself is the library part, not a custom lead bend.
