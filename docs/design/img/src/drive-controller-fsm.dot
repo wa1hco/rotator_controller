@@ -1,0 +1,67 @@
+digraph drive_fsm {
+  graph [
+    label="Drive controller, one axis\nSolid edges are the motion path. Dashed edges are heartbeat loss under stop or hold.\nA complete-move loss stays on the solid path. Dotted edges are faults.\nOn an AC axis, RAMP_UP and RAMP_DOWN have ramp time 0 and pass straight through.\nA slope is the later DC H-bridge module.\nIDLE, parked, BOOT, and FAULT ignore heartbeat loss. Every other event is in the state table."
+    labelloc=t
+    fontsize=13
+    fontname="Liberation Sans"
+    rankdir=TB
+    pad=0.4
+    nodesep=0.45
+    ranksep=0.55
+    splines=true
+    bgcolor="white"
+  ];
+  node [
+    fontname="Liberation Sans"
+    fontsize=11
+    shape=box
+    style="rounded,filled"
+    color="#1e293b"
+    fillcolor="#f8fafc"
+  ];
+  edge [fontname="Liberation Sans", fontsize=9, color="#1e293b"];
+
+  boot [label="BOOT\ngates off\nbrake engaged", fillcolor="#e2e8f0"];
+  idle [label="IDLE\nbrake engaged, ARM off\nno heartbeat required\nparked is a flag", fillcolor="#dcfce7"];
+  rel  [label="BRAKE_RELEASE\ndirections off\nARM on", fillcolor="#dbeafe"];
+  up   [label="RAMP_UP\none direction on\nAC: ramp time 0", fillcolor="#dbeafe"];
+  run  [label="RUN\none direction on", fillcolor="#dbeafe"];
+  creep [label="CREEP\none direction, slow", fillcolor="#dbeafe"];
+  down [label="RAMP_DOWN\nthat direction, then off\nAC: ramp time 0", fillcolor="#dbeafe"];
+  dead [label="DEAD_TIME\nboth directions off\nbrake stays released\ntimer at least 500 ms", fillcolor="#ffedd5"];
+  eng  [label="BRAKE_ENGAGE\ndirections off\nbrake engaging", fillcolor="#dbeafe"];
+  fault [label="FAULT\ngates off, ARM off\nbrake engaged\nlatched until clear_fault", fillcolor="#fee2e2"];
+
+  boot -> idle [label="config and sensor ok"];
+  boot -> fault [label="config or sensor bad", style=dotted, color="#b91c1c"];
+
+  idle -> rel [label="goto, jog, or park"];
+  rel -> up [label="brake time elapsed\nmove still pending"];
+  rel -> eng [label="stop, or heading\nalready at the target"];
+
+  up -> run [label="ramp done"];
+  run -> creep [label="inside creep window\ngoto or park"];
+  creep -> run [label="target leaves\nthe creep window"];
+
+  up -> down [label="stop, soft limit,\nor reverse"];
+  run -> down [label="stop, target, soft limit,\nor reverse"];
+  creep -> down [label="stop, target, soft limit,\nor reverse"];
+  down -> up [label="same direction\nordered again"];
+
+  down -> dead [label="ramp done\nand a reverse is pending"];
+  down -> eng [label="ramp done\nand the axis is stopping"];
+  dead -> up [label="dead time elapsed\ndirection still pending"];
+  dead -> eng [label="dead time elapsed\nmove cancelled"];
+  eng -> idle [label="brake time elapsed"];
+
+  fault -> idle [label="clear_fault\nand the cause is gone"];
+
+  rel -> eng [label="heartbeat lost\nstop or hold", style=dashed, color="#c2410c"];
+  up -> down [label="heartbeat lost\nstop or hold", style=dashed, color="#c2410c"];
+  run -> down [label="heartbeat lost\nstop or hold", style=dashed, color="#c2410c"];
+  creep -> down [label="heartbeat lost\nstop or hold", style=dashed, color="#c2410c"];
+
+  idle -> fault [label="jam, sensor,\nstuck triac, STOP", style=dotted, color="#b91c1c"];
+  run -> fault [label="stall, jam, run timeout,\nstuck triac, STOP", style=dotted, color="#b91c1c"];
+  dead -> fault [label="jam, run timeout,\nstuck triac, STOP", style=dotted, color="#b91c1c"];
+}
