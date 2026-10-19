@@ -1065,6 +1065,13 @@ def _segment_overlaps_box(seg: WireSeg, box: Box, ignore=None) -> bool:
     return False
 
 
+def _wire_ends_on(seg: WireSeg, x: float, y: float) -> bool:
+    """True when either end of the wire is the point."""
+    return (abs(seg.x0 - x) <= 0.05 and abs(seg.y0 - y) <= 0.05) or (
+        abs(seg.x1 - x) <= 0.05 and abs(seg.y1 - y) <= 0.05
+    )
+
+
 def item_overlaps(item: TextItem, model: SheetModel, texts: list[TextItem]) -> list[str]:
     reasons = []
     box = item.box
@@ -1091,6 +1098,11 @@ def item_overlaps(item: TextItem, model: SheetModel, texts: list[TextItem]) -> l
                     continue
             reasons.append(f"symbol {sym.name}")
     for seg in model.wires:
+        # A sheet pin name is drawn along the wire that ends on the pin.
+        # That wire is the connection. A wire that only crosses the name,
+        # with neither end on the pin, is still an overlap.
+        if item.kind == "sheet_pin" and _wire_ends_on(seg, item.x, item.y):
+            continue
         if _segment_overlaps_box(seg, box, ignore):
             reasons.append("wire")
             break

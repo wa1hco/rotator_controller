@@ -283,6 +283,47 @@ class TidyTests(unittest.TestCase):
         box = tidy.page_box(root)
         self.assertEqual((box.x0, box.y0, box.x1, box.y1), (0.0, 0.0, 431.8, 279.4))
 
+    def test_sheet_pin_ignores_its_own_wire(self):
+        # The pin name is drawn back along the wire that ends on the pin.
+        # A wire that only crosses the name is still an overlap.
+        sheet = """\
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(uuid "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee")
+	(paper "A3")
+	(sheet
+		(at 100 20)
+		(size 40 30)
+		(uuid "bbbbbbbb-bbbb-4ccc-8ddd-eeeeeeeeeeee")
+		(property "Sheetname" "drive"
+			(at 120 18 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(pin "ARM_EN" input
+			(at 100 30 180)
+			(effects (font (size 1.27 1.27)) (justify right))
+			(uuid "cccccccc-bbbb-4ccc-8ddd-eeeeeeeeeeee")
+		)
+	)
+	(wire
+		(pts (xy 70 30) (xy 100 30))
+		(stroke (width 0) (type default))
+		(uuid "dddddddd-bbbb-4ccc-8ddd-eeeeeeeeeeee")
+	)
+)
+"""
+        crossed = sheet.replace(
+            "(xy 70 30) (xy 100 30)",
+            "(xy 70 30) (xy 110 30)",
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "root.kicad_sch"
+            path.write_text(sheet, encoding="utf-8")
+            self.assertEqual(tidy.main(["--check", str(path)]), 0)
+            path.write_text(crossed, encoding="utf-8")
+            self.assertEqual(tidy.main(["--check", str(path)]), 1)
+
     def test_dry_run_does_not_write(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "sheet.kicad_sch"

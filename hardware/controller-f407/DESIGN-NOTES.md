@@ -1,10 +1,10 @@
 # Rotor drive sheet
 
-Azimuth, AC version. The processor sheet and the power sheet are later. MCU pins are not assigned.
+Azimuth, AC version. The Drive MCU is `drive_mcu`. The pot front end and the VIN_RECT warning are `analog_input`. The power sheet is still later. Pin assignment is in `docs/design/drive-controller.md`.
 
-Nets on this sheet join by name. A label on a pin is the connection. Hierarchical labels are the ones that leave the sheet. `+5V` and `+3V3` are hierarchical labels with a power flag, because those supplies are on the power sheet, which is not drawn yet. Logic ground is the `GNDPWR` power symbol, and it is flagged too. The root sheet no-connects every sheet pin for the same reason.
+Nets on this sheet join by name. A label on a pin is the connection. Hierarchical labels are the ones that leave the sheet. `+5V` is a hierarchical label with a power flag, because that supply is on the power sheet, which is not drawn yet. `+3V3` is a hierarchical label. Its power flag is on this sheet, and the Drive sheets share the net. Logic ground is the `GNDPWR` power symbol, and it is flagged too. On the root, `+5V` and `AC_HOT` stay no-connects until the power sheet exists. The other rotor pins are wired to `drive_mcu` and `analog_input`.
 
-Logic ground is `ROTOR_RETURN`, and that hierarchical label is tied to the `GNDPWR` power symbol, so they are one net. CDE terminal 1 lands on it (ADR 0018). Do not put a current shunt in it. The pot measurement uses it as the ADC reference. The parent-sheet pin `ROTOR_RETURN` is that same net. The root sheet no-connects the pin, the same waiver as the other sheet pins, because the power sheet is not drawn yet.
+Logic ground is `ROTOR_RETURN`, and that hierarchical label is tied to the `GNDPWR` power symbol, so they are one net. CDE terminal 1 lands on it (ADR 0018). Do not put a current shunt in it. The pot measurement uses it as the ADC reference. The parent-sheet pin `ROTOR_RETURN` is that same net, and the root carries it to the Drive sheets.
 
 ## Rotor connector
 
@@ -251,6 +251,6 @@ No C-number is filled in for these. Do not guess one.
 8. ZMCT103C is through-hole and was confirmed on LCSC, not on Mouser. The 5 A rating against a 7.3 A motor-plus-brake overlap, and whether stall detection still works if the CT saturates.
 9. G5LE-1A4 inductive rating is 5 A. The overlap is about 7.3 A. G5LE-1A-E is the 16 A alternative. This sheet keeps the part the design note named. Confirm pin 3 is NO on the figure before stuffing.
 10. HDR-300 cable adapter. Elevation is a second copy of this sheet, not drawn.
-11. Chassis RF capacitor and TVS from `GNDPWR` (ADR 0018), and the ADC clamp on the pot, belong on later sheets.
-12. VIN_RECT early-warning divider and the comparator pin. ADR 0021. It is not on this sheet. STOP is a Station command. The Drive has no STOP pin. A stuck Drive is the hardware IWDG. Removing power is the power switch or the AC feed.
+11. Chassis RF capacitor and TVS from `GNDPWR` (ADR 0018) still belong on a later sheet. The pot clamp is on `analog_input`.
+12. The VIN_RECT divider is on `analog_input` (39.0 kΩ over 1.00 kΩ, no capacitor, into PA1). STOP is a Station command. The Drive has no STOP pin. A stuck Drive is the hardware IWDG. Removing power is the power switch or the AC feed. TR1's conditioning stays on this sheet. Moving it needs approval.
 13. Vertical TO-220 footprint versus the bar lead row is a placement note. The footprint itself is the library part, not a custom lead bend.

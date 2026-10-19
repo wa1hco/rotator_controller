@@ -2,7 +2,7 @@
   "source_commit": "f665ffd9ae2a624626e28e4fee26031c2f50f154",
   "parent_commit": "74417fb",
   "author": "Jeff Millar <wa1hco@gmail.com>",
-  "note": "Fields and labels whose position, text, angle, justification, hide flag, or font size differ from the parent, plus items added in that commit. The tidy tool never moves these. Fourteen more in-page labels and fields from the 2026-10-17 rotor sheet are included so the overlap check reports them as owner leftovers. Commit 9421933 placed R4G's Reference on Q4; that field is recorded here and is not moved.",
+  "note": "Fields and labels whose position, text, angle, justification, hide flag, or font size differ from the parent, plus items added in that commit. The tidy tool never moves these. Fourteen more in-page labels and fields from the 2026-10-17 rotor sheet are included so the overlap check reports them as owner leftovers. Commit 9421933 placed R4G's Reference on Q4; that field is recorded here and is not moved. The orphan ARM_EN label 45a71746 was removed with the AND-gate stubs; its key is gone. Overlapping field text on the rotor sheet was nudged off the graphics. No symbol origin in this list was moved.",
   "counts": {
     "hardware/controller-f407/controller-f407.kicad_sch": {
       "changed_or_added": 21,
@@ -12,10 +12,10 @@
       }
     },
     "hardware/controller-f407/rotor_drive.kicad_sch": {
-      "changed_or_added": 418,
+      "changed_or_added": 417,
       "kinds": {
         "text": 1,
-        "label": 103,
+        "label": 102,
         "hierarchical_label": 69,
         "property": 245
       }
@@ -385,10 +385,6 @@
     [
       "label",
       "44abe603-7556-4c58-b07f-cd2dfe263201"
-    ],
-    [
-      "label",
-      "45a71746-0704-4ce8-bd5e-71d8e5b6702f"
     ],
     [
       "label",

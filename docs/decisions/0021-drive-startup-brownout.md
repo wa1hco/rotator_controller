@@ -219,6 +219,6 @@ Below POR, and below VBOR0, the pin state is not guaranteed. The pulldowns defin
 
 ## Open questions
 
-1. VIN_RECT divider ratio, clamp, and comparator input pin. Not drawn here.
+1. VIN_RECT divider ratio, clamp, and comparator input pin. Now drawn on `analog_input`: 39.0 kΩ over 1.00 kΩ, 1%, no capacitor, BAT54 clamps, into PA1 (COMP1_INP) against internal 1/4 VREFINT. Typical trip about 12.1 V, about 10.3 V to 13.2 V across DS12589 Table 20, the 24–26% divider, ES0431 §2.6.1 (−20 mV to +3 mV), and the 1% resistors. The passives are LCSC TBD.
 2. Whether a later change restores PB8 boot for field update. This record leaves it off.
 3. K1's 5 A inductive rating against about 7.3 A of motor-plus-brake overlap, and TR1 saturation. Unchanged from ADR 0020.

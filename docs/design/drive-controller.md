@@ -1,6 +1,6 @@
 # Drive controller
 
-Design note, 2026-10-17, with the startup and brownout section added 2026-10-18. The decision records are [ADR 0020](../decisions/0020-drive-controller.md), status Accepted, and [ADR 0021](../decisions/0021-drive-startup-brownout.md), status Accepted. The 2026-10-18 schematic edit follows ADR 0021. Firmware is unchanged.
+Design note, 2026-10-17, with the startup and brownout section added 2026-10-18. The decision records are [ADR 0020](../decisions/0020-drive-controller.md), status Accepted, and [ADR 0021](../decisions/0021-drive-startup-brownout.md), status Accepted. The 2026-10-18 schematic edit follows ADR 0021. The Drive sheets (`drive_mcu`, `analog_input`) and the pin table below were added after that. Firmware is unchanged.
 
 The board gains a second MCU, the Drive. It is the virtual rotator: a short command interface, every deadline, and the same behavior when the STM32F407 is off, busy, or in the middle of an update. The F407 becomes the Station. It keeps the web UI, USB, Ethernet, GS-232, Hamlib, Easycom, the operator preset catalog, logging, parking schedules, multi-rotator, and firmware updates for both chips.
 
@@ -571,7 +571,54 @@ Assumption: the first board pins both axes. Elevation power parts can stay off t
 
 Without the optional limit inputs that is about 30 signals plus the SWD header. The 64-pin part lists 52 I/O. The 48-pin part lists 38, which covers the cut above and leaves little spare. SWD uses two of those I/O.
 
-The pot wiper is rotor return (ADR 0018). The Drive measures the two ends. The 60 Hz notch and the FIR described in the system overview run on the Drive. The firmware in the tree today implements the ideal end-voltage ratio only; the notch and the FIR are not written yet.
+The pot wiper is rotor return (ADR 0018). The Drive measures the two ends. The 60 Hz notch and the FIR described in the system overview run on the Drive. The firmware in the tree today implements the ideal end-voltage ratio only; the notch and the FIR are not written yet, and the notch is not drawn on `analog_input`.
+
+### Pin assignment
+
+Drawn on `hardware/controller-f407/drive_mcu.kicad_sch`. Package is LQFP-64. Pin numbers are DS12589 Table 12. Gate pins are high-Z at reset (DS12589 §3.11.5, RM0440 §9.4.1) and the pulldowns already on `rotor_drive` hold them down. This sheet does not add a second pulldown.
+
+These pins are not gates: PA13, PA14, PA15, PB3, PB4 (debug), PG10 (NRST), PB8 (BOOT0, spare while nSWBOOT0 = 0), and every pin AN2606 Table 115 drives or pulls. That includes PA6 and PB14, which the ROM bootloader drives to 3.3 V. Those pins are no-connects on this sheet. PB3 is SWO on the debug header, not a gate.
+
+| Signal | Pin | Use |
+| --- | --- | --- |
+| `AZ_CW_EN` | PC6, pin 38 | CW gate. High-Z at reset. |
+| `AZ_CCW_EN` | PC7, pin 39 | CCW gate. |
+| `AZ_BRAKE_EN` | PC12, pin 54 | Brake gate. High releases the wedge. |
+| `ARM_EN` | PD2, pin 55 | K1 gate. Low or high-Z leaves the relay open. |
+| `ZC_SENSE` | PB5, pin 58 | Zero-cross input. |
+| `AZ_CW_SNS` | PC13, pin 2 | Stuck-on sense, CW. |
+| `AZ_CCW_SNS` | PC14, pin 3 | Stuck-on sense, CCW. |
+| `AZ_BRAKE_SNS` | PC15, pin 4 | Stuck-on sense, brake. |
+| `AZ_A_ADC` | PC0, pin 8, ADC12_IN6 | Azimuth pot end A. |
+| `AZ_B_ADC` | PC1, pin 9, ADC12_IN7 | Azimuth pot end B. |
+| `EL_A_ADC` | PC2, pin 10, ADC12_IN8 | Elevation pot end A. |
+| `EL_B_ADC` | PC3, pin 11, ADC12_IN9 | Elevation pot end B. |
+| `I_SENSE` | PA0, pin 12, ADC12_IN1 | TR1, after the conditioning on `rotor_drive`. |
+| `VIN_WARN` | PA1, pin 13, COMP1_INP | AC-loss comparator. COMP1_INM is the internal 1/4 VREFINT, not a second pin. |
+| Station TX | PB10, pin 30, USART3_TX AF7 | 3.3 V UART. Not the Table 115 USART3 pair (PC10/PC11). |
+| Station RX | PB11, pin 33, USART3_RX AF7 | 3.3 V UART. |
+| SWDIO | PA13, pin 49 | Cortex header J10. |
+| SWCLK | PA14, pin 50 | Cortex header J10. |
+| SWO | PB3, pin 56 | Cortex header J10. Not a gate. |
+| NRST | PG10, pin 7 | J10 pin 10, with C108. No BOOT0 pin on the header. |
+
+Clock is the internal HSI16. DS12589 Table 42 is ±1% from 0 to 85 °C, which is enough for this UART. There is no HSE and no LSE. The Drive has no USB, and the RTC is unused, so ES0431 §2.2.3 does not apply to the IWDG's LSI. A later RTC follows ADR 0021: LSE or HSE/32, LSECSSON clear. No crystal is on the sheet, and no crystal C-number is invented here.
+
+`J10` is a Cortex 2×5 1.27 mm header (pins 1 VTREF, 2 SWDIO, 3 GND, 4 SWCLK, 5 GND, 6 SWO, 7 key, 8 no-connect, 9 GND, 10 nRESET). `J11` is a 4-pin 3.3 V UART (1 ground, 2 +3V3, 3 TX from PB10, 4 RX to PB11). ADR 0020 shares rotor-return ground, so this revision has no isolator. The connector, and any later isolator, are TBD. Both headers are through-hole and come from Mouser; the Mouser numbers are TBD.
+
+VBAT (pin 1) is tied to VDD. VDD is pins 16, 32, 48, and 64, each with 100 nF (C100–C103) and a shared 4.7 µF (C104). VSS is pins 15, 31, 47, and 63. VSSA is pin 27. VDDA is pin 29 and VREF+ is pin 28. On LQFP-64 those two are separate pins. R100 (10 Ω) feeds both from digital +3V3, with C106 (100 nF) and C107 (1 µF) to ground. That filter is the ADC reference, not a safety timer. VREFBUF versus this filtered 3.3 V is still open (section 8). The sheet uses the filtered 3.3 V. PF0 and PF1 are no-connects. Every new passive on this sheet is LCSC TBD. The MCU is LCSC C431633.
+
+### Analog front end
+
+Drawn on `hardware/controller-f407/analog_input.kicad_sch`. The pot path is a measurement. The RC there is an anti-alias filter, not a safety timer. The VIN_RECT path has no capacitor and no gate logic.
+
+Each pot end is 330 Ω from +3V3, then 1 kΩ, then a BAT54 to +3V3 and a BAT54 to ground, then 10 kΩ and 100 nF. That is about 159 Hz. Azimuth ends are `AZ_POT_3` and `AZ_POT_7`. Their SMAJ90CA clamps (D6, D7) stay on `rotor_drive`. The wiper is `ROTOR_RETURN`. Elevation is the same circuit on `J20` (pin 1 wiper, pin 2 end A, pin 3 end B), with D260 and D261, SMAJ90CA, LCSC C5353147, the same part as D6 and D7. `J20` is through-hole, Mouser TBD. The 330 Ω, 1 kΩ, 10 kΩ, 100 nF, and BAT54 parts are LCSC TBD.
+
+TR1 and its bias and clamps stay on `rotor_drive`. `I_SENSE` is brought across this sheet to `I_ADC` on a wire, with no second copy of that circuit. Moving the conditioning needs the owner's approval.
+
+`VIN_WARN` is 39.0 kΩ over 1.00 kΩ, both 1%, from `VIN_RECT` to ground, clamped by BAT54 to +3V3 and to ground, into PA1. There is no capacitor. The comparator's other input is internal 1/4 VREFINT (DS12589 Table 20: VREFINT 1.182 / 1.212 / 1.232 V; the 1/4 divider is 24–26%). Typical trip is about 12.1 V at the rectifier. Across that table, the 1/4 range, the ES0431 §2.6.1 offset (−20 mV to +3 mV), and the 1% resistors, the trip is about 10.3 V to 13.2 V. That is below the 18 V brake-sag floor and above the buck's 6 V floor. At 48 V the pin is about 1.2 V. The two resistors and the two BAT54s are LCSC TBD.
+
+The ADC reference on this board is the filtered 3.3 V on VREF+, described with the MCU. It is not VREFBUF.
 
 Sensor kinds to pin now, from ADR 0008: dual-end pot, single-ended pot with an excitation GPIO, pulse or reed, and quadrature. The connector positions for the kinds the first cable does not use are TBD (section 8).
 
@@ -596,12 +643,12 @@ The citations are ADR 0021. This is the sequence the sheet and the firmware foll
 3. Option bytes load. The accepted word is 0xFBEEFCAA, from production 0xFFEFF8AA with IWDG_SW = 0, nSWBOOT0 = 0, and BOR_LEV = 100. nBOOT0 stays 1, so main flash is selected (RM0440 Table 5). The hardware IWDG is already counting. At the power-on reload (PR = /4, RL = 0xFFF) the timeout is 512 ms at 32 kHz, about 482 ms at 34 kHz, and about 555 ms at 29.5 kHz (DS12589 Tables 44 and 79).
 4. Firmware pets the IWDG, writes PR = /4 and RL = 799, and pets again. The running timeout is (800 × 4) / fLSI: 100 ms at 32 kHz, about 94 ms at 34 kHz, about 109 ms at 29.5 kHz. It dummy-reads SRAM before the first write (ES0431 §2.2.7). It checks FLASH_OPTR and, on a mismatch, sets `OPTION_BYTES` and never enables an output.
 5. `ARM_EN` is Q1's gate. Low or high-Z leaves K1 open. Firmware raises it only after the option-byte check passes.
-6. A falling VIN_RECT, divided and clamped into a comparator, interrupts while the core is still up. Firmware drives CW and CCW low, the brake gate low, and `ARM_EN` low. The PVD watches VDD. VPVD6 falling (min 2.84 V) overlaps VBOR4 falling (max 2.86 V), so the VIN_RECT warning is the comparator. The divider is not on the sheet.
+6. A falling VIN_RECT, divided and clamped into a comparator, interrupts while the core is still up. Firmware drives CW and CCW low, the brake gate low, and `ARM_EN` low. The PVD watches VDD. VPVD6 falling (min 2.84 V) overlaps VBOR4 falling (max 2.86 V), so the VIN_RECT warning is the comparator. The divider is on `analog_input`: 39.0 kΩ over 1.00 kΩ, no capacitor, into PA1, compared with internal 1/4 VREFINT. Typical trip is about 12.1 V.
 7. An IWDG timeout returns the pins to analog. The pulldowns turn the triacs off, engage the brake, and open K1. That is how a stuck Drive is handled.
 
 Gate pins, when assigned, avoid the reset-time debug pins (PA13, PA14, PA15, PB3, PB4), PG10-NRST, PB8, and every pin AN2606 Table 115 configures. That table drives PA6 and PB14 to 3.3 V during system-memory boot, and it pulls several USART and I2C pins up. nSWBOOT0 = 0 keeps a floating PB8 from entering that boot.
 
-The RTC is clocked from LSE or HSE/32, and LSECSSON stays clear, so ES0431 §2.2.3 does not move the IWDG's LSI. Arming state stays out of the backup domain (ES0431 §2.2.6).
+The sheet clocks the core from HSI16 and leaves the RTC unused, so ES0431 §2.2.3 does not move the IWDG's LSI. A later RTC is LSE or HSE/32 with LSECSSON clear, which is the ADR 0021 workaround. Arming state stays out of the backup domain (ES0431 §2.2.6).
 
 ### Programming and update
 
@@ -706,13 +753,13 @@ Settled, and removed from this list: the names Drive and Station; AC axes on or 
 3. Dead-time floor of 500 ms, brake released through the reversal, and brake-release and brake-engage times (values TBD).
 4. Drive independent-watchdog period. ADR 0021 sets PR = /4 and RL = 799, about 94 to 109 ms across the LSI range in DS12589 Table 44. The power-on reload stays 0xFFF, about 0.5 s, until firmware writes 799. That watchdog is the stuck-Drive response.
 5. K1 rating. The relay stays. The G5LE-1A4 5 A inductive rating against about 7.3 A motor-plus-brake overlap is still open, as in DESIGN-NOTES.
-6. Pot reference: the G4 VREFBUF (2.048 V, 2.5 V, or 2.95 V), or the separate filtered 3.3 V ADR 0018 left TBD.
+6. Pot reference: the G4 VREFBUF (2.048 V, 2.5 V, or 2.95 V), or the separate filtered 3.3 V ADR 0018 left TBD. `drive_mcu` uses the filtered 3.3 V (R100, C106, C107) until that choice is closed.
 7. Which sense interfaces get connector pins on the first board, beyond the dual-end pot.
 8. Front-panel CW and CCW, if the headless panel of ADR 0006 is fitted: Drive inputs, so they become jog events while the Station is busy. A front-panel STOP, if fitted, is a Station input and sends the Drive protocol STOP. The Drive has no STOP pin.
 9. Field update. ADR 0021 sets nSWBOOT0 = 0. Field update is a command the running Drive accepts, or SWD. Still open: the `ENTER_BOOTLOADER` magic, and whether a later change restores pin boot. The bootloader pin list in AN2606 Table 115 stays forbidden for gates either way.
 10. The CCW hold network is gone, along with U2 and the direction gates, and this edit removes the remaining AND gates U3, U6, U9, and U10. A repair of the discrete hold would be a different change.
 11. D2, the SMAJ90CA, pending the owner's push. Section 6 still records the discrepancy already in this tree: DESIGN-NOTES says `AC_BUS`; the 2026-10-17 netlist has pin 2 on `AC_FUSED`. The local schematic, not yet pushed, places D2 after the fuse and before the relay. This tree is not edited to match until that push.
-12. TR1, the ZMCT103C, stays. Still open: the 5 A rating versus about 7.3 A motor-plus-brake, and saturation.
+12. TR1, the ZMCT103C, stays on `rotor_drive`, including its bias and clamps. `analog_input` only carries `I_SENSE` to the ADC. Moving that conditioning needs approval. Still open: the 5 A rating versus about 7.3 A motor-plus-brake, and saturation.
 13. Heading unit of 0.01° and speed in permille.
 14. Drive flash stores park, limits, calibration, ramps, and deadlines. The preset catalog and the parking schedules stay on the Station.
 15. Duty-cycle rest (the CDE 10% and Yaesu three-minute notes in the system overview). This machine enforces max run as `RUN_TIMEOUT` and leaves a minimum off time out until a preset needs it.
