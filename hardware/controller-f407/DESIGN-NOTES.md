@@ -78,25 +78,19 @@ Snubber 68 Ω in series with 0.1 µF, across MT2-MT1. Time constant `68 × 0.1 �
 
 ## Hardware interlock
 
-All of this is 3.3 V logic. The only residual gate on this sheet is `ARM_OK` (ADR 0020). Direction exclusion and the dead time of at least 500 ms are the Drive's job. This sheet does not implement them.
+All of this is 3.3 V logic. There is no AND gate and no supervisor on this sheet. Direction exclusion and the dead time of at least 500 ms are the Drive's job (ADR 0020). Startup, brownout, and the option bytes are ADR 0021 (Accepted). The voltages and the register values are cited there. Before and after plots of the supervisor removal are `docs/design/img/rotor-drive-supervisor-before.png` and `docs/design/img/rotor-drive-supervisor-after.png`.
 
-`ARM_OK = ARM_EN AND nRESET`
+CW follows `AZ_CW_EN`. CCW follows `AZ_CCW_EN`. The brake follows `AZ_BRAKE_EN`. Each of those nets is a Drive pin into the gate of Q2, Q3, or Q4, the 2N7002 that switches the MOC3023 LED. The LED current stays on +5 V through 180 Ω. The Drive pin drives the FET gate, about 33 µA into the 100 kΩ pulldown at 3.3 V.
 
-`CW_GATE = AZ_CW_EN AND ARM_OK`
+`R2G`, `R3G`, and `R4G` are 100 kΩ from those gates to `GNDPWR`. `R50`, `R51`, and `R52` are another 100 kΩ on `AZ_CW_EN`, `AZ_CCW_EN`, and `AZ_BRAKE_EN`. A high-Z pin, which is how a non-debug GPIO comes out of reset, leaves the opto FET off.
 
-`CCW_GATE = AZ_CCW_EN AND ARM_OK`
+The relay FET follows `ARM_EN`. `R53` and `R40` both pulldown that net, 100 kΩ to `GNDPWR`. Low or high-Z leaves Q1 off, so K1 stays open and the brake stays engaged.
 
-`BRK_GATE = AZ_BRAKE_EN AND ARM_OK`
-
-`U3` is `ARM_EN AND nRESET`. `U6` is `AZ_CW_EN AND ARM_OK`. `U9` is `AZ_CCW_EN AND ARM_OK`. `U10` is `AZ_BRAKE_EN AND ARM_OK`. The parts are Nexperia 74LVC1G08GW,125, LCSC C12512, four of them. Each has 100 nF: `C3` on `U3`, `C10` on `U6`, `C6` on `U9`, `C9` on `U10`.
-
-A low `ARM_OK` forces `CW_GATE`, `CCW_GATE`, and `BRK_GATE` off, and it turns off the relay FET. `R2G`, `R3G`, and `R4G` are 100 kΩ from those gates to `GNDPWR`, so an open gate output leaves the opto FETs off. `AZ_CW_EN`, `AZ_CCW_EN`, `AZ_BRAKE_EN`, and `ARM_EN` each have a 100 kΩ pulldown, so an unprogrammed or high-Z pin leaves the gates off.
-
-The 74LVC14 (`U2`), the direction AND gates, and the hold network (BAT54, 1 µF, 100 kΩ, `HOLD_CW` / `HOLD_CCW`) are not on this sheet. The Drive keeps both direction outputs off for at least 500 ms before a reversal.
+The 74LVC14, the direction AND gates, the hold network, the ARM_OK AND gates (U3, U6, U9, U10 and C3, C6, C9, C10), and the TPS3823 clamp (U1, C21, R41, R42, Q8, Q9, R54, R55, R56) are not on this sheet. The Drive keeps both direction outputs off for at least 500 ms before a reversal.
 
 ### Brake defaults to engaged
 
-`AZ_BRAKE_EN` high means release. `BRK_GATE` is that signal AND `ARM_OK`. Watchdog timeout, brownout, or `STOP_N` drops `nRESET`, which drops `ARM_OK`, which drops the brake gate. The solenoid opens and the wedge engages. The brake does not need a separate "fail safe" triac state.
+`AZ_BRAKE_EN` high means release. Low, or a high-Z pin with `R4G` and `R52`, leaves the solenoid open and the wedge engaged. A hardware IWDG reset returns the pin to analog and the pulldown re-engages the wedge. STOP is a software command from the Station. While the core is running it drops this gate. A stuck core is the hardware IWDG.
 
 ## ARM relay
 
@@ -113,17 +107,23 @@ Coil off, the rotator is dark. A swapped NO/NC would run the motor whenever the 
 
 Datasheet ratings used here, from the Omron G5LE sheet: standard type, 10 A at 120 VAC general purpose, 5 A at 120 VAC inductive (cos φ = 0.4). Coil 5 V, 62.5 Ω, 80 mA, 400 mW. Height 19 mm, under the 22.9 mm limit. Simultaneous motor plus brake is about 7.3 A intermittent, which is over the 5 A inductive rating. The high-capacity G5LE-1A-E (16 A NO) is the part to look at if that overlap is real. The accepted design note specified G5LE-1A4-DC5, so this sheet does not silently change it. Mouser `653-G5LE-1A4-DC5` was seen on distributor listings, not confirmed on a live Mouser page.
 
-The coil transistor is an AO3400A (LCSC C20917, AOS, SOT-23, about 5.7 A, 48 mΩ at 2.5 V). The symbol is the 2N7002 drawing because the pinout is the same G-S-D. A 2N7002 at 3.3 V gate is a poor switch for 80 mA. The 2N7002s on the sheet (`Q2` `Q3` `Q4`, LCSC C8545, JSCJ) only switch the 10 mA opto LEDs. Flyback is a 1N4148W across the coil, cathode at +5 V. Gate pulldown 100 kΩ.
+The coil transistor is an AO3400A (LCSC C20917, AOS, SOT-23, about 5.7 A, 48 mΩ at 2.5 V). The symbol is the 2N7002 drawing because the pinout is the same G-S-D. A 2N7002 at 3.3 V gate is a poor switch for 80 mA. `Q2`, `Q3`, and `Q4` (LCSC C8545, JSCJ) only switch the opto LEDs. Flyback is a 1N4148W across the coil, cathode at +5 V. Gate pulldown 100 kΩ on `ARM_EN` (R40 and R53).
 
-## Supervisor
+## Outputs against the supply
 
-`U1` is a TPS3823-33DBVR, LCSC C7719, SOT-23-5. Pinout from TI SLVS165O, DBV top view: 1 `/RESET`, 2 GND, 3 `/MR`, 4 WDI, 5 VDD. `/RESET` is push-pull and active low. `nRESET` on this sheet is that pin, high when the supply and the watchdog are both all right.
+The cited thresholds are in ADR 0021. On this sheet the behavior is:
 
-`/MR` has an internal pull-up around 90 kΩ. `R42` is another 100 kΩ to 3.3 V, and `STOP_N` is active low into `/MR`. Either one drops the reset.
+| Supply | Triac gates (Q2 Q3 Q4) | Relay (Q1) | Brake wedge | K1 contact |
+| --- | --- | --- | --- | --- |
+| VDD below POR / VBOR0, pin high-Z, +5 V may still be up. Pin state is not guaranteed. | Pulldown holds the 2N7002 off. VGS(th) minimum is 1 V. | R40 and R53 hold Q1 off while `ARM_EN` is high-Z. Q1's VGS(th) minimum is 0.65 V, so a pin that is not high-Z can begin to conduct above that. | Engaged if the brake triac is off. | Open while the gate is high-Z. |
+| Gate net driven high by something other than the MCU (a short, or a bootloader pin). | The 100 kΩ pulldown loses. The triac can fire. | The same short can close K1. | Follows the brake gate. | Can close. |
+| VDD under VBOR4 (about 2.8 V). BOR holds reset. Pins are analog. | Pulldowns hold the FETs off. | Pulldowns hold Q1 off. | Engaged. | Open. |
+| VDD up, core running, option bytes and IWDG not yet checked. | Still the reset pulldowns until firmware drives them. Firmware pets the IWDG inside the power-on window, about 0.5 s, then shortens it to about 100 ms. | Same. | Engaged. | Open until firmware raises `ARM_EN`. |
+| Running, VIN_RECT early warning. | Firmware drives CW and CCW low and the brake gate low. | Firmware drives `ARM_EN` low. | Engaged. | Opens. |
+| IWDG timeout. A stuck Drive. | Pins return to analog. Pulldowns hold the FETs off. | Same. | Engaged. | Open. |
+| STOP command from the Station, core running. | Firmware drives the direction gates low and the brake gate low. | Firmware drives `ARM_EN` low. | Engaged. | Open. |
 
-WDI clears on a falling edge. Timeout is 0.9 to 2.5 s, 1.6 s typical. Firmware must kick faster than 0.9 s. A floating WDI is not a timeout: the datasheet says a floating WDI is pulsed inside the chip so the watchdog does not fire. `R41`, 100 kΩ to `GNDPWR`, is what makes an unconnected MCU pin time out. 100 nF on VDD, as the datasheet note requires.
-
-`ARM_OK` gates the relay FET and all three triac gates. Brownout (the -33 threshold is 2.93 V nominal, 2.86 to 3.00 V), watchdog, or `STOP_N` drops the relay and the gates together.
+A divided VIN_RECT into a Drive comparator is the early warning. It is not drawn on this sheet. The PVD watches the 3.3 V rail. The VIN_RECT warning is the comparator.
 
 ## 26 VAC inlet
 
@@ -181,10 +181,7 @@ Nameplate motor plus brake, about 7.3 A, is past the 5 A rating. If the CT staye
 | `ROTOR_RETURN` | both | Logic ground, tied to `GNDPWR`. CDE terminal 1. Parent-sheet pin. |
 | `AC_HOT` | both | Powerpole hot, before the fuse. |
 | `VIN_RECT` | out | Half-wave raw dc into the power sheet. |
-| `AZ_CW_EN`, `AZ_CCW_EN`, `AZ_BRAKE_EN`, `ARM_EN` | in | MCU requests. Brake high releases. |
-| `WDI_KICK` | in | Falling edge, faster than 0.9 s. |
-| `STOP_N` | in | Active low into `/MR`. |
-| `nRESET` | out | High means the supervisor is happy. |
+| `AZ_CW_EN`, `AZ_CCW_EN`, `AZ_BRAKE_EN`, `ARM_EN` | in | MCU requests. Brake high releases. `ARM_EN` is the relay FET gate. |
 | `ZC_SENSE` | out | High in the zero-cross gap. |
 | `I_SENSE` | out | CT, biased at 1.65 V. |
 | `AZ_CW_SNS`, `AZ_CCW_SNS`, `AZ_BRAKE_SNS` | out | Low while that triac is on. Stuck-on is armed, not gated, and no pulse for 20 ms. |
@@ -201,8 +198,6 @@ LCSC numbers were checked on the product page on 2026-10-12. Stock is not a prom
 | 3 | Q2 Q3 Q4 | JSCJ 2N7002, SOT-23 | C8545 |
 | 1 | Q1 | AOS AO3400A, SOT-23 | C20917 |
 | 3 | U11 U12 U13 | onsemi MOC3023SM | C899792 |
-| 1 | U1 | TI TPS3823-33DBVR | C7719 |
-| 4 | U3 U6 U9 U10 | Nexperia 74LVC1G08GW,125 | C12512 |
 | 4 | U14 U15 U16 U17 | LITEON LTV-814S-TA1 | C125118 |
 | 6 | D2–D7 | FOSAN SMAJ90CA (not Littelfuse) | C5353147 |
 
@@ -219,8 +214,8 @@ No C-number is filled in for these. Do not guess one.
 | 8 | 7.5 kΩ | 1206 | R30 R31 R74 R75 R84 R85 R94 R95 |
 | 3 | 68 Ω | 1206 | R73 R83 R93 |
 | 6 | 10 kΩ | 0603 | R21 R22 R32 R76 R86 R96 |
-| 10 | 100 kΩ | 0603 | R40 R41 R42 R50 R51 R52 R53 R2G R3G R4G |
-| 8 | 100 nF | 0603 | C3 C6 C9 C10 C20 C21 C22 C23 |
+| 8 | 100 kΩ | 0603 | R40 R50 R51 R52 R53 R2G R3G R4G |
+| 3 | 100 nF | 0603 | C20 C22 C23 |
 | 3 | red LED | 0603 | D70 D71 D72 |
 | 2 | BAT54 | SOD-123 | D20 D21 |
 | 1 | 1N4148W | SOD-123 | D8 |
@@ -257,4 +252,5 @@ No C-number is filled in for these. Do not guess one.
 9. G5LE-1A4 inductive rating is 5 A. The overlap is about 7.3 A. G5LE-1A-E is the 16 A alternative. This sheet keeps the part the design note named. Confirm pin 3 is NO on the figure before stuffing.
 10. HDR-300 cable adapter. Elevation is a second copy of this sheet, not drawn.
 11. Chassis RF capacitor and TVS from `GNDPWR` (ADR 0018), and the ADC clamp on the pot, belong on later sheets.
+12. VIN_RECT early-warning divider and the comparator pin. ADR 0021. It is not on this sheet. STOP is a Station command. The Drive has no STOP pin. A stuck Drive is the hardware IWDG. Removing power is the power switch or the AC feed.
 13. Vertical TO-220 footprint versus the bar lead row is a placement note. The footprint itself is the library part, not a custom lead bend.

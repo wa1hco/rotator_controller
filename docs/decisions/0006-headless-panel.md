@@ -3,6 +3,7 @@
 - Status: Accepted
 - Date: 2026-10-11
 - Revised: 2026-10-12. The host interface named below is ADR 0015.
+- Revised: 2026-10-18, with ADR 0021. A front-panel STOP, if this panel is fitted, is a Station input. It sends the Drive protocol STOP. The Drive sheet has no STOP pin. Removing power is the user's power switch or the AC feed.
 
 ## Context
 

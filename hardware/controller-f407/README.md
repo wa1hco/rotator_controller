@@ -10,7 +10,7 @@ The directory is `hardware/controller-f407/` because ADR 0014 names the STM32F40
 | `rotor_drive.kicad_sch` | Azimuth rotor connector, motor caps, triac drive, ARM relay, 26 VAC tap. |
 | `rotor-drive.pdf` | Plot of both sheets, for review away from KiCad. |
 | `DESIGN-NOTES.md` | What each block does, the calculations, the bill of materials, and the open questions. |
-| `symbols/controller-f407.kicad_sym` | TPS3823-33 and the no-pad Powerpole gland marker. |
+| `symbols/controller-f407.kicad_sym` | Unused TPS3823-33 symbol (the supervisor is not on the rotor sheet) and the no-pad Powerpole gland marker. |
 | `footprints/controller-f407.pretty/` | The two motor-cap footprints copied from the Hammond outline, and the gland marker. |
 
 KiCad 9. Nets leave this sheet on hierarchical labels (`AZ_CW_EN`, `AZ_CCW_EN`, `AZ_BRAKE_EN`, `ARM_EN`, `ZC_SENSE`, and the rest listed in the design notes). MCU pin assignment is deferred.

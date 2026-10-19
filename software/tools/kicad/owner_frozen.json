@@ -2,7 +2,7 @@
   "source_commit": "f665ffd9ae2a624626e28e4fee26031c2f50f154",
   "parent_commit": "74417fb",
   "author": "Jeff Millar <wa1hco@gmail.com>",
-  "note": "Fields and labels whose position, text, angle, justification, hide flag, or font size differ from the parent, plus items added in that commit. The tidy tool never moves these. Fourteen more in-page labels and fields from the 2026-10-17 rotor sheet are included so the overlap check reports them as owner leftovers.",
+  "note": "Fields and labels whose position, text, angle, justification, hide flag, or font size differ from the parent, plus items added in that commit. The tidy tool never moves these. Fourteen more in-page labels and fields from the 2026-10-17 rotor sheet are included so the overlap check reports them as owner leftovers. Commit 9421933 placed R4G's Reference on Q4; that field is recorded here and is not moved.",
   "counts": {
     "hardware/controller-f407/controller-f407.kicad_sch": {
       "changed_or_added": 21,
@@ -12,12 +12,12 @@
       }
     },
     "hardware/controller-f407/rotor_drive.kicad_sch": {
-      "changed_or_added": 417,
+      "changed_or_added": 418,
       "kinds": {
         "text": 1,
         "label": 103,
         "hierarchical_label": 69,
-        "property": 244
+        "property": 245
       }
     }
   },
@@ -991,6 +991,11 @@
       "property",
       "65d28fe6-42e9-460c-a1dd-207681139132",
       "Description"
+    ],
+    [
+      "property",
+      "65d28fe6-42e9-460c-a1dd-207681139132",
+      "Reference"
     ],
     [
       "property",

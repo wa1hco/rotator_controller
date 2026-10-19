@@ -21,10 +21,6 @@
 		(uuid "061441cf-d818-4864-9eba-a0a94c5028ca")
 	)
 	(no_connect
-		(at 86.36 101.6)
-		(uuid "0eb3a6be-5fbf-43cd-9784-a52d5cc283da")
-	)
-	(no_connect
 		(at 86.36 147.32)
 		(uuid "330a6ee0-5782-4635-9037-9d56e2b9bca9")
 	)
@@ -47,14 +43,6 @@
 	(no_connect
 		(at 86.36 137.16)
 		(uuid "8626cad9-b01a-4af8-a5da-8b90ecc0a863")
-	)
-	(no_connect
-		(at 86.36 106.68)
-		(uuid "aad7183b-d114-498b-9f84-80f34161839b")
-	)
-	(no_connect
-		(at 86.36 111.76)
-		(uuid "aea938af-40f5-4151-9e36-73d8049e5d29")
 	)
 	(no_connect
 		(at 86.36 157.48)
@@ -208,36 +196,6 @@
 		(pin "ARM_EN" input
 			(at 86.36 116.84 180)
 			(uuid "b346f829-2447-4e58-9491-648d7ee62fb3")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(pin "WDI_KICK" input
-			(at 86.36 111.76 180)
-			(uuid "b90ac14b-d844-41e8-bace-175fb577f0ed")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(pin "STOP_N" input
-			(at 86.36 106.68 180)
-			(uuid "c9989d19-2da5-45e2-942b-f6173f20c6fb")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(pin "nRESET" output
-			(at 86.36 101.6 180)
-			(uuid "bef400ec-69bb-439c-ab17-66187ef45fe6")
 			(effects
 				(font
 					(size 1.27 1.27)

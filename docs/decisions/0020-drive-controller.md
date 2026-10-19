@@ -3,6 +3,8 @@
 - Status: Accepted
 - Date: 2026-10-17
 
+[ADR 0021](0021-drive-startup-brownout.md) (Accepted) removes the residual ARM_OK AND gates, the TPS3823, and the Drive STOP pin, and records startup and brownout. This record stays accepted for the Drive and Station split, the heartbeat, K1, TR1, and the STM32G431RBT6.
+
 ## Context
 
 ADR 0005 puts CW/CCW exclusion and the reversal gap in 74LVC gates and an RC hold, with a longer gap in firmware. Those gates are hard to review for every timing edge, and the STM32F407 is also busy with Ethernet, USB, the web UI, and firmware updates. A deadline that lives in that firmware can slip for reasons that have nothing to do with the motor.
