@@ -584,7 +584,7 @@ These pins are not gates: PA13, PA14, PA15, PB3, PB4 (debug), PG10 (NRST), PB8 (
 | `AZ_CW_EN` | PC6, pin 38 | CW gate. High-Z at reset. |
 | `AZ_CCW_EN` | PC7, pin 39 | CCW gate. |
 | `AZ_BRAKE_EN` | PC12, pin 54 | Brake gate. High releases the wedge. |
-| `ARM_EN` | PD2, pin 55 | K1 gate. Low or high-Z leaves the relay open. |
+| `AMR_EN` | PD2, pin 55 | K1 gate. Low or high-Z leaves the relay open. The owner's sheet spells this net `AMR_EN`. |
 | `ZC_SENSE` | PB5, pin 58 | Zero-cross input. |
 | `AZ_CW_SNS` | PC13, pin 2 | Stuck-on sense, CW. |
 | `AZ_CCW_SNS` | PC14, pin 3 | Stuck-on sense, CCW. |
@@ -667,7 +667,7 @@ The 2026-10-17 netlist, taken before those edits, had an open CCW hold (`/HOLD_C
 Stays:
 
 - MOC3023 optos, triacs, gate resistors, and snubbers (ADR 0004). Q2, Q3, and Q4 still switch the LEDs from +5 V. The Drive pin drives the FET gate.
-- K1, one relay, plus Q1 (AO3400A, LCSC C20917) and the flyback diode. `ARM_EN` drives Q1 through R40 and R53. Coil off, the rotator is dark. K1 stays because it is the only way to end a shorted-triac fault. The G5LE-1A4 5 A inductive rating against about 7.3 A motor-plus-brake overlap stays open.
+- K1, one relay, plus Q1 (AO3400A, LCSC C20917) and the flyback diode. `AMR_EN` drives Q1 through R40. The owner's sheet removes R53, and also R50, R51, and R52. R2G, R3G, and R4G stay on the triac gates. Coil off, the rotator is dark. K1 stays because it is the only way to end a shorted-triac fault. The G5LE-1A4 5 A inductive rating against about 7.3 A motor-plus-brake overlap stays open.
 - U14, U15, and U16 stuck-on sense; U17 zero-cross; TR1, the Zeming ZMCT103C, and the `I_SENSE` bias and clamps. TR1 stays as drawn. Its 5 A rating and saturation stay open.
 - Pot clamps, the SMAJ90CA parts, the fuse, and the MOV.
 - The F407, the ADuM4160, and the MagJack.

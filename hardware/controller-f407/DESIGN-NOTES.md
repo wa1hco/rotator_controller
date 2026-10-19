@@ -2,7 +2,7 @@
 
 Azimuth, AC version. The Drive MCU is `drive_mcu`. The pot front end and the VIN_RECT warning are `analog_input`. The power sheet is still later. Pin assignment is in `docs/design/drive-controller.md`.
 
-Nets on this sheet join by name. A label on a pin is the connection. Hierarchical labels are the ones that leave the sheet. `+5V` is a hierarchical label with a power flag, because that supply is on the power sheet, which is not drawn yet. `+3V3` is a hierarchical label. Its power flag is on this sheet, and the Drive sheets share the net. Logic ground is the `GNDPWR` power symbol, and it is flagged too. On the root, `+5V` and `AC_HOT` stay no-connects until the power sheet exists. The other rotor pins are wired to `drive_mcu` and `analog_input`.
+Nets on this sheet join by name. A label on a pin is the connection. Hierarchical labels are the ones that leave the sheet. `+5V` is a hierarchical label with a power flag, because that supply is on the power sheet, which is not drawn yet. `+3V3` is a hierarchical label. Its power flag is on this sheet, and the Drive sheets share the net. Logic ground is the `GNDPWR` power symbol, and it is flagged too. On the root, `+5V` and `AC_FUSED` stay no-connects until the power sheet exists. The other rotor pins are wired to `drive_mcu` and `analog_input`.
 
 Logic ground is `ROTOR_RETURN`, and that hierarchical label is tied to the `GNDPWR` power symbol, so they are one net. CDE terminal 1 lands on it (ADR 0018). Do not put a current shunt in it. The pot measurement uses it as the ADC reference. The parent-sheet pin `ROTOR_RETURN` is that same net, and the root carries it to the Drive sheets.
 
@@ -84,7 +84,7 @@ CW follows `AZ_CW_EN`. CCW follows `AZ_CCW_EN`. The brake follows `AZ_BRAKE_EN`.
 
 `R2G`, `R3G`, and `R4G` are 100 kΩ from those gates to `GNDPWR`. `R50`, `R51`, and `R52` are another 100 kΩ on `AZ_CW_EN`, `AZ_CCW_EN`, and `AZ_BRAKE_EN`. A high-Z pin, which is how a non-debug GPIO comes out of reset, leaves the opto FET off.
 
-The relay FET follows `ARM_EN`. `R53` and `R40` both pulldown that net, 100 kΩ to `GNDPWR`. Low or high-Z leaves Q1 off, so K1 stays open and the brake stays engaged.
+The relay FET follows `AMR_EN`. `R40` pulldowns that net, 100 kΩ to `GNDPWR`. `R53` is not on the sheet. Low or high-Z leaves Q1 off, so K1 stays open and the brake stays engaged.
 
 The 74LVC14, the direction AND gates, the hold network, the ARM_OK AND gates (U3, U6, U9, U10 and C3, C6, C9, C10), and the TPS3823 clamp (U1, C21, R41, R42, Q8, Q9, R54, R55, R56) are not on this sheet. The Drive keeps both direction outputs off for at least 500 ms before a reversal.
 
@@ -107,7 +107,7 @@ Coil off, the rotator is dark. A swapped NO/NC would run the motor whenever the 
 
 Datasheet ratings used here, from the Omron G5LE sheet: standard type, 10 A at 120 VAC general purpose, 5 A at 120 VAC inductive (cos φ = 0.4). Coil 5 V, 62.5 Ω, 80 mA, 400 mW. Height 19 mm, under the 22.9 mm limit. Simultaneous motor plus brake is about 7.3 A intermittent, which is over the 5 A inductive rating. The high-capacity G5LE-1A-E (16 A NO) is the part to look at if that overlap is real. The accepted design note specified G5LE-1A4-DC5, so this sheet does not silently change it. Mouser `653-G5LE-1A4-DC5` was seen on distributor listings, not confirmed on a live Mouser page.
 
-The coil transistor is an AO3400A (LCSC C20917, AOS, SOT-23, about 5.7 A, 48 mΩ at 2.5 V). The symbol is the 2N7002 drawing because the pinout is the same G-S-D. A 2N7002 at 3.3 V gate is a poor switch for 80 mA. `Q2`, `Q3`, and `Q4` (LCSC C8545, JSCJ) only switch the opto LEDs. Flyback is a 1N4148W across the coil, cathode at +5 V. Gate pulldown 100 kΩ on `ARM_EN` (R40 and R53).
+The coil transistor is an AO3400A (LCSC C20917, AOS, SOT-23, about 5.7 A, 48 mΩ at 2.5 V). The symbol is the 2N7002 drawing because the pinout is the same G-S-D. A 2N7002 at 3.3 V gate is a poor switch for 80 mA. `Q2`, `Q3`, and `Q4` (LCSC C8545, JSCJ) only switch the opto LEDs. Flyback is a 1N4148W across the coil, cathode at +5 V. Gate pulldown 100 kΩ on `AMR_EN` (R40).
 
 ## Outputs against the supply
 
@@ -115,13 +115,13 @@ The cited thresholds are in ADR 0021. On this sheet the behavior is:
 
 | Supply | Triac gates (Q2 Q3 Q4) | Relay (Q1) | Brake wedge | K1 contact |
 | --- | --- | --- | --- | --- |
-| VDD below POR / VBOR0, pin high-Z, +5 V may still be up. Pin state is not guaranteed. | Pulldown holds the 2N7002 off. VGS(th) minimum is 1 V. | R40 and R53 hold Q1 off while `ARM_EN` is high-Z. Q1's VGS(th) minimum is 0.65 V, so a pin that is not high-Z can begin to conduct above that. | Engaged if the brake triac is off. | Open while the gate is high-Z. |
+| VDD below POR / VBOR0, pin high-Z, +5 V may still be up. Pin state is not guaranteed. | Pulldown holds the 2N7002 off. VGS(th) minimum is 1 V. | R40 holds Q1 off while `AMR_EN` is high-Z. Q1's VGS(th) minimum is 0.65 V, so a pin that is not high-Z can begin to conduct above that. | Engaged if the brake triac is off. | Open while the gate is high-Z. |
 | Gate net driven high by something other than the MCU (a short, or a bootloader pin). | The 100 kΩ pulldown loses. The triac can fire. | The same short can close K1. | Follows the brake gate. | Can close. |
 | VDD under VBOR4 (about 2.8 V). BOR holds reset. Pins are analog. | Pulldowns hold the FETs off. | Pulldowns hold Q1 off. | Engaged. | Open. |
-| VDD up, core running, option bytes and IWDG not yet checked. | Still the reset pulldowns until firmware drives them. Firmware pets the IWDG inside the power-on window, about 0.5 s, then shortens it to about 100 ms. | Same. | Engaged. | Open until firmware raises `ARM_EN`. |
-| Running, VIN_RECT early warning. | Firmware drives CW and CCW low and the brake gate low. | Firmware drives `ARM_EN` low. | Engaged. | Opens. |
+| VDD up, core running, option bytes and IWDG not yet checked. | Still the reset pulldowns until firmware drives them. Firmware pets the IWDG inside the power-on window, about 0.5 s, then shortens it to about 100 ms. | Same. | Engaged. | Open until firmware raises `AMR_EN`. |
+| Running, VIN_RECT early warning. | Firmware drives CW and CCW low and the brake gate low. | Firmware drives `AMR_EN` low. | Engaged. | Opens. |
 | IWDG timeout. A stuck Drive. | Pins return to analog. Pulldowns hold the FETs off. | Same. | Engaged. | Open. |
-| STOP command from the Station, core running. | Firmware drives the direction gates low and the brake gate low. | Firmware drives `ARM_EN` low. | Engaged. | Open. |
+| STOP command from the Station, core running. | Firmware drives the direction gates low and the brake gate low. | Firmware drives `AMR_EN` low. | Engaged. | Open. |
 
 A divided VIN_RECT into a Drive comparator is the early warning. It is not drawn on this sheet. The PVD watches the 3.3 V rail. The VIN_RECT warning is the comparator.
 
@@ -181,7 +181,7 @@ Nameplate motor plus brake, about 7.3 A, is past the 5 A rating. If the CT staye
 | `ROTOR_RETURN` | both | Logic ground, tied to `GNDPWR`. CDE terminal 1. Parent-sheet pin. |
 | `AC_HOT` | both | Powerpole hot, before the fuse. |
 | `VIN_RECT` | out | Half-wave raw dc into the power sheet. |
-| `AZ_CW_EN`, `AZ_CCW_EN`, `AZ_BRAKE_EN`, `ARM_EN` | in | MCU requests. Brake high releases. `ARM_EN` is the relay FET gate. |
+| `AZ_CW_EN`, `AZ_CCW_EN`, `AZ_BRAKE_EN`, `AMR_EN` | in | MCU requests. Brake high releases. `AMR_EN` is the relay FET gate (the owner's label spelling). |
 | `ZC_SENSE` | out | High in the zero-cross gap. |
 | `I_SENSE` | out | CT, biased at 1.65 V. |
 | `AZ_CW_SNS`, `AZ_CCW_SNS`, `AZ_BRAKE_SNS` | out | Low while that triac is on. Stuck-on is armed, not gated, and no pulse for 20 ms. |

@@ -5,7 +5,7 @@
 	(uuid "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d")
 	(paper "A3")
 	(lib_symbols)
-	(text "Rotator controller\nRoot sheet. rotor_drive is the triac page. drive_mcu is the Drive.\nanalog_input is the pot front end and the VIN_RECT warning.\nThe power sheet is not drawn. +5V and AC_HOT stay no-connects for that.\n+3V3 and ROTOR_RETURN join the sheets that use them.\nDo not copy hardware/controller/ (imported V4). It stays as reference."
+	(text "Rotator controller\nRoot sheet. rotor_drive is the triac page. drive_mcu is the Drive.\nanalog_input is the pot front end and the VIN_RECT warning.\nThe power sheet is not drawn. +5V and AC_FUSED stay no-connects for that.\n+3V3 and ROTOR_RETURN join the sheets that use them.\nDo not copy hardware/controller/ (imported V4). It stays as reference."
 		(exclude_from_sim no)
 		(at 140 250 0)
 		(effects
@@ -87,7 +87,7 @@
 				(justify right)
 			)
 		)
-		(pin "AC_HOT" bidirectional
+		(pin "AC_FUSED" bidirectional
 			(at 86.36 142.24 180)
 			(uuid "4577a765-ab97-4b8f-83db-a32e5c735248")
 			(effects
@@ -137,7 +137,7 @@
 				(justify right)
 			)
 		)
-		(pin "ARM_EN" input
+		(pin "AMR_EN" input
 			(at 86.36 116.84 180)
 			(uuid "b346f829-2447-4e58-9491-648d7ee62fb3")
 			(effects
@@ -262,7 +262,7 @@
 			(effects (font (size 1.27 1.27)) (justify right))
 		)
 
-		(pin "ARM_EN" output
+		(pin "AMR_EN" output
 			(at 248.92 44.45 180)
 			(uuid "46025289-c9ae-4268-a183-8bdc00e06c06")
 			(effects (font (size 1.27 1.27)) (justify right))
@@ -452,7 +452,7 @@
 	)
 	(wire (pts (xy 55.88 121.92) (xy 86.36 121.92))
 		(stroke (width 0) (type default)) (uuid "86945e54-1c77-4fd6-ad09-20f467a9a852"))
-	(label "ARM_EN" (at 55.88 116.84 180)
+	(label "AMR_EN" (at 55.88 116.84 180)
 		(effects (font (size 1.27 1.27)) (justify right))
 		(uuid "11e6b247-06db-48f0-bb29-d3971f54a977")
 	)
@@ -530,7 +530,7 @@
 	)
 	(wire (pts (xy 218.44 39.37) (xy 248.92 39.37))
 		(stroke (width 0) (type default)) (uuid "86c1b2e4-a842-4c86-8479-d6b8376c6b91"))
-	(label "ARM_EN" (at 218.44 44.45 180)
+	(label "AMR_EN" (at 218.44 44.45 180)
 		(effects (font (size 1.27 1.27)) (justify right))
 		(uuid "7a56d006-bb18-4264-a76f-da4899fedc03")
 	)
