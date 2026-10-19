@@ -133,4 +133,6 @@ jobs:
         run: |
           python3 software/tools/kicad/tidy_schematic.py --check \
             hardware/controller-f407/controller-f407.kicad_sch \
-            hardware/controller-f407/rotor_drive.kicad_sch
+            hardware/controller-f407/rotor_drive.kicad_sch \
+            hardware/controller-f407/drive_mcu.kicad_sch \
+            hardware/controller-f407/analog_input.kicad_sch

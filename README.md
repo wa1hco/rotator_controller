@@ -16,6 +16,7 @@ not drawn into the board yet.
 | Path | What it is |
 |---|---|
 | [hardware/controller/](hardware/controller/README.md) | V4 KiCad 9 project and the project-local libraries it uses |
+| [hardware/controller-f407/](hardware/controller-f407/README.md) | New schematic: rotor drive, Drive MCU, and the analog front end |
 | [hardware/controller/mechanical/](hardware/controller/mechanical/README.md) | Hammond 1455N1601 outline; machining drawings generated from the layout |
 | [software/firmware/](software/firmware/README.md) | C++17 core, host CMake build, unit tests. Board target STM32F407VGT6; the core stays processor-agnostic |
 | [software/sim/](software/sim/README.md) | Physics simulator, GS-232 harness, browser compass |
@@ -25,7 +26,8 @@ not drawn into the board yet.
 
 ## Status
 
-- The KiCad project opens in KiCad 9. It is the CPC1966 V4 board.
+- The new schematic is [hardware/controller-f407/](hardware/controller-f407/README.md): the triac page, the Drive MCU, and the analog front end. The pin list is in [docs/design/drive-controller.md](docs/design/drive-controller.md).
+- The V4 KiCad project opens in KiCad 9. It is the CPC1966 board.
   ERC reports many known violations (unconnected MCU pins and similar).
   CI uploads ERC and DRC reports and does not fail the build on them.
 - Laptop-only edits (the triac swap and annotated design notes) are not

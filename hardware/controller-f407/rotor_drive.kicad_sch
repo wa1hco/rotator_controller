@@ -6884,16 +6884,6 @@
 	)
 	(wire
 		(pts
-			(xy 224.79 92.71) (xy 224.79 91.44)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c5666804-08c9-4307-b0dd-65f1ae5a62a2")
-	)
-	(wire
-		(pts
 			(xy 252.73 194.31) (xy 252.73 196.85)
 		)
 		(stroke
@@ -7702,7 +7692,7 @@
 		)
 		(uuid "61610a2e-68c1-4177-b51e-4287f69b2d74")
 	)
-	(hierarchical_label "AMR_EN"
+	(hierarchical_label "ARM_EN"
 		(shape input)
 		(at 224.79 92.71 180)
 		(effects

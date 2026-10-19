@@ -1,31 +1,27 @@
 {
-  "source_commit": "f665ffd9ae2a624626e28e4fee26031c2f50f154",
-  "parent_commit": "74417fb",
+  "source_commit": "57d43f9",
+  "parent_commit": "84e08ee",
   "author": "Jeff Millar <wa1hco@gmail.com>",
-  "note": "Fields and labels whose position, text, angle, justification, hide flag, or font size differ from the parent, plus items added in that commit. The tidy tool never moves these. Fourteen more in-page labels and fields from the 2026-10-17 rotor sheet are included so the overlap check reports them as owner leftovers. Commit 9421933 placed R4G's Reference on Q4; that field is recorded here and is not moved.",
+  "note": "Fields and labels on the rotor sheet as the owner left them in 57d43f9 (rotor drive layout tweaks). The tidy tool records these keys and does not move them. The AMR_EN hierarchical label text was corrected to ARM_EN in place, and the 1.27 mm dangling wire at that label was removed. Those keys are unchanged. Root sheet pins that were already frozen and still exist are kept. The layout tweak did not add or remove text keys.",
   "counts": {
     "hardware/controller-f407/controller-f407.kicad_sch": {
-      "changed_or_added": 21,
+      "changed_or_added": 18,
       "kinds": {
         "sheet_property": 2,
-        "sheet_pin": 19
+        "sheet_pin": 16
       }
     },
     "hardware/controller-f407/rotor_drive.kicad_sch": {
-      "changed_or_added": 418,
+      "changed_or_added": 202,
       "kinds": {
-        "text": 1,
-        "label": 103,
-        "hierarchical_label": 69,
-        "property": 245
+        "text": 2,
+        "label": 13,
+        "hierarchical_label": 25,
+        "property": 162
       }
     }
   },
   "keys": [
-    [
-      "hierarchical_label",
-      "0947b756-6167-4307-807a-68ab88247b4b"
-    ],
     [
       "hierarchical_label",
       "0d1ed23d-b034-4d4a-aa62-afa90df537cb"
@@ -36,47 +32,11 @@
     ],
     [
       "hierarchical_label",
-      "1444e01f-5fc0-410c-9311-f97a66497033"
+      "27ea7e7a-4254-47ad-816c-9c772455f477"
     ],
     [
       "hierarchical_label",
-      "1571bf18-def5-4ffb-bce0-c7f408679494"
-    ],
-    [
-      "hierarchical_label",
-      "17810e88-af97-4941-9a15-aa6fe992e3ab"
-    ],
-    [
-      "hierarchical_label",
-      "17a69d7f-2ac2-4efa-9155-c20337684d25"
-    ],
-    [
-      "hierarchical_label",
-      "2d6b28c6-2ee2-4be2-9dda-de11cc606483"
-    ],
-    [
-      "hierarchical_label",
-      "319ca550-b7ee-4cc4-b235-b92cd7116555"
-    ],
-    [
-      "hierarchical_label",
-      "34d3aad4-2443-4c2d-b488-2b9492439dc6"
-    ],
-    [
-      "hierarchical_label",
-      "3ffa1d24-0d7f-4270-b575-9d66a605bd77"
-    ],
-    [
-      "hierarchical_label",
-      "413f3155-fbd5-42a7-8644-1953681d2aef"
-    ],
-    [
-      "hierarchical_label",
-      "41fb2cf6-e97a-48df-865b-56ce12e06a33"
-    ],
-    [
-      "hierarchical_label",
-      "4bc84a1c-4525-4559-8305-a7ebddcbeb51"
+      "305f2f25-dc77-4287-9abe-5b80b1697880"
     ],
     [
       "hierarchical_label",
@@ -84,19 +44,7 @@
     ],
     [
       "hierarchical_label",
-      "4e63d774-ad62-4351-8f95-544fb79a7340"
-    ],
-    [
-      "hierarchical_label",
-      "50213dec-fc7d-43f3-bc3e-f0d32c1e285e"
-    ],
-    [
-      "hierarchical_label",
       "53d732d4-9357-4404-a136-784209d5fc7e"
-    ],
-    [
-      "hierarchical_label",
-      "559906ed-e3cc-4263-8549-6a700252ca11"
     ],
     [
       "hierarchical_label",
@@ -116,31 +64,7 @@
     ],
     [
       "hierarchical_label",
-      "641702c1-f559-4c4b-9d8b-4a2f5d1f0ce4"
-    ],
-    [
-      "hierarchical_label",
-      "732b8081-71d9-4629-a0e4-563154aa5063"
-    ],
-    [
-      "hierarchical_label",
-      "73c298b7-a9e4-46c7-bb16-37ad5264acb8"
-    ],
-    [
-      "hierarchical_label",
-      "748fc849-424a-48de-bd39-7c0d54a48132"
-    ],
-    [
-      "hierarchical_label",
-      "78cc20a5-5738-4576-9d28-174987190467"
-    ],
-    [
-      "hierarchical_label",
-      "79465843-0d56-41bc-812d-22c449e2e28c"
-    ],
-    [
-      "hierarchical_label",
-      "79a02d9a-3d22-4f24-867d-0e94cd83cf4a"
+      "6c41b9b6-4dcf-45d2-ba9d-093791c7d748"
     ],
     [
       "hierarchical_label",
@@ -148,15 +72,7 @@
     ],
     [
       "hierarchical_label",
-      "866cd6e9-5bb4-4256-82a5-98188e30a90f"
-    ],
-    [
-      "hierarchical_label",
       "89a3d950-0c58-40b0-893b-5df5d0135770"
-    ],
-    [
-      "hierarchical_label",
-      "923ad7ee-be7d-4e80-979b-7f4077c3f480"
     ],
     [
       "hierarchical_label",
@@ -168,51 +84,11 @@
     ],
     [
       "hierarchical_label",
-      "9dd33819-4a76-4f7a-8a3a-b2ae374260ba"
-    ],
-    [
-      "hierarchical_label",
-      "a0469f82-a336-42e4-9c47-35acc4f078fa"
-    ],
-    [
-      "hierarchical_label",
-      "a3a3af5e-6b06-48e6-81f0-27a9e0c36417"
-    ],
-    [
-      "hierarchical_label",
-      "a88ca9c7-1145-451c-b80c-9b82b870b844"
-    ],
-    [
-      "hierarchical_label",
-      "b2d17420-46cb-4cda-99eb-7ea91b85a7eb"
-    ],
-    [
-      "hierarchical_label",
-      "b347ee4f-ca5a-40c4-8911-90cf33b78ab3"
-    ],
-    [
-      "hierarchical_label",
       "b73b6cc8-e3dd-4b26-b33a-5358bbd7be22"
     ],
     [
       "hierarchical_label",
-      "b991b7eb-ba27-467d-9800-523ed34cefdb"
-    ],
-    [
-      "hierarchical_label",
-      "bde36e60-6d33-4b33-81c0-1cd5b47abbe9"
-    ],
-    [
-      "hierarchical_label",
-      "c1a706b1-b640-40a8-a712-1b0efd4a467b"
-    ],
-    [
-      "hierarchical_label",
       "c379df2e-72da-47b5-83a4-8c2d05844594"
-    ],
-    [
-      "hierarchical_label",
-      "c6120ea9-aa66-4e53-a235-aa040dda6f99"
     ],
     [
       "hierarchical_label",
@@ -224,27 +100,7 @@
     ],
     [
       "hierarchical_label",
-      "d0d9402b-0d2f-48ac-baac-043d67efc6a4"
-    ],
-    [
-      "hierarchical_label",
-      "d26ac83e-909c-40d4-a163-3cd8c5b31b89"
-    ],
-    [
-      "hierarchical_label",
-      "d5effba6-762c-4179-a785-7f888fd27094"
-    ],
-    [
-      "hierarchical_label",
-      "d6623955-abd0-4649-8d67-4f7270ea8fbb"
-    ],
-    [
-      "hierarchical_label",
-      "d71c78f8-2ff9-4f3b-887c-9d44ef58ec91"
-    ],
-    [
-      "hierarchical_label",
-      "d8f07d2d-e83b-4106-8eac-a15ac43afe63"
+      "d904d329-69b8-4767-aa67-146b1af7ab52"
     ],
     [
       "hierarchical_label",
@@ -252,23 +108,7 @@
     ],
     [
       "hierarchical_label",
-      "dd8e6bca-5461-444b-8c78-f8223a48c282"
-    ],
-    [
-      "hierarchical_label",
-      "e0a338eb-1c85-4152-a90a-cdf6301650ce"
-    ],
-    [
-      "hierarchical_label",
-      "e5b05292-a3b1-41d8-8e96-2172c4088445"
-    ],
-    [
-      "hierarchical_label",
       "e5cd56c3-27d1-406f-aefa-af4c5962755c"
-    ],
-    [
-      "hierarchical_label",
-      "ebdeac36-c8be-4da2-9fc1-b0ba7ce5fa97"
     ],
     [
       "hierarchical_label",
@@ -280,43 +120,7 @@
     ],
     [
       "hierarchical_label",
-      "f1a25b2e-34af-4e36-909f-e31cced1c9f7"
-    ],
-    [
-      "hierarchical_label",
-      "f28c61e6-65aa-4e44-9362-5b9f5c1cb1bf"
-    ],
-    [
-      "hierarchical_label",
-      "f7446bad-b026-4152-b97a-ccf4347d06ec"
-    ],
-    [
-      "hierarchical_label",
-      "f7cd4b6a-29b8-4a24-b898-751815ceb4eb"
-    ],
-    [
-      "hierarchical_label",
       "fa36c1b6-f8d2-4839-9d67-8a827b466e0e"
-    ],
-    [
-      "label",
-      "021b556b-ad2e-48f7-a540-a42def2657c9"
-    ],
-    [
-      "label",
-      "0c547a0e-e0ab-4b59-9d6c-771a429acd08"
-    ],
-    [
-      "label",
-      "0f30d002-c6d4-406c-94f9-56b180de0737"
-    ],
-    [
-      "label",
-      "0fd138c6-6047-4f05-9185-83586458a682"
-    ],
-    [
-      "label",
-      "10aea3ab-2784-4f08-87e4-bca3b721ea9b"
     ],
     [
       "label",
@@ -324,15 +128,11 @@
     ],
     [
       "label",
-      "120dcb84-2685-4f17-aff0-cc5e3d755731"
+      "15bfb8c1-aa51-4f0c-a62a-1788cec6203b"
     ],
     [
       "label",
-      "13a1eae2-82b4-4298-aa38-32c6edac8df3"
-    ],
-    [
-      "label",
-      "150d17ea-19ab-4371-b474-cdb5710f8cf7"
+      "16424ce1-4e9e-459d-80e8-a2caa5341667"
     ],
     [
       "label",
@@ -340,47 +140,7 @@
     ],
     [
       "label",
-      "32f76ed4-c1fe-4217-9a6e-e2bad3b2a99b"
-    ],
-    [
-      "label",
-      "366d7a33-f2a7-4a60-8315-699c6c464be2"
-    ],
-    [
-      "label",
-      "36d30ab4-c964-4f7e-83f6-513eefe3c9ac"
-    ],
-    [
-      "label",
-      "37757a7f-3b52-4843-af4f-941bf951cf8f"
-    ],
-    [
-      "label",
       "378ed413-076f-4142-8d42-652d158a6f73"
-    ],
-    [
-      "label",
-      "37f81e54-4947-4432-9755-1e7afbd9f3ab"
-    ],
-    [
-      "label",
-      "3a701ce8-f1f1-4422-bf8f-6e09d3508a4f"
-    ],
-    [
-      "label",
-      "3aa80fb7-8604-41d6-b791-6a87f0111f82"
-    ],
-    [
-      "label",
-      "3c4f6044-abb0-467b-b2dd-7d7ab9472cb4"
-    ],
-    [
-      "label",
-      "3c93d4f2-d937-4c77-8631-6cbbf614fdb9"
-    ],
-    [
-      "label",
-      "43a773ab-e13f-4437-a9e3-5199e59ac0a1"
     ],
     [
       "label",
@@ -388,179 +148,7 @@
     ],
     [
       "label",
-      "45a71746-0704-4ce8-bd5e-71d8e5b6702f"
-    ],
-    [
-      "label",
-      "4804ba75-7cb2-42d6-a43e-2089debe6b91"
-    ],
-    [
-      "label",
-      "4aa01415-eebe-4d84-8fcf-6bf8f057b703"
-    ],
-    [
-      "label",
-      "4b297b25-8431-414e-9a2f-dbe9919fd9cb"
-    ],
-    [
-      "label",
-      "4d794378-977c-475d-acd0-4d08162aadc5"
-    ],
-    [
-      "label",
-      "50401173-4bad-41ac-8366-a801fdee4fd6"
-    ],
-    [
-      "label",
-      "5492394d-7c37-4af1-b2fd-7b6cfcab9ebe"
-    ],
-    [
-      "label",
-      "5523419c-d64d-45a0-b98b-8acf6b96c1b1"
-    ],
-    [
-      "label",
-      "58e474d3-5443-483c-9aff-9f3a5a9b723e"
-    ],
-    [
-      "label",
-      "5d49928e-890d-4886-a458-b4fc2c62215c"
-    ],
-    [
-      "label",
-      "5fb73045-1b9e-4b25-9850-a21b0846f08b"
-    ],
-    [
-      "label",
-      "6119f19e-b110-4664-8edf-16c095f96335"
-    ],
-    [
-      "label",
-      "63512b9b-117a-421a-a1a8-c1c79bb9f18d"
-    ],
-    [
-      "label",
-      "642c1423-621e-4f4e-a6f5-7ca3ed4a2d3a"
-    ],
-    [
-      "label",
-      "66e6435f-636e-49b9-9b33-ce5fe5211ad4"
-    ],
-    [
-      "label",
-      "673b9729-6ae8-4ac6-ab40-82d93e2035a8"
-    ],
-    [
-      "label",
-      "6d228cbd-88b6-4dff-9194-83ec9d348d7a"
-    ],
-    [
-      "label",
-      "6e908855-5788-4642-a02d-22075efb80ab"
-    ],
-    [
-      "label",
-      "6e913a75-838b-4cf8-b999-097a35ba34f9"
-    ],
-    [
-      "label",
-      "6f68fc4c-886f-41fa-8996-1c42ff39c045"
-    ],
-    [
-      "label",
-      "713e37f5-dce5-4359-9e0f-1a4dc43afa52"
-    ],
-    [
-      "label",
-      "72939aa0-69df-4740-97a3-55b16514fa60"
-    ],
-    [
-      "label",
-      "73cd8e3e-099a-408a-abc9-c5f1e970c1db"
-    ],
-    [
-      "label",
-      "7472ec7c-a7a9-45c0-a28a-796c67136c1a"
-    ],
-    [
-      "label",
-      "748cc2bc-0c71-4bbb-ba99-dc44a07277d7"
-    ],
-    [
-      "label",
-      "7772e225-0d94-42e0-b762-5f69f99c2dd9"
-    ],
-    [
-      "label",
-      "77e25f10-938a-4acf-a6b4-a5ce1e5da2e8"
-    ],
-    [
-      "label",
-      "7885a869-2faa-4fcf-91b0-0be970a32808"
-    ],
-    [
-      "label",
-      "7a203e71-9b3d-46a0-a4f6-fe0db585a8f5"
-    ],
-    [
-      "label",
-      "7ee7f272-d0fe-46c3-8f85-ab4426fadc6b"
-    ],
-    [
-      "label",
-      "83b602ec-6bdc-4cee-871e-b327f8844950"
-    ],
-    [
-      "label",
-      "85c3691d-0195-4c16-b672-8360a4fb8ed1"
-    ],
-    [
-      "label",
-      "9155b2c0-794a-4fe4-bc47-88a05ed6aec2"
-    ],
-    [
-      "label",
-      "95a4cd54-ca13-4ce7-93c4-282b8e8c5cac"
-    ],
-    [
-      "label",
-      "964fed01-0192-4fb7-9b08-34334844f4d7"
-    ],
-    [
-      "label",
-      "98a2d507-59b1-4a85-aefd-f5659db1aab7"
-    ],
-    [
-      "label",
-      "9bb58cc6-3151-4ae1-aaf4-d7c9157d8b9a"
-    ],
-    [
-      "label",
-      "a2747eab-d7da-4ecf-bccf-b725299b1c3d"
-    ],
-    [
-      "label",
-      "a27a7180-4349-46a3-af91-17cef5746723"
-    ],
-    [
-      "label",
-      "a3d79c73-9016-4b61-b843-de4cf6e6cbb0"
-    ],
-    [
-      "label",
-      "a40aa2e9-1349-4d3f-b5ea-846fe9ffd642"
-    ],
-    [
-      "label",
-      "a4c6413f-c178-4e6d-b45a-3a5e188f3a06"
-    ],
-    [
-      "label",
-      "a6015b33-03a8-47f6-94eb-2d7efed52295"
-    ],
-    [
-      "label",
-      "a7dd371e-a050-49a2-a10f-86f33ab208ca"
+      "9cbfc578-c369-498e-bcc3-6ccac90f6946"
     ],
     [
       "label",
@@ -568,71 +156,7 @@
     ],
     [
       "label",
-      "b1d5b359-6a10-4907-8a5e-c0a3f488e866"
-    ],
-    [
-      "label",
-      "b1f2b2df-bab2-459e-b60d-2b4f3d18271c"
-    ],
-    [
-      "label",
-      "b2cf0577-64eb-4112-8839-454ba51abe31"
-    ],
-    [
-      "label",
-      "b36a2367-c71c-4dd6-a065-7e8899d5c23c"
-    ],
-    [
-      "label",
-      "b5219642-554c-4573-a653-08ced340767e"
-    ],
-    [
-      "label",
-      "b5d82a10-2721-4a82-bfd3-6f0c41fdc33a"
-    ],
-    [
-      "label",
-      "bff38cb3-b07e-470d-864b-ccbbd64aa933"
-    ],
-    [
-      "label",
-      "c9a82ae2-2f61-473e-a686-2bdace15074e"
-    ],
-    [
-      "label",
-      "ce91f643-07f1-431e-8c2e-0b7bdec0acb6"
-    ],
-    [
-      "label",
-      "cef5a4c6-8957-4c86-908e-b2960a4a4555"
-    ],
-    [
-      "label",
-      "d5b70399-b12b-42b2-a633-ff1755cd1736"
-    ],
-    [
-      "label",
-      "d904aa47-36fd-4b8d-9bf7-8e65bf156cea"
-    ],
-    [
-      "label",
-      "d92fadc8-d82b-42ad-b86b-c74cde021b0f"
-    ],
-    [
-      "label",
-      "d97f64fd-2b6a-4d29-a5fe-4ee63068cab8"
-    ],
-    [
-      "label",
-      "d9f4218a-0c70-44de-90ba-fad0758ab9f2"
-    ],
-    [
-      "label",
-      "da47af32-bf9e-4c75-87ce-933812394c4d"
-    ],
-    [
-      "label",
-      "ddc73dff-278a-4ccc-ba19-8fba32e308a6"
+      "cfd0e577-7e57-4061-b3df-c858de53deac"
     ],
     [
       "label",
@@ -644,103 +168,41 @@
     ],
     [
       "label",
-      "e3fad658-f85d-4fb0-a1b5-50f6cd896d93"
-    ],
-    [
-      "label",
       "e69e3597-abb1-4179-a901-8862fe5055aa"
     ],
     [
       "label",
-      "eb72e0fc-0ee8-45db-b55b-ba98c8a7ec8e"
-    ],
-    [
-      "label",
-      "ee98f74e-b63f-4cad-9ec4-7eb0764a3db2"
-    ],
-    [
-      "label",
-      "f05da2d3-de28-42b9-aa7a-1ffd4826e236"
-    ],
-    [
-      "label",
-      "f0c7ff68-ffb2-4b26-95a3-44f5a5be0988"
-    ],
-    [
-      "label",
-      "f224fdac-e6c7-4d06-8cb4-12f25315b1df"
-    ],
-    [
-      "label",
-      "f3127e0a-581a-4542-a41d-40d1239a3089"
-    ],
-    [
-      "label",
-      "f4b9c0b2-f947-4ecd-9ba9-2eeba9aa24cb"
-    ],
-    [
-      "label",
-      "f4fa8083-1479-4de2-8cb0-12677a84f1a2"
-    ],
-    [
-      "label",
-      "f5c29a13-8547-4fa3-b31d-ec523cfd04e0"
-    ],
-    [
-      "label",
-      "f6cc9445-7a74-49ea-a670-4d4ca1fdbfa2"
-    ],
-    [
-      "label",
-      "f9a9ab58-c260-4ba8-bd51-443a901a8bca"
-    ],
-    [
-      "label",
-      "fb9ebae2-8eab-42bc-a062-66e2cb875375"
-    ],
-    [
-      "label",
-      "fdae89b0-1000-4d3d-85a7-296ee3ca77c1"
+      "f8af86e7-97f4-4e72-ac4a-98afed385cf6"
     ],
     [
       "property",
       "019b74a9-6859-4b22-b33f-dc5a0b4144ca",
-      "Description"
+      "Reference"
     ],
     [
       "property",
-      "0299c39b-dc64-4654-ac5c-7db03c104dd0",
-      "Description"
-    ],
-    [
-      "property",
-      "02f03a4b-dd3c-4b7a-a9a2-0577b54a532a",
-      "Description"
+      "019b74a9-6859-4b22-b33f-dc5a0b4144ca",
+      "Value"
     ],
     [
       "property",
       "0f6babd8-3778-418d-ba0e-0354cf009360",
-      "Description"
+      "Reference"
     ],
     [
       "property",
-      "16a3e967-8c86-493e-a731-f023a66babc6",
-      "Datasheet"
+      "0f6babd8-3778-418d-ba0e-0354cf009360",
+      "Value"
     ],
     [
       "property",
-      "16a3e967-8c86-493e-a731-f023a66babc6",
-      "Description"
+      "1245aebb-bea0-4b37-b31c-f3b0b40c6ce0",
+      "Reference"
     ],
     [
       "property",
-      "16a3e967-8c86-493e-a731-f023a66babc6",
-      "Footprint"
-    ],
-    [
-      "property",
-      "16a3e967-8c86-493e-a731-f023a66babc6",
-      "LCSC"
+      "1245aebb-bea0-4b37-b31c-f3b0b40c6ce0",
+      "Value"
     ],
     [
       "property",
@@ -754,48 +216,13 @@
     ],
     [
       "property",
-      "1bfa7ab1-32d9-435b-99e0-233aaf922ee7",
-      "Description"
+      "2678a891-f1ff-4b62-8ce0-ae247f7c070c",
+      "Reference"
     ],
     [
       "property",
-      "1e752c3b-bc78-4db4-a30c-6342ba572bd0",
-      "Description"
-    ],
-    [
-      "property",
-      "22604c0b-124a-42b4-8315-b42221a0ba1e",
-      "Description"
-    ],
-    [
-      "property",
-      "22d3e86e-1b94-4707-8570-3b50865ef0d2",
-      "Description"
-    ],
-    [
-      "property",
-      "258ac86c-0e6f-4b97-9ff4-ca3f0261e971",
-      "Description"
-    ],
-    [
-      "property",
-      "27e23049-0df6-406f-944b-c2efacecb7b5",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "27e23049-0df6-406f-944b-c2efacecb7b5",
-      "Description"
-    ],
-    [
-      "property",
-      "27e23049-0df6-406f-944b-c2efacecb7b5",
-      "Footprint"
-    ],
-    [
-      "property",
-      "27e23049-0df6-406f-944b-c2efacecb7b5",
-      "LCSC"
+      "2678a891-f1ff-4b62-8ce0-ae247f7c070c",
+      "Value"
     ],
     [
       "property",
@@ -806,26 +233,6 @@
       "property",
       "27e23049-0df6-406f-944b-c2efacecb7b5",
       "Value"
-    ],
-    [
-      "property",
-      "29fcdb57-a11f-4960-9551-ff664f44109e",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "29fcdb57-a11f-4960-9551-ff664f44109e",
-      "Description"
-    ],
-    [
-      "property",
-      "29fcdb57-a11f-4960-9551-ff664f44109e",
-      "Footprint"
-    ],
-    [
-      "property",
-      "29fcdb57-a11f-4960-9551-ff664f44109e",
-      "LCSC"
     ],
     [
       "property",
@@ -840,47 +247,52 @@
     [
       "property",
       "2a8fb071-01d4-4216-a192-2ae5694456d6",
-      "Description"
+      "Reference"
+    ],
+    [
+      "property",
+      "2a8fb071-01d4-4216-a192-2ae5694456d6",
+      "Value"
     ],
     [
       "property",
       "2b4b16a2-bbe8-43b1-8f10-632b98f9268b",
-      "Description"
+      "Reference"
     ],
     [
       "property",
-      "2ca83a2a-4b08-4e62-b608-d2f3c7ea910a",
-      "Description"
+      "2b4b16a2-bbe8-43b1-8f10-632b98f9268b",
+      "Value"
     ],
     [
       "property",
-      "2eb9adf1-213d-443d-a38e-67ef6fc66a4d",
-      "Description"
+      "2b745106-13aa-4fe1-b375-39ca4922f077",
+      "Reference"
     ],
     [
       "property",
-      "2fb482e6-6199-498b-8971-3bf9f9a9714a",
-      "Datasheet"
+      "2b745106-13aa-4fe1-b375-39ca4922f077",
+      "Value"
     ],
     [
       "property",
-      "2fb482e6-6199-498b-8971-3bf9f9a9714a",
-      "Description"
+      "2dde52dd-c9d0-4fee-923c-68729d7f254c",
+      "Reference"
     ],
     [
       "property",
-      "2fb482e6-6199-498b-8971-3bf9f9a9714a",
-      "Footprint"
+      "2dde52dd-c9d0-4fee-923c-68729d7f254c",
+      "Value"
     ],
     [
       "property",
-      "2fb482e6-6199-498b-8971-3bf9f9a9714a",
-      "LCSC"
+      "2fa52a37-9587-4b43-923b-7b2c8cfb9b63",
+      "Reference"
     ],
     [
       "property",
-      "2fb482e6-6199-498b-8971-3bf9f9a9714a",
-      "MPN"
+      "2fa52a37-9587-4b43-923b-7b2c8cfb9b63",
+      "Value"
     ],
     [
       "property",
@@ -894,28 +306,13 @@
     ],
     [
       "property",
-      "30dfde7d-9e15-458a-97b9-0eed2ca52af5",
-      "Description"
+      "30a18bd1-1083-4a4f-bb9a-2e3869700da7",
+      "Reference"
     ],
     [
       "property",
-      "3480b051-b507-408d-9195-be0b7d0b8d60",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "3480b051-b507-408d-9195-be0b7d0b8d60",
-      "Description"
-    ],
-    [
-      "property",
-      "3480b051-b507-408d-9195-be0b7d0b8d60",
-      "Footprint"
-    ],
-    [
-      "property",
-      "3480b051-b507-408d-9195-be0b7d0b8d60",
-      "LCSC"
+      "30a18bd1-1083-4a4f-bb9a-2e3869700da7",
+      "Value"
     ],
     [
       "property",
@@ -929,43 +326,103 @@
     ],
     [
       "property",
-      "3de33a37-a948-43d0-b6dc-8c4daa5e1d28",
-      "Description"
+      "35a3212b-cc95-4395-8c7d-2997b26a44a5",
+      "Reference"
     ],
     [
       "property",
-      "46a85ab3-8d88-4d91-8501-a3a065778da5",
-      "Description"
+      "35a3212b-cc95-4395-8c7d-2997b26a44a5",
+      "Value"
+    ],
+    [
+      "property",
+      "3799489e-e2cd-4fb4-bcf4-7ba9886a3c07",
+      "Reference"
+    ],
+    [
+      "property",
+      "3799489e-e2cd-4fb4-bcf4-7ba9886a3c07",
+      "Value"
+    ],
+    [
+      "property",
+      "3af576f2-fd5e-409e-a58a-5378ababf8d1",
+      "Reference"
+    ],
+    [
+      "property",
+      "3af576f2-fd5e-409e-a58a-5378ababf8d1",
+      "Value"
+    ],
+    [
+      "property",
+      "3b271716-96d8-4b3b-a09f-677befed0606",
+      "Reference"
+    ],
+    [
+      "property",
+      "3b271716-96d8-4b3b-a09f-677befed0606",
+      "Value"
+    ],
+    [
+      "property",
+      "3d188a24-5b02-475d-b26c-1db66a3cf82c",
+      "Reference"
+    ],
+    [
+      "property",
+      "3d188a24-5b02-475d-b26c-1db66a3cf82c",
+      "Value"
+    ],
+    [
+      "property",
+      "422651bc-72c4-4d05-a9dc-448896b502ff",
+      "Reference"
+    ],
+    [
+      "property",
+      "422651bc-72c4-4d05-a9dc-448896b502ff",
+      "Value"
+    ],
+    [
+      "property",
+      "4a94eeea-5a2a-435d-99dd-6bc778de35ce",
+      "Reference"
+    ],
+    [
+      "property",
+      "4a94eeea-5a2a-435d-99dd-6bc778de35ce",
+      "Value"
     ],
     [
       "property",
       "4b26a2db-ee79-4fb9-9e79-5518b111b1d8",
-      "Description"
+      "Reference"
     ],
     [
       "property",
-      "4c9f1c5e-1aa0-4060-90ea-087e155994d8",
-      "Description"
+      "4b26a2db-ee79-4fb9-9e79-5518b111b1d8",
+      "Value"
     ],
     [
       "property",
-      "5aa1a9a3-d2fa-41ee-83cf-a674eb321c03",
-      "Datasheet"
+      "4e4ddeaf-9a92-409c-bc28-ee61b669f131",
+      "Reference"
     ],
     [
       "property",
-      "5aa1a9a3-d2fa-41ee-83cf-a674eb321c03",
-      "Description"
+      "4e4ddeaf-9a92-409c-bc28-ee61b669f131",
+      "Value"
     ],
     [
       "property",
-      "5aa1a9a3-d2fa-41ee-83cf-a674eb321c03",
-      "Footprint"
+      "596c3235-c676-4939-890d-436bf2770a83",
+      "Reference"
     ],
     [
       "property",
-      "5aa1a9a3-d2fa-41ee-83cf-a674eb321c03",
-      "LCSC"
+      "596c3235-c676-4939-890d-436bf2770a83",
+      "Value"
     ],
     [
       "property",
@@ -980,17 +437,32 @@
     [
       "property",
       "5d393381-c9c0-44cb-8cf6-1254304b5582",
-      "Description"
+      "Reference"
     ],
     [
       "property",
-      "64b1c4fa-a0f9-47f4-bcdd-dee93f10d529",
-      "Description"
+      "5d393381-c9c0-44cb-8cf6-1254304b5582",
+      "Value"
     ],
     [
       "property",
-      "65d28fe6-42e9-460c-a1dd-207681139132",
-      "Description"
+      "5e8e4534-269d-4dcc-952e-1a370395d85a",
+      "Reference"
+    ],
+    [
+      "property",
+      "5e8e4534-269d-4dcc-952e-1a370395d85a",
+      "Value"
+    ],
+    [
+      "property",
+      "6260c91e-bb6f-4776-a5d7-081c15aaaa1c",
+      "Reference"
+    ],
+    [
+      "property",
+      "6260c91e-bb6f-4776-a5d7-081c15aaaa1c",
+      "Value"
     ],
     [
       "property",
@@ -999,28 +471,28 @@
     ],
     [
       "property",
-      "7191c7d0-1817-43e4-91ef-13b989067d08",
-      "Datasheet"
+      "65d28fe6-42e9-460c-a1dd-207681139132",
+      "Value"
     ],
     [
       "property",
-      "7191c7d0-1817-43e4-91ef-13b989067d08",
-      "Description"
+      "689eecc7-78f2-4a51-b3b3-4bcdb2605f9b",
+      "Reference"
     ],
     [
       "property",
-      "7191c7d0-1817-43e4-91ef-13b989067d08",
-      "Footprint"
+      "689eecc7-78f2-4a51-b3b3-4bcdb2605f9b",
+      "Value"
     ],
     [
       "property",
-      "7191c7d0-1817-43e4-91ef-13b989067d08",
-      "LCSC"
+      "6d17ae7f-a7d9-434d-8bae-68f510881ab5",
+      "Reference"
     ],
     [
       "property",
-      "7191c7d0-1817-43e4-91ef-13b989067d08",
-      "MPN"
+      "6d17ae7f-a7d9-434d-8bae-68f510881ab5",
+      "Value"
     ],
     [
       "property",
@@ -1034,18 +506,13 @@
     ],
     [
       "property",
-      "726aa434-8804-4929-af75-dc0c9af2fcfe",
-      "Datasheet"
+      "719ea288-c0dd-4c5f-ba62-91dc4e22a1db",
+      "Reference"
     ],
     [
       "property",
-      "726aa434-8804-4929-af75-dc0c9af2fcfe",
-      "Description"
-    ],
-    [
-      "property",
-      "726aa434-8804-4929-af75-dc0c9af2fcfe",
-      "Footprint"
+      "719ea288-c0dd-4c5f-ba62-91dc4e22a1db",
+      "Value"
     ],
     [
       "property",
@@ -1060,52 +527,12 @@
     [
       "property",
       "73c60454-2de9-45a7-8a09-185d45cc36b7",
-      "Description"
+      "Reference"
     ],
     [
       "property",
-      "73dae1c1-8c4a-4c98-92e7-98b993702dd7",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "73dae1c1-8c4a-4c98-92e7-98b993702dd7",
-      "Description"
-    ],
-    [
-      "property",
-      "73dae1c1-8c4a-4c98-92e7-98b993702dd7",
-      "Footprint"
-    ],
-    [
-      "property",
-      "73dae1c1-8c4a-4c98-92e7-98b993702dd7",
-      "MPN"
-    ],
-    [
-      "property",
-      "73dae1c1-8c4a-4c98-92e7-98b993702dd7",
-      "Mouser"
-    ],
-    [
-      "property",
-      "73dae1c1-8c4a-4c98-92e7-98b993702dd7",
-      "Panel"
-    ],
-    [
-      "property",
-      "73dae1c1-8c4a-4c98-92e7-98b993702dd7",
-      "PanelCutout"
-    ],
-    [
-      "property",
-      "73dae1c1-8c4a-4c98-92e7-98b993702dd7",
-      "PanelName"
-    ],
-    [
-      "property",
-      "73dae1c1-8c4a-4c98-92e7-98b993702dd7",
-      "PanelZ"
+      "73c60454-2de9-45a7-8a09-185d45cc36b7",
+      "Value"
     ],
     [
       "property",
@@ -1119,38 +546,23 @@
     ],
     [
       "property",
-      "75396155-4b94-4233-80ce-e942e199e2d6",
-      "Description"
+      "75bab340-22e2-4e0f-a337-e21939170bdc",
+      "Reference"
     ],
     [
       "property",
-      "75dd90d5-d957-48fe-9bac-7a420a030fc6",
-      "Description"
+      "75bab340-22e2-4e0f-a337-e21939170bdc",
+      "Value"
     ],
     [
       "property",
       "775f8a83-0e1b-4184-9372-9d2f07689436",
-      "Description"
+      "Reference"
     ],
     [
       "property",
-      "7ba7859c-144d-45a4-940f-4985f70f2fb2",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "7ba7859c-144d-45a4-940f-4985f70f2fb2",
-      "Description"
-    ],
-    [
-      "property",
-      "7ba7859c-144d-45a4-940f-4985f70f2fb2",
-      "Footprint"
-    ],
-    [
-      "property",
-      "7ba7859c-144d-45a4-940f-4985f70f2fb2",
-      "LCSC"
+      "775f8a83-0e1b-4184-9372-9d2f07689436",
+      "Value"
     ],
     [
       "property",
@@ -1160,42 +572,67 @@
     [
       "property",
       "7ba7859c-144d-45a4-940f-4985f70f2fb2",
+      "Value"
+    ],
+    [
+      "property",
+      "7e280b50-1c88-445a-9039-f4e403d5d378",
+      "Reference"
+    ],
+    [
+      "property",
+      "7e280b50-1c88-445a-9039-f4e403d5d378",
+      "Value"
+    ],
+    [
+      "property",
+      "7f863402-b10b-4c34-971e-9d76d5a14fcb",
+      "Reference"
+    ],
+    [
+      "property",
+      "7f863402-b10b-4c34-971e-9d76d5a14fcb",
+      "Value"
+    ],
+    [
+      "property",
+      "7fd85bed-fcbd-4fb6-8e46-56de5f891a05",
+      "Reference"
+    ],
+    [
+      "property",
+      "7fd85bed-fcbd-4fb6-8e46-56de5f891a05",
+      "Value"
+    ],
+    [
+      "property",
+      "84944604-d555-49f4-92cb-4664bb963637",
+      "Reference"
+    ],
+    [
+      "property",
+      "84944604-d555-49f4-92cb-4664bb963637",
       "Value"
     ],
     [
       "property",
       "8566a482-fc67-4c4f-92d4-da03ac7f4af5",
-      "Description"
+      "Reference"
+    ],
+    [
+      "property",
+      "8566a482-fc67-4c4f-92d4-da03ac7f4af5",
+      "Value"
     ],
     [
       "property",
       "8c2c3094-4fa6-4115-9825-6d2f4357c2c6",
-      "Description"
+      "Reference"
     ],
     [
       "property",
-      "8d13ec48-017f-4a2c-bd1e-8f09bd78222a",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "8d13ec48-017f-4a2c-bd1e-8f09bd78222a",
-      "Description"
-    ],
-    [
-      "property",
-      "8d13ec48-017f-4a2c-bd1e-8f09bd78222a",
-      "Footprint"
-    ],
-    [
-      "property",
-      "8d13ec48-017f-4a2c-bd1e-8f09bd78222a",
-      "MPN"
-    ],
-    [
-      "property",
-      "8d13ec48-017f-4a2c-bd1e-8f09bd78222a",
-      "Mouser"
+      "8c2c3094-4fa6-4115-9825-6d2f4357c2c6",
+      "Value"
     ],
     [
       "property",
@@ -1210,82 +647,12 @@
     [
       "property",
       "8fa19019-ce7a-4004-bb53-53d1c8319782",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "8fa19019-ce7a-4004-bb53-53d1c8319782",
-      "Description"
-    ],
-    [
-      "property",
-      "8fa19019-ce7a-4004-bb53-53d1c8319782",
-      "Footprint"
-    ],
-    [
-      "property",
-      "8fa19019-ce7a-4004-bb53-53d1c8319782",
-      "Mouser"
-    ],
-    [
-      "property",
-      "8fa19019-ce7a-4004-bb53-53d1c8319782",
-      "Panel"
-    ],
-    [
-      "property",
-      "8fa19019-ce7a-4004-bb53-53d1c8319782",
-      "PanelCutout"
-    ],
-    [
-      "property",
-      "8fa19019-ce7a-4004-bb53-53d1c8319782",
-      "PanelName"
-    ],
-    [
-      "property",
-      "8fa19019-ce7a-4004-bb53-53d1c8319782",
-      "PanelZ"
-    ],
-    [
-      "property",
-      "8fa19019-ce7a-4004-bb53-53d1c8319782",
       "Reference"
     ],
     [
       "property",
       "8fa19019-ce7a-4004-bb53-53d1c8319782",
       "Value"
-    ],
-    [
-      "property",
-      "92dddd31-274e-4f6b-97ba-120b797b516a",
-      "Description"
-    ],
-    [
-      "property",
-      "93bdb0d7-d4e6-4eb1-9939-e3ecc6798df5",
-      "Description"
-    ],
-    [
-      "property",
-      "99d9ef27-6bbb-4ad7-93c0-8e6e1bb2dfa4",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "99d9ef27-6bbb-4ad7-93c0-8e6e1bb2dfa4",
-      "Description"
-    ],
-    [
-      "property",
-      "99d9ef27-6bbb-4ad7-93c0-8e6e1bb2dfa4",
-      "Footprint"
-    ],
-    [
-      "property",
-      "99d9ef27-6bbb-4ad7-93c0-8e6e1bb2dfa4",
-      "LCSC"
     ],
     [
       "property",
@@ -1299,23 +666,13 @@
     ],
     [
       "property",
-      "9e6eb29e-b725-426e-a3af-736b55b3ecd4",
-      "Datasheet"
+      "9a23a1a2-08eb-4d32-a677-938e4af25ddf",
+      "Reference"
     ],
     [
       "property",
-      "9e6eb29e-b725-426e-a3af-736b55b3ecd4",
-      "Description"
-    ],
-    [
-      "property",
-      "9e6eb29e-b725-426e-a3af-736b55b3ecd4",
-      "Footprint"
-    ],
-    [
-      "property",
-      "9e6eb29e-b725-426e-a3af-736b55b3ecd4",
-      "LCSC"
+      "9a23a1a2-08eb-4d32-a677-938e4af25ddf",
+      "Value"
     ],
     [
       "property",
@@ -1330,27 +687,22 @@
     [
       "property",
       "a3c62238-df9a-4baf-bef0-0527cc0436ba",
-      "Description"
+      "Reference"
+    ],
+    [
+      "property",
+      "a3c62238-df9a-4baf-bef0-0527cc0436ba",
+      "Value"
     ],
     [
       "property",
       "a59548ea-ec03-4583-99c6-b3d022472a36",
-      "Description"
+      "Reference"
     ],
     [
       "property",
-      "a790fa51-b6d5-416b-82b9-60e30832bd92",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "a790fa51-b6d5-416b-82b9-60e30832bd92",
-      "Description"
-    ],
-    [
-      "property",
-      "a790fa51-b6d5-416b-82b9-60e30832bd92",
-      "Footprint"
+      "a59548ea-ec03-4583-99c6-b3d022472a36",
+      "Value"
     ],
     [
       "property",
@@ -1365,31 +717,6 @@
     [
       "property",
       "a8ce1c24-df3e-4a60-b595-c194c071d47f",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "a8ce1c24-df3e-4a60-b595-c194c071d47f",
-      "Description"
-    ],
-    [
-      "property",
-      "a8ce1c24-df3e-4a60-b595-c194c071d47f",
-      "Footprint"
-    ],
-    [
-      "property",
-      "a8ce1c24-df3e-4a60-b595-c194c071d47f",
-      "MPN"
-    ],
-    [
-      "property",
-      "a8ce1c24-df3e-4a60-b595-c194c071d47f",
-      "Mouser"
-    ],
-    [
-      "property",
-      "a8ce1c24-df3e-4a60-b595-c194c071d47f",
       "Reference"
     ],
     [
@@ -1400,72 +727,42 @@
     [
       "property",
       "acb93905-f76f-45fb-82f5-324fc20dc6ac",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "acb93905-f76f-45fb-82f5-324fc20dc6ac",
-      "Description"
-    ],
-    [
-      "property",
-      "acb93905-f76f-45fb-82f5-324fc20dc6ac",
-      "Footprint"
-    ],
-    [
-      "property",
-      "acb93905-f76f-45fb-82f5-324fc20dc6ac",
-      "LCSC"
-    ],
-    [
-      "property",
-      "acb93905-f76f-45fb-82f5-324fc20dc6ac",
       "Reference"
     ],
     [
       "property",
       "acb93905-f76f-45fb-82f5-324fc20dc6ac",
+      "Value"
+    ],
+    [
+      "property",
+      "ad596d33-34e0-45db-aacf-b41d6fc8dd97",
+      "Reference"
+    ],
+    [
+      "property",
+      "ad596d33-34e0-45db-aacf-b41d6fc8dd97",
       "Value"
     ],
     [
       "property",
       "b3083b40-8124-4e72-b884-bf08f1b811a8",
-      "Description"
+      "Reference"
     ],
     [
       "property",
-      "bcb0bb2e-e134-4bd6-898a-1e81b8ba8704",
-      "Description"
+      "b3083b40-8124-4e72-b884-bf08f1b811a8",
+      "Value"
     ],
     [
       "property",
-      "bf524542-4b4a-47a6-be51-7573f2ad94d1",
-      "Description"
+      "be8ac1a1-aa3a-46b7-8acf-b41c67b7dcad",
+      "Reference"
     ],
     [
       "property",
-      "c3ad345f-221a-4af0-8854-ce0886e0f003",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "c3ad345f-221a-4af0-8854-ce0886e0f003",
-      "Description"
-    ],
-    [
-      "property",
-      "c3ad345f-221a-4af0-8854-ce0886e0f003",
-      "Footprint"
-    ],
-    [
-      "property",
-      "c3ad345f-221a-4af0-8854-ce0886e0f003",
-      "LCSC"
-    ],
-    [
-      "property",
-      "c3ad345f-221a-4af0-8854-ce0886e0f003",
-      "MPN"
+      "be8ac1a1-aa3a-46b7-8acf-b41c67b7dcad",
+      "Value"
     ],
     [
       "property",
@@ -1479,36 +776,6 @@
     ],
     [
       "property",
-      "c3f7b3df-777f-4a67-86c3-4a6c2ee9bf3d",
-      "Description"
-    ],
-    [
-      "property",
-      "c6852be3-8126-452a-b6bc-57a0d1c91eae",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "c6852be3-8126-452a-b6bc-57a0d1c91eae",
-      "Description"
-    ],
-    [
-      "property",
-      "c6852be3-8126-452a-b6bc-57a0d1c91eae",
-      "Footprint"
-    ],
-    [
-      "property",
-      "c6852be3-8126-452a-b6bc-57a0d1c91eae",
-      "LCSC"
-    ],
-    [
-      "property",
-      "c6852be3-8126-452a-b6bc-57a0d1c91eae",
-      "MPN"
-    ],
-    [
-      "property",
       "c6852be3-8126-452a-b6bc-57a0d1c91eae",
       "Reference"
     ],
@@ -1516,41 +783,6 @@
       "property",
       "c6852be3-8126-452a-b6bc-57a0d1c91eae",
       "Value"
-    ],
-    [
-      "property",
-      "c9187e9b-f40e-4c04-a08f-16f37d2cf4e9",
-      "Description"
-    ],
-    [
-      "property",
-      "c9a3c087-5f5d-4f2c-8c94-c5c05ef47239",
-      "Description"
-    ],
-    [
-      "property",
-      "ca5692b3-90d5-466e-aa8d-d6219041b7bc",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "ca5692b3-90d5-466e-aa8d-d6219041b7bc",
-      "Description"
-    ],
-    [
-      "property",
-      "ca5692b3-90d5-466e-aa8d-d6219041b7bc",
-      "Footprint"
-    ],
-    [
-      "property",
-      "ca5692b3-90d5-466e-aa8d-d6219041b7bc",
-      "LCSC"
-    ],
-    [
-      "property",
-      "ca5692b3-90d5-466e-aa8d-d6219041b7bc",
-      "MPN"
     ],
     [
       "property",
@@ -1564,28 +796,13 @@
     ],
     [
       "property",
-      "cb12e6fe-68a1-4f4e-a9df-2880afc5ce1e",
-      "Datasheet"
+      "caa645f6-1f84-4b12-937d-e84b63f0c2e6",
+      "Reference"
     ],
     [
       "property",
-      "cb12e6fe-68a1-4f4e-a9df-2880afc5ce1e",
-      "Description"
-    ],
-    [
-      "property",
-      "cb12e6fe-68a1-4f4e-a9df-2880afc5ce1e",
-      "Footprint"
-    ],
-    [
-      "property",
-      "cb12e6fe-68a1-4f4e-a9df-2880afc5ce1e",
-      "LCSC"
-    ],
-    [
-      "property",
-      "cb12e6fe-68a1-4f4e-a9df-2880afc5ce1e",
-      "MPN"
+      "caa645f6-1f84-4b12-937d-e84b63f0c2e6",
+      "Value"
     ],
     [
       "property",
@@ -1599,73 +816,43 @@
     ],
     [
       "property",
-      "cc927ead-53cb-407a-b04a-1ee346e18c6d",
-      "Description"
-    ],
-    [
-      "property",
-      "d7048486-39b3-4df0-9c61-90be97406a2b",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "d7048486-39b3-4df0-9c61-90be97406a2b",
-      "Description"
-    ],
-    [
-      "property",
-      "d7048486-39b3-4df0-9c61-90be97406a2b",
-      "Footprint"
-    ],
-    [
-      "property",
-      "d7048486-39b3-4df0-9c61-90be97406a2b",
-      "LCSC"
-    ],
-    [
-      "property",
-      "d7048486-39b3-4df0-9c61-90be97406a2b",
-      "MPN"
-    ],
-    [
-      "property",
       "d7048486-39b3-4df0-9c61-90be97406a2b",
       "Reference"
     ],
     [
       "property",
       "d7048486-39b3-4df0-9c61-90be97406a2b",
+      "Value"
+    ],
+    [
+      "property",
+      "d83af08e-30de-447a-97d6-e5b7c9f2eaf8",
+      "Reference"
+    ],
+    [
+      "property",
+      "d83af08e-30de-447a-97d6-e5b7c9f2eaf8",
       "Value"
     ],
     [
       "property",
       "da55514e-3ea1-4569-a1ca-8d9587873c1d",
-      "Description"
+      "Reference"
     ],
     [
       "property",
-      "e36a59c4-cab5-477f-8077-90f40e9a3a9f",
-      "Datasheet"
+      "da55514e-3ea1-4569-a1ca-8d9587873c1d",
+      "Value"
     ],
     [
       "property",
-      "e36a59c4-cab5-477f-8077-90f40e9a3a9f",
-      "Description"
+      "df2466be-e316-4936-af7b-7fb6341f232b",
+      "Reference"
     ],
     [
       "property",
-      "e36a59c4-cab5-477f-8077-90f40e9a3a9f",
-      "Footprint"
-    ],
-    [
-      "property",
-      "e36a59c4-cab5-477f-8077-90f40e9a3a9f",
-      "LCSC"
-    ],
-    [
-      "property",
-      "e36a59c4-cab5-477f-8077-90f40e9a3a9f",
-      "MPN"
+      "df2466be-e316-4936-af7b-7fb6341f232b",
+      "Value"
     ],
     [
       "property",
@@ -1675,32 +862,37 @@
     [
       "property",
       "e36a59c4-cab5-477f-8077-90f40e9a3a9f",
+      "Value"
+    ],
+    [
+      "property",
+      "e5a026d2-fb7c-41d6-bb88-42acc2f258e6",
+      "Reference"
+    ],
+    [
+      "property",
+      "e5a026d2-fb7c-41d6-bb88-42acc2f258e6",
+      "Value"
+    ],
+    [
+      "property",
+      "e7d833b4-ceac-4065-80ba-e6cff3db736c",
+      "Reference"
+    ],
+    [
+      "property",
+      "e7d833b4-ceac-4065-80ba-e6cff3db736c",
       "Value"
     ],
     [
       "property",
       "e9935cc9-8292-40c5-8fba-b89b75cf587a",
-      "Description"
+      "Reference"
     ],
     [
       "property",
-      "eb0f30ab-be45-434f-b761-043657cdbc6a",
-      "Description"
-    ],
-    [
-      "property",
-      "ec018256-1a85-440f-b6f9-81be14e2d1ba",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "ec018256-1a85-440f-b6f9-81be14e2d1ba",
-      "Description"
-    ],
-    [
-      "property",
-      "ec018256-1a85-440f-b6f9-81be14e2d1ba",
-      "Footprint"
+      "e9935cc9-8292-40c5-8fba-b89b75cf587a",
+      "Value"
     ],
     [
       "property",
@@ -1715,57 +907,12 @@
     [
       "property",
       "ec623c20-1964-4edd-a9fb-37add279a97d",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "ec623c20-1964-4edd-a9fb-37add279a97d",
-      "Description"
-    ],
-    [
-      "property",
-      "ec623c20-1964-4edd-a9fb-37add279a97d",
-      "Footprint"
-    ],
-    [
-      "property",
-      "ec623c20-1964-4edd-a9fb-37add279a97d",
-      "LCSC"
-    ],
-    [
-      "property",
-      "ec623c20-1964-4edd-a9fb-37add279a97d",
       "Reference"
     ],
     [
       "property",
       "ec623c20-1964-4edd-a9fb-37add279a97d",
       "Value"
-    ],
-    [
-      "property",
-      "ec7970c8-9fac-44b7-8576-50c23fa7a638",
-      "Datasheet"
-    ],
-    [
-      "property",
-      "ec7970c8-9fac-44b7-8576-50c23fa7a638",
-      "Description"
-    ],
-    [
-      "property",
-      "ec7970c8-9fac-44b7-8576-50c23fa7a638",
-      "Footprint"
-    ],
-    [
-      "property",
-      "ec7970c8-9fac-44b7-8576-50c23fa7a638",
-      "MPN"
-    ],
-    [
-      "property",
-      "ec7970c8-9fac-44b7-8576-50c23fa7a638",
-      "Mouser"
     ],
     [
       "property",
@@ -1779,48 +926,33 @@
     ],
     [
       "property",
-      "edaf6093-f1c7-4246-add7-46c4f7ba501e",
-      "Description"
+      "f100f8fd-8f83-4081-95c9-2ec4d06286d4",
+      "Reference"
     ],
     [
       "property",
-      "edc8bd44-7eb7-4218-9561-a275504d425b",
-      "Description"
+      "f100f8fd-8f83-4081-95c9-2ec4d06286d4",
+      "Value"
     ],
     [
       "property",
       "f11e5da5-4a7c-409f-b262-21bcdf84e5a5",
-      "Description"
+      "Reference"
     ],
     [
       "property",
-      "fad1b379-0421-4a4d-810a-c6465275ca47",
-      "Description"
+      "f11e5da5-4a7c-409f-b262-21bcdf84e5a5",
+      "Value"
     ],
     [
       "property",
-      "fbb7883f-f024-45c0-8311-04ebe21c8a31",
-      "Datasheet"
+      "f6bb52f8-d4f8-4fe2-ab01-16b5941a5954",
+      "Reference"
     ],
     [
       "property",
-      "fbb7883f-f024-45c0-8311-04ebe21c8a31",
-      "Description"
-    ],
-    [
-      "property",
-      "fbb7883f-f024-45c0-8311-04ebe21c8a31",
-      "Footprint"
-    ],
-    [
-      "property",
-      "fbb7883f-f024-45c0-8311-04ebe21c8a31",
-      "LCSC"
-    ],
-    [
-      "property",
-      "fbb7883f-f024-45c0-8311-04ebe21c8a31",
-      "MPN"
+      "f6bb52f8-d4f8-4fe2-ab01-16b5941a5954",
+      "Value"
     ],
     [
       "property",
@@ -1834,28 +966,13 @@
     ],
     [
       "property",
-      "ff361e2a-5809-40e3-b160-1a4903612aa4",
-      "Datasheet"
+      "fdb5f244-cab8-4f69-abe5-c42330bfa158",
+      "Reference"
     ],
     [
       "property",
-      "ff361e2a-5809-40e3-b160-1a4903612aa4",
-      "Description"
-    ],
-    [
-      "property",
-      "ff361e2a-5809-40e3-b160-1a4903612aa4",
-      "Footprint"
-    ],
-    [
-      "property",
-      "ff361e2a-5809-40e3-b160-1a4903612aa4",
-      "MPN"
-    ],
-    [
-      "property",
-      "ff361e2a-5809-40e3-b160-1a4903612aa4",
-      "Mouser"
+      "fdb5f244-cab8-4f69-abe5-c42330bfa158",
+      "Value"
     ],
     [
       "property",
@@ -1932,18 +1049,6 @@
       "b8a289c4-c122-4782-9608-5a6451034fb8"
     ],
     [
-      "sheet_pin",
-      "b90ac14b-d844-41e8-bace-175fb577f0ed"
-    ],
-    [
-      "sheet_pin",
-      "bef400ec-69bb-439c-ab17-66187ef45fe6"
-    ],
-    [
-      "sheet_pin",
-      "c9989d19-2da5-45e2-942b-f6173f20c6fb"
-    ],
-    [
       "sheet_property",
       "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
       "Sheetfile"
@@ -1955,75 +1060,11 @@
     ],
     [
       "text",
-      "3d01385d-11fe-4ac6-94dc-7a95f2f5e1e6"
+      "34bd69bb-45ff-4318-9599-add6f096fb79"
     ],
     [
-      "label",
-      "6080dd21-4f80-440a-b503-4dbf2178785d"
-    ],
-    [
-      "label",
-      "9cbfc578-c369-498e-bcc3-6ccac90f6946"
-    ],
-    [
-      "property",
-      "2fa52a37-9587-4b43-923b-7b2c8cfb9b63",
-      "Value"
-    ],
-    [
-      "property",
-      "30a18bd1-1083-4a4f-bb9a-2e3869700da7",
-      "Reference"
-    ],
-    [
-      "property",
-      "30a18bd1-1083-4a4f-bb9a-2e3869700da7",
-      "Value"
-    ],
-    [
-      "property",
-      "35a3212b-cc95-4395-8c7d-2997b26a44a5",
-      "Value"
-    ],
-    [
-      "property",
-      "422651bc-72c4-4d05-a9dc-448896b502ff",
-      "Reference"
-    ],
-    [
-      "property",
-      "422651bc-72c4-4d05-a9dc-448896b502ff",
-      "Value"
-    ],
-    [
-      "property",
-      "4a94eeea-5a2a-435d-99dd-6bc778de35ce",
-      "Reference"
-    ],
-    [
-      "property",
-      "4a94eeea-5a2a-435d-99dd-6bc778de35ce",
-      "Value"
-    ],
-    [
-      "property",
-      "6260c91e-bb6f-4776-a5d7-081c15aaaa1c",
-      "Value"
-    ],
-    [
-      "property",
-      "d83af08e-30de-447a-97d6-e5b7c9f2eaf8",
-      "Value"
-    ],
-    [
-      "property",
-      "f100f8fd-8f83-4081-95c9-2ec4d06286d4",
-      "Reference"
-    ],
-    [
-      "property",
-      "f100f8fd-8f83-4081-95c9-2ec4d06286d4",
-      "Value"
+      "text",
+      "9fcc164c-5e9a-4229-83f1-f02c5e68c5b4"
     ]
   ]
 }
