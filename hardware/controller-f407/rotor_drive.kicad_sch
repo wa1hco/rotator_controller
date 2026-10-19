@@ -5404,7 +5404,7 @@
 	)
 	(wire
 		(pts
-			(xy 314.96 44.45) (xy 346.71 44.45)
+			(xy 288.29 44.45) (xy 346.71 44.45)
 		)
 		(stroke
 			(width 0)
@@ -5424,7 +5424,7 @@
 	)
 	(wire
 		(pts
-			(xy 227.33 194.31) (xy 245.11 194.31)
+			(xy 222.25 194.31) (xy 245.11 194.31)
 		)
 		(stroke
 			(width 0)
@@ -5504,7 +5504,7 @@
 	)
 	(wire
 		(pts
-			(xy 223.52 54.61) (xy 327.66 54.61)
+			(xy 223.52 54.61) (xy 275.59 54.61)
 		)
 		(stroke
 			(width 0)
@@ -5594,7 +5594,7 @@
 	)
 	(wire
 		(pts
-			(xy 219.71 248.92) (xy 252.73 248.92)
+			(xy 220.98 248.92) (xy 252.73 248.92)
 		)
 		(stroke
 			(width 0)
@@ -5694,7 +5694,7 @@
 	)
 	(wire
 		(pts
-			(xy 226.06 218.44) (xy 236.22 218.44)
+			(xy 222.25 218.44) (xy 236.22 218.44)
 		)
 		(stroke
 			(width 0)
@@ -5994,7 +5994,7 @@
 	)
 	(wire
 		(pts
-			(xy 227.33 196.85) (xy 252.73 196.85)
+			(xy 222.25 196.85) (xy 252.73 196.85)
 		)
 		(stroke
 			(width 0)
@@ -6474,7 +6474,7 @@
 	)
 	(wire
 		(pts
-			(xy 227.33 163.83) (xy 236.22 163.83)
+			(xy 220.98 163.83) (xy 236.22 163.83)
 		)
 		(stroke
 			(width 0)
@@ -6654,7 +6654,7 @@
 	)
 	(wire
 		(pts
-			(xy 219.71 246.38) (xy 243.84 246.38)
+			(xy 220.98 246.38) (xy 243.84 246.38)
 		)
 		(stroke
 			(width 0)
@@ -6664,7 +6664,7 @@
 	)
 	(wire
 		(pts
-			(xy 307.34 44.45) (xy 306.07 44.45)
+			(xy 280.67 44.45) (xy 279.4 44.45)
 		)
 		(stroke
 			(width 0)
@@ -6924,7 +6924,7 @@
 	)
 	(wire
 		(pts
-			(xy 298.45 44.45) (xy 266.7 44.45)
+			(xy 271.78 44.45) (xy 266.7 44.45)
 		)
 		(stroke
 			(width 0)
@@ -7294,7 +7294,7 @@
 	)
 	(wire
 		(pts
-			(xy 335.28 54.61) (xy 337.82 54.61)
+			(xy 283.21 54.61) (xy 337.82 54.61)
 		)
 		(stroke
 			(width 0)
@@ -7616,7 +7616,7 @@
 	)
 	(hierarchical_label "AZ_CCW_SNS"
 		(shape output)
-		(at 219.71 248.92 180)
+		(at 220.98 248.92 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7627,7 +7627,7 @@
 	)
 	(hierarchical_label "AZ_CW_SNS"
 		(shape output)
-		(at 227.33 196.85 180)
+		(at 222.25 196.85 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7660,7 +7660,7 @@
 	)
 	(hierarchical_label "+5V"
 		(shape input)
-		(at 226.06 218.44 180)
+		(at 222.25 218.44 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7693,7 +7693,7 @@
 	)
 	(hierarchical_label "+5V"
 		(shape input)
-		(at 227.33 163.83 180)
+		(at 220.98 163.83 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7792,7 +7792,7 @@
 	)
 	(hierarchical_label "+3V3"
 		(shape input)
-		(at 227.33 194.31 180)
+		(at 222.25 194.31 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7858,7 +7858,7 @@
 	)
 	(hierarchical_label "+3V3"
 		(shape input)
-		(at 219.71 246.38 180)
+		(at 220.98 246.38 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8488,7 +8488,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 302.26 44.45 270)
+		(at 275.59 44.45 270)
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
@@ -8497,7 +8497,7 @@
 		(dnp no)
 		(uuid "29fcdb57-a11f-4960-9551-ff664f44109e")
 		(property "Reference" "R31"
-			(at 303.53 40.64 0)
+			(at 273.05 41.91 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8505,7 +8505,7 @@
 			)
 		)
 		(property "Value" "7.5k"
-			(at 300.482 40.386 0)
+			(at 277.368 41.91 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8513,7 +8513,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_1206_3216Metric"
-			(at 302.26 44.45 0)
+			(at 275.59 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8522,7 +8522,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 302.26 44.45 0)
+			(at 275.59 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8531,7 +8531,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 302.26 44.45 0)
+			(at 275.59 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8539,7 +8539,7 @@
 			)
 		)
 		(property "LCSC" "TBD"
-			(at 302.26 44.45 0)
+			(at 275.59 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12872,7 +12872,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 311.15 44.45 270)
+		(at 284.48 44.45 270)
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
@@ -12881,7 +12881,7 @@
 		(dnp no)
 		(uuid "99d9ef27-6bbb-4ad7-93c0-8e6e1bb2dfa4")
 		(property "Reference" "R30"
-			(at 312.42 40.894 0)
+			(at 282.448 41.91 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12889,7 +12889,7 @@
 			)
 		)
 		(property "Value" "7.5k"
-			(at 310.134 40.894 0)
+			(at 286.766 41.91 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12897,7 +12897,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_1206_3216Metric"
-			(at 311.15 44.45 0)
+			(at 284.48 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12906,7 +12906,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 311.15 44.45 0)
+			(at 284.48 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12915,7 +12915,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 311.15 44.45 0)
+			(at 284.48 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12923,7 +12923,7 @@
 			)
 		)
 		(property "LCSC" "TBD"
-			(at 311.15 44.45 0)
+			(at 284.48 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14146,7 +14146,7 @@
 	)
 	(symbol
 		(lib_id "Device:D")
-		(at 331.47 54.61 0)
+		(at 279.4 54.61 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -14154,7 +14154,7 @@
 		(dnp no)
 		(uuid "c6852be3-8126-452a-b6bc-57a0d1c91eae")
 		(property "Reference" "D1"
-			(at 329.946 51.562 0)
+			(at 277.876 51.562 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14162,7 +14162,7 @@
 			)
 		)
 		(property "Value" "S1M"
-			(at 333.756 51.562 0)
+			(at 281.686 51.562 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14170,7 +14170,7 @@
 			)
 		)
 		(property "Footprint" "Diode_SMD:D_SMA"
-			(at 331.47 54.61 0)
+			(at 279.4 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14179,7 +14179,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 331.47 54.61 0)
+			(at 279.4 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14188,7 +14188,7 @@
 			)
 		)
 		(property "Description" "Half-wave from AC_FUSED to VIN_RECT. PIV about 74 V, so not a 1N4148. Bulk cap is on the power sheet."
-			(at 331.47 54.61 0)
+			(at 279.4 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14197,7 +14197,7 @@
 			)
 		)
 		(property "LCSC" "TBD"
-			(at 331.47 54.61 0)
+			(at 279.4 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14206,7 +14206,7 @@
 			)
 		)
 		(property "MPN" "S1M or US1M, 1 A, >= 200 V SMA"
-			(at 331.47 54.61 0)
+			(at 279.4 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
