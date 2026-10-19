@@ -2,7 +2,7 @@
   "source_commit": "84e08ee",
   "parent_commit": "74417fb",
   "author": "Jeff Millar <wa1hco@gmail.com>",
-  "note": "Fields and labels on the rotor sheet as the owner left them in 84e08ee (removed logic, relying on MCU; cleanup layout for readability). The tidy tool records these keys and does not move them. Root sheet pins that were already frozen and still exist are kept. Keys from the pre-cleanup sheet that are no longer in the file are dropped.",
+  "note": "Fields and labels on the rotor sheet as the owner left them in 84e08ee (removed logic, relying on MCU; cleanup layout for readability). The tidy tool records these keys and does not move them. The AMR_EN hierarchical label text was corrected to ARM_EN in place, and the 1.27 mm dangling wire at that label was removed. Those keys are unchanged. Root sheet pins that were already frozen and still exist are kept. Keys from the pre-cleanup sheet that are no longer in the file are dropped.",
   "counts": {
     "hardware/controller-f407/controller-f407.kicad_sch": {
       "changed_or_added": 18,
