@@ -9609,7 +9609,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "100 uF 100 VDC/63 VAC, flat, leads bent down. Digi-Key 399-13010-ND. Mouser number not found."
+		(property "Description" "100 uF 100 VDC/63 VAC, flat on the bottom, leads bent up into the board and soldered from the top. Digi-Key 399-13010-ND. Mouser number not found."
 			(at 322.58 217.17 0)
 			(effects
 				(font
