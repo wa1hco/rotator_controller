@@ -191,76 +191,6 @@
 	(net 111 "unconnected-(U8-PB6-Pad59)")
 	(net 112 "unconnected-(U8-PA15-Pad51)")
 	(net 113 "unconnected-(U8-PA9-Pad43)")
-	(footprint "C_Rect_TDK_B32526T_P37.5_L41.5_W24_H15_Upright"
-		(layer "F.Cu")
-		(uuid "0098bfc1-08a2-40be-b245-000759a9e492")
-		(at 259.51 80.06 90)
-		(property "Reference" "C_MOTOR2"
-			(at 0 0 90)
-			(layer "F.SilkS")
-			(hide yes)
-			(uuid "3c7fdc98-c90a-46ed-abc3-64ca03d61409")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Value" "B32526T1336K000"
-			(at 0 0 90)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "25e51b84-2265-445a-aef8-bc72122c3127")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 0 0 90)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "2a8fed53-570b-43bb-8c89-aae96ec90047")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 0 0 90)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "f3b72cfc-83d1-4ea6-a8b1-9043bf0ae955")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(pad "1" thru_hole circle
-			(at 0 0 90)
-			(size 2.5 2.5)
-			(drill 1.3)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(uuid "c3989d73-d519-4ae0-86b5-9969dee4cf80")
-		)
-		(pad "2" thru_hole circle
-			(at 0 37.5 90)
-			(size 2.5 2.5)
-			(drill 1.3)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(uuid "82e6341a-2a5f-4400-958e-c3f04f60ca99")
-		)
-		(embedded_fonts no)
-	)
 	(footprint "AL_BAR_10x50"
 		(layer "F.Cu")
 		(uuid "02688a78-dd4e-4d32-8866-2417956002af")
@@ -313,7 +243,7 @@
 				)
 			)
 		)
-		(attr exclude_from_pos_files exclude_from_bom)
+		(attr board_only exclude_from_pos_files exclude_from_bom)
 		(pad "" np_thru_hole circle
 			(at 0 -20)
 			(size 3.2 3.2)
@@ -4533,90 +4463,6 @@
 				(xyz 0 0 0)
 			)
 		)
-	)
-	(footprint "C_Rect_KEMET_R60_P37.5_L41.5_W20_H40_Flat"
-		(layer "F.Cu")
-		(uuid "25fe7513-8edb-4f1a-b9ce-4a7662bfbdd0")
-		(at 259.51 141.06 90)
-		(property "Reference" "C_MOTOR1"
-			(at 0 0 90)
-			(layer "F.SilkS")
-			(hide yes)
-			(uuid "31b8c3a4-4609-4aef-8220-9d0a3147bb20")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Value" "R60EW61005000K"
-			(at 0 0 90)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "839442d6-4b0f-4725-814f-8357b3664b87")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 0 0 90)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "dfe02c06-cd21-44b8-90bc-a62c4d7ac386")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 0 0 90)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "11ec82ae-3e3e-4247-b701-96767d8c4b07")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(pad "" np_thru_hole circle
-			(at 0 18.75 90)
-			(size 3.2 3.2)
-			(drill 3.2)
-			(layers "*.Cu" "*.Mask")
-			(uuid "f0e7feae-44b9-4d9e-a232-98a072ef42f4")
-		)
-		(pad "" np_thru_hole circle
-			(at 45.1 18.75 90)
-			(size 3.2 3.2)
-			(drill 3.2)
-			(layers "*.Cu" "*.Mask")
-			(uuid "02263124-4e2a-481f-a6c2-45cddfcc463d")
-		)
-		(pad "1" thru_hole circle
-			(at 0 0 90)
-			(size 2.5 2.5)
-			(drill 1.3)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(uuid "e39bf807-f450-47e1-92d9-7acb1e0a20a5")
-		)
-		(pad "2" thru_hole circle
-			(at 0 37.5 90)
-			(size 2.5 2.5)
-			(drill 1.3)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(uuid "8eb0971e-88c5-4f52-8fbc-3f62a699f7ef")
-		)
-		(embedded_fonts no)
 	)
 	(footprint "Resistor_SMD:R_0603_1608Metric"
 		(layer "F.Cu")
