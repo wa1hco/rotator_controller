@@ -571,7 +571,7 @@ Assumption: the first board pins both axes. Elevation power parts can stay off t
 
 Without the optional limit inputs that is about 30 signals plus the SWD header. The 64-pin part lists 52 I/O. The 48-pin part lists 38, which covers the cut above and leaves little spare. SWD uses two of those I/O.
 
-The pot wiper is rotor return (ADR 0018). The Drive measures the two ends. The 60 Hz notch and the FIR described in the system overview run on the Drive. The firmware in the tree today implements the ideal end-voltage ratio only; the notch and the FIR are not written yet, and the notch is not drawn on `analog_input`.
+The pot wiper is rotor return (ADR 0018). The Drive measures the two ends. A passive 60 Hz twin-T is drawn on each sense line of `analog_input`, ahead of the ADC. The FIR described in the system overview is not written yet. Firmware averaging is not the fix for the 60 Hz that the shared return wire puts on these lines.
 
 ### Pin assignment
 
@@ -612,7 +612,13 @@ VBAT (pin 1) is tied to VDD. VDD is pins 16, 32, 48, and 64, each with 100 nF (C
 
 Drawn on `hardware/controller-f407/analog_input.kicad_sch`. The pot path is a measurement. The RC there is an anti-alias filter, not a safety timer. The VIN_RECT path has no capacitor and no gate logic.
 
-Each pot end is 330 Ω from +3V3, then 1 kΩ, then a BAT54 to +3V3 and a BAT54 to ground, then 10 kΩ and 100 nF. That is about 159 Hz. Azimuth ends are `AZ_POT_3` and `AZ_POT_7`. Their SMAJ90CA clamps (D6, D7) stay on `rotor_drive`. The wiper is `ROTOR_RETURN`. Elevation is the same circuit on `J20` (pin 1 wiper, pin 2 end A, pin 3 end B), with D260 and D261, SMAJ90CA, LCSC C5353147, the same part as D6 and D7. `J20` is through-hole, Mouser TBD. The 330 Ω, 1 kΩ, 10 kΩ, 100 nF, and BAT54 parts are LCSC TBD.
+Each pot end is 330 Ω from +3V3, then 1 kΩ, then a 60 Hz twin-T, then 10 kΩ and 100 nF, then a BAT54 to +3V3 and a BAT54 to ground. The clamps are after the notch so they do not clip the 60 Hz before the filter can remove it. Azimuth ends are `AZ_POT_3` and `AZ_POT_7`. Their SMAJ90CA clamps (D6, D7) stay on `rotor_drive`. The wiper is `ROTOR_RETURN`. Elevation uses the same front end. The connector is `J5`, value `ELEVATION ROTOR` (pin 1 wiper to `ROTOR_RETURN`, pin 2 end A, pin 3 end B), through-hole, Mouser TBD. `D19` and `D22` on that cable are SMAJ90CA, LCSC C5353147, the same part as D6 and D7. The 330 Ω, 1 kΩ, 10 kΩ, 100 nF, and BAT54 parts are LCSC TBD.
+
+The twin-T is R, R, and R/2, with C, C, and 2C. The values are 121 kΩ, 121 kΩ, and 60.4 kΩ, all 1%, with 22 nF C0G 1% 50 V 0805, and the shunt capacitor is two of those 22 nF in parallel so the capacitor ratio stays exact. Ideal half of 121 kΩ is 60.5 kΩ; 60.4 kΩ is the E96 value (60.4/60.5 = 0.998). Notch frequency 1/(2π·121 kΩ·22 nF) is 59.79 Hz. The 1 kΩ source is small next to 121 kΩ, and the ADC after the 10 kΩ is high impedance. The 100 nF is not high impedance at 60 Hz against 121 kΩ, so it stays as drawn and it sets the bandwidth: the twin-T's low-frequency output resistance is about 242 kΩ in series with the 10 kΩ, into 100 nF, about 4.7 Hz. A unit step at the ADC is inside 1% after 0.157 s and finishes at 1.000. DC gain is 1.000.
+
+With the 60.4 kΩ shunt, the gain at 60 Hz at the ADC pin is 3.71×10⁻⁴, which is −68.6 dB. Five volts peak of 60 Hz on the line is 1.86 mV peak at the pin. The BAT54s do not conduct on that residue. At ±1% the notch moves: C +1% is −56.2 dB (7.7 mV peak), C −1% is −61.8 dB (4.1 mV), R and R/2 both +1% is −56.3 dB (7.7 mV), and both R and C +1% is −51.3 dB (13.5 mV peak). A 5% capacitor would be too shallow, so the capacitors are C0G 1%, not X7R.
+
+SMT parts, confirmed as real LCSC numbers (stock was thin; confirm before ordering): 121 kΩ 0603 is LCSC C4280654 (Vishay CRCW0603121KFKTC); 60.4 kΩ 0603 is LCSC C844800 (Vishay CRCW060360K4FKEA); 22 nF C0G ±1% 50 V 0805 is LCSC C2259101 (KEMET C0805X223F5GEC7800). Do not substitute Yageo CC0805JRNPO9BN220 (that is 22 pF) or an X7R 22 nF.
 
 TR1 and its bias and clamps stay on `rotor_drive`. That is the owner's decision. `analog_input` carries `I_SENSE` across to `I_ADC` on a wire, with no second copy of that circuit.
 
@@ -746,7 +752,7 @@ None of that code is in this change.
 
 ## 8. Open questions
 
-Settled, and removed from this list: the names Drive and Station; AC axes on or off with ramp time 0; K1 stays, one relay on the first board; TR1 and its conditioning stay on `rotor_drive`, and `analog_input` only carries `I_SENSE` to the ADC; one pulldown per gate line (R2G, R3G, R4G, R40); heartbeat default 5 seconds (range 2–30) with loss policy stop; Drive MCU STM32G431RBT6, LCSC C431633. Accepted in ADR 0021, and drawn on the rotor sheet: direct Drive pins, BOR level 4, hardware IWDG with PR = /4 and RL = 799, option word 0xFBEEFCAA. The supervisor, the relay clamp, and the Drive STOP pin are off the sheet. A stuck Drive is the hardware IWDG. A physical emergency stop is the power switch or the AC feed.
+Settled, and removed from this list: a passive 60 Hz twin-T on each pot sense line (121 kΩ / 60.4 kΩ / 22 nF C0G, clamps after the filter); the names Drive and Station; AC axes on or off with ramp time 0; K1 stays, one relay on the first board; TR1 and its conditioning stay on `rotor_drive`, and `analog_input` only carries `I_SENSE` to the ADC; one pulldown per gate line (R2G, R3G, R4G, R40); heartbeat default 5 seconds (range 2–30) with loss policy stop; Drive MCU STM32G431RBT6, LCSC C431633. Accepted in ADR 0021, and drawn on the rotor sheet: direct Drive pins, BOR level 4, hardware IWDG with PR = /4 and RL = 799, option word 0xFBEEFCAA. The supervisor, the relay clamp, and the Drive STOP pin are off the sheet. A stuck Drive is the hardware IWDG. A physical emergency stop is the power switch or the AC feed.
 
 1. A jog under the complete policy takes the stop path, because a jog has no target.
 2. A command on a healthy link counts as a heartbeat. After `host_lost`, only HEARTBEAT or READ_STATUS clears the flag.

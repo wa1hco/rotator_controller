@@ -250,7 +250,7 @@ No C-number is filled in for these. Do not guess one.
 7. SMAJ90CA on the sheet is FOSAN C5353147, not Littelfuse.
 8. ZMCT103C is through-hole and was confirmed on LCSC, not on Mouser. The 5 A rating against a 7.3 A motor-plus-brake overlap, and whether stall detection still works if the CT saturates.
 9. G5LE-1A4 inductive rating is 5 A. The overlap is about 7.3 A. G5LE-1A-E is the 16 A alternative. This sheet keeps the part the design note named. Confirm pin 3 is NO on the figure before stuffing.
-10. HDR-300 cable adapter. Elevation is a second copy of this sheet, not drawn.
+10. HDR-300 cable adapter. Elevation is not a second copy of this sheet. It is `J5` on `analog_input`, value `ELEVATION ROTOR`: pin 1 wiper to `ROTOR_RETURN`, pin 2 end A, pin 3 end B. Each of the four pot sense lines has a 60 Hz twin-T (121 kΩ, 121 kΩ, 60.4 kΩ, 22 nF, 22 nF, and two 22 nF in parallel) between the 1 kΩ and the 10 kΩ / 100 nF, with the BAT54 clamps after that filter. The numbers and the LCSC C-numbers are in `docs/design/drive-controller.md`.
 11. Chassis RF capacitor and TVS from `GNDPWR` (ADR 0018) still belong on a later sheet. The pot clamp is on `analog_input`.
 12. The VIN_RECT divider is on `analog_input` (39.0 kΩ over 1.00 kΩ, no capacitor, into PA1). STOP is a Station command. The Drive has no STOP pin. A stuck Drive is the hardware IWDG. Removing power is the power switch or the AC feed. TR1 and its conditioning stay on this sheet. `analog_input` only carries `I_SENSE` to the ADC.
 13. Vertical TO-220 footprint versus the bar lead row is a placement note. The footprint itself is the library part, not a custom lead bend.

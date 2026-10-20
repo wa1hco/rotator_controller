@@ -7,7 +7,7 @@
 	(lib_symbols
 		(symbol "Connector:Conn_01x03"
 			(pin_numbers
-				(hide yes)
+				(hide no)
 			)
 			(pin_names
 				(offset 0.254)
@@ -2909,7 +2909,7 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "Analog front end.\nAzimuth ends are AZ_POT_3 and AZ_POT_7 from the rotor sheet. \nThe wiper is ROTOR_RETURN.\n330 ohm from +3V3, then 1k, BAT54 clamps, then 10k and 100 nF (about 159 Hz).\n\nElevation is the same circuit. \nJ20 is TBD (Mouser, through-hole).\nD260 and D261 are SMAJ90CA, LCSC C5353147. \n\nAzimuth clamps D6 and D7 stay on the rotor sheet.\nTR1 and its conditioning stay on rotor_drive. I_SENSE is only carried across to I_ADC.\nVIN_WARN is 39k over 1k into the comparator, with no capacitor."
+	(text "Analog front end.\nAzimuth ends are AZ_POT_3 and AZ_POT_7 from the rotor sheet. The wiper is ROTOR_RETURN.\nEach pot end is 330 ohm from +3V3, then 1k, then a 60 Hz twin-T,\nthen 10k and 100 nF, then BAT54 clamps to +3V3 and to ground.\nTwin-T is 121k, 121k, and 60.4k, with 22n, 22n, and two 22n in parallel.\n1/(2*pi*121k*22n) is 59.8 Hz. The clamps are after the notch, so they do not clip 60 Hz first.\nThe 100 nF after 121 k ohm is about 4.7 Hz. A step is within 1 percent in about 0.16 s. Five volts peak at 60 Hz leaves about 2 mV at the ADC.\n\nJ5 is the elevation rotor cable, not a potentiometer.\nPin 1 wiper to ROTOR_RETURN, pin 2 end A, pin 3 end B. Through-hole, Mouser TBD.\nD19 and D22 are SMAJ90CA, LCSC C5353147.\nAzimuth clamps D6 and D7 stay on the rotor sheet.\nTR1 and its conditioning stay on rotor_drive. I_SENSE is only carried across to I_ADC.\nVIN_WARN is 39k over 1k into the comparator, with no capacitor."
 		(exclude_from_sim no)
 		(at 203.2 30.48 0)
 		(effects
@@ -3096,16 +3096,7 @@
 		)
 		(uuid "037282f2-b106-4926-b711-a503dfdfd48f")
 	)
-	(wire
-		(pts
-			(xy 245.11 114.3) (xy 245.11 113.03)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "05a1e97f-4055-4746-bfa3-7fab4fa5168e")
-	)
+	
 	(wire
 		(pts
 			(xy 217.17 187.96) (xy 217.17 189.23)
@@ -3136,16 +3127,7 @@
 		)
 		(uuid "08d4a4bb-d0a9-4082-9735-4a29e07439c5")
 	)
-	(wire
-		(pts
-			(xy 237.49 189.23) (xy 245.11 189.23)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "099ab988-0adb-4d33-b3a0-16a137564066")
-	)
+	
 	(wire
 		(pts
 			(xy 265.43 76.2) (xy 265.43 74.93)
@@ -3166,16 +3148,7 @@
 		)
 		(uuid "133997c8-c25b-4cf0-b7a9-c6caad5ce570")
 	)
-	(wire
-		(pts
-			(xy 245.11 149.86) (xy 245.11 151.13)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "13568cb1-fc7f-4b6f-b32a-6971a51ec73d")
-	)
+	
 	(wire
 		(pts
 			(xy 208.28 231.14) (xy 208.28 232.41)
@@ -3188,7 +3161,7 @@
 	)
 	(wire
 		(pts
-			(xy 217.17 102.87) (xy 245.11 102.87)
+			(xy 217.17 102.87) (xy 273.05 102.87)
 		)
 		(stroke
 			(width 0)
@@ -3236,26 +3209,8 @@
 		)
 		(uuid "2366f1d8-535d-417e-ba09-923addcea496")
 	)
-	(wire
-		(pts
-			(xy 245.11 140.97) (xy 245.11 142.24)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "244accb9-f547-4275-af2f-87c4f80b6aa5")
-	)
-	(wire
-		(pts
-			(xy 245.11 64.77) (xy 245.11 66.04)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "2454b347-74f3-4ded-86c0-a02f15472683")
-	)
+	
+	
 	(wire
 		(pts
 			(xy 143.51 102.87) (xy 143.51 140.97)
@@ -3286,16 +3241,7 @@
 		)
 		(uuid "2eca1557-1f13-431c-9441-d6c5fb620785")
 	)
-	(wire
-		(pts
-			(xy 245.11 113.03) (xy 256.54 113.03)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "30f9450a-d6cb-4439-ab3d-43a94d723a2e")
-	)
+	
 	(wire
 		(pts
 			(xy 264.16 189.23) (xy 265.43 189.23)
@@ -3318,7 +3264,7 @@
 	)
 	(wire
 		(pts
-			(xy 265.43 74.93) (xy 280.67 74.93)
+			(xy 273.05 74.93) (xy 280.67 74.93)
 		)
 		(stroke
 			(width 0)
@@ -3376,16 +3322,7 @@
 		)
 		(uuid "41d7df68-2c7a-4edd-92a2-36cc503ed4aa")
 	)
-	(wire
-		(pts
-			(xy 245.11 76.2) (xy 245.11 74.93)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "41fa1b29-3177-450a-b4b6-bfc036be9e1b")
-	)
+	
 	(wire
 		(pts
 			(xy 208.28 232.41) (xy 220.98 232.41)
@@ -3408,7 +3345,7 @@
 	)
 	(wire
 		(pts
-			(xy 265.43 171.45) (xy 280.67 171.45)
+			(xy 260.35 171.45) (xy 265.43 171.45)
 		)
 		(stroke
 			(width 0)
@@ -3436,16 +3373,7 @@
 		)
 		(uuid "52c5a081-99f2-43e5-97c4-df3162f6775c")
 	)
-	(wire
-		(pts
-			(xy 245.11 179.07) (xy 245.11 180.34)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "55b7ad02-c1cb-4116-9bad-6a25add9e4ab")
-	)
+	
 	(wire
 		(pts
 			(xy 143.51 67.31) (xy 143.51 102.87)
@@ -3466,26 +3394,8 @@
 		)
 		(uuid "5b029977-37d1-4cae-a2c4-4ed93da59851")
 	)
-	(wire
-		(pts
-			(xy 245.11 73.66) (xy 245.11 74.93)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5e690e23-fa86-4c35-948a-d869e490c51c")
-	)
-	(wire
-		(pts
-			(xy 245.11 190.5) (xy 245.11 189.23)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5ee761e5-cde0-47c0-9083-82b27c2042fd")
-	)
+	
+	
 	(wire
 		(pts
 			(xy 153.67 232.41) (xy 182.88 232.41)
@@ -3496,16 +3406,7 @@
 		)
 		(uuid "60857f8d-351a-4f29-8762-f5f73d3f0412")
 	)
-	(wire
-		(pts
-			(xy 245.11 152.4) (xy 245.11 151.13)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "63e735c1-e656-48ea-9152-d9d5182733de")
-	)
+	
 	(wire
 		(pts
 			(xy 185.42 148.59) (xy 191.77 148.59)
@@ -3526,16 +3427,7 @@
 		)
 		(uuid "6ab0d52e-88c5-40db-a5de-fa928485ad66")
 	)
-	(wire
-		(pts
-			(xy 245.11 74.93) (xy 256.54 74.93)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6c9fba7f-dcec-4d0c-aa66-faada15ec415")
-	)
+	
 	(wire
 		(pts
 			(xy 217.17 111.76) (xy 217.17 113.03)
@@ -3576,26 +3468,8 @@
 		)
 		(uuid "7985d03c-d2cf-4a73-894d-cfdf1d118eb6")
 	)
-	(wire
-		(pts
-			(xy 245.11 111.76) (xy 245.11 113.03)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "82d4be82-1ab6-4cd4-82d7-0db6530fd452")
-	)
-	(wire
-		(pts
-			(xy 245.11 189.23) (xy 256.54 189.23)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "847db6c2-2d6c-4c54-9bfe-edcaab2ba995")
-	)
+	
+	
 	(wire
 		(pts
 			(xy 191.77 148.59) (xy 191.77 189.23)
@@ -3628,7 +3502,7 @@
 	)
 	(wire
 		(pts
-			(xy 265.43 189.23) (xy 280.67 189.23)
+			(xy 273.05 189.23) (xy 280.67 189.23)
 		)
 		(stroke
 			(width 0)
@@ -3648,7 +3522,7 @@
 	)
 	(wire
 		(pts
-			(xy 217.17 64.77) (xy 245.11 64.77)
+			(xy 217.17 64.77) (xy 273.05 64.77)
 		)
 		(stroke
 			(width 0)
@@ -3666,16 +3540,7 @@
 		)
 		(uuid "9ce065d6-3d79-4c80-95e9-e3d0f60bf00d")
 	)
-	(wire
-		(pts
-			(xy 245.11 151.13) (xy 237.49 151.13)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a0b22a88-597b-4fb4-8a57-ead4a931eb24")
-	)
+	
 	(wire
 		(pts
 			(xy 190.5 232.41) (xy 193.04 232.41)
@@ -3688,7 +3553,7 @@
 	)
 	(wire
 		(pts
-			(xy 217.17 140.97) (xy 245.11 140.97)
+			(xy 217.17 140.97) (xy 273.05 140.97)
 		)
 		(stroke
 			(width 0)
@@ -3716,16 +3581,7 @@
 		)
 		(uuid "ab2a935e-9723-4aac-832c-de720a89edae")
 	)
-	(wire
-		(pts
-			(xy 245.11 113.03) (xy 237.49 113.03)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b0527210-3cc4-4bb6-a4e5-b08428142b88")
-	)
+	
 	(wire
 		(pts
 			(xy 204.47 151.13) (xy 217.17 151.13)
@@ -3746,39 +3602,12 @@
 		)
 		(uuid "b855f00f-6b6b-4352-bb40-1c734c3ac9a2")
 	)
+	
+	
+	
 	(wire
 		(pts
-			(xy 245.11 102.87) (xy 245.11 104.14)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "bc816f2c-7e75-48c2-b42d-11ab1dc7c08f")
-	)
-	(wire
-		(pts
-			(xy 245.11 74.93) (xy 237.49 74.93)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "bc8cbd45-73a0-4c92-b2ed-b273c71f6c70")
-	)
-	(wire
-		(pts
-			(xy 245.11 187.96) (xy 245.11 189.23)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "bd8a60b0-1a7d-4371-bc7f-e110cca86188")
-	)
-	(wire
-		(pts
-			(xy 186.69 171.45) (xy 265.43 171.45)
+			(xy 186.69 171.45) (xy 232.41 171.45)
 		)
 		(stroke
 			(width 0)
@@ -3788,7 +3617,7 @@
 	)
 	(wire
 		(pts
-			(xy 265.43 113.03) (xy 280.67 113.03)
+			(xy 273.05 113.03) (xy 280.67 113.03)
 		)
 		(stroke
 			(width 0)
@@ -3806,16 +3635,7 @@
 		)
 		(uuid "c810c211-a29e-47b0-a91d-3c0a5c73bd9a")
 	)
-	(wire
-		(pts
-			(xy 245.11 151.13) (xy 256.54 151.13)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cc88e67f-cc3d-4a05-9e71-bb22cd675687")
-	)
+	
 	(wire
 		(pts
 			(xy 163.83 151.13) (xy 185.42 151.13)
@@ -3828,7 +3648,7 @@
 	)
 	(wire
 		(pts
-			(xy 265.43 151.13) (xy 280.67 151.13)
+			(xy 273.05 151.13) (xy 280.67 151.13)
 		)
 		(stroke
 			(width 0)
@@ -3888,7 +3708,7 @@
 	)
 	(wire
 		(pts
-			(xy 217.17 179.07) (xy 245.11 179.07)
+			(xy 217.17 179.07) (xy 273.05 179.07)
 		)
 		(stroke
 			(width 0)
@@ -4050,7 +3870,7 @@
 	)
 	(symbol
 		(lib_id "Device:D")
-		(at 245.11 194.31 270)
+		(at 273.05 194.31 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4058,7 +3878,7 @@
 		(dnp no)
 		(uuid "07b4ad64-0b2b-47e5-b468-e26bef992e2f")
 		(property "Reference" "D23"
-			(at 249.428 193.294 90)
+			(at 277.37 193.29 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4066,7 +3886,7 @@
 			)
 		)
 		(property "Value" "BAT54"
-			(at 249.682 195.58 90)
+			(at 277.62 195.58 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4074,7 +3894,7 @@
 			)
 		)
 		(property "Footprint" "Diode_SMD:D_SOD-123"
-			(at 245.11 194.31 0)
+			(at 273.05 194.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4083,7 +3903,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 245.11 194.31 0)
+			(at 273.05 194.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4092,7 +3912,7 @@
 			)
 		)
 		(property "Description" "Clamp to ROTOR_RETURN. LCSC TBD."
-			(at 245.11 194.31 0)
+			(at 273.05 194.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4101,7 +3921,7 @@
 			)
 		)
 		(property "LCSC" "TBD"
-			(at 245.11 194.31 0)
+			(at 273.05 194.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4126,7 +3946,7 @@
 	)
 	(symbol
 		(lib_id "Device:D")
-		(at 245.11 156.21 270)
+		(at 273.05 156.21 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4134,7 +3954,7 @@
 		(dnp no)
 		(uuid "0a7fc96b-3d32-4715-bc53-c8b65ffb53ba")
 		(property "Reference" "D20"
-			(at 249.682 155.448 90)
+			(at 277.62 155.45 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4142,7 +3962,7 @@
 			)
 		)
 		(property "Value" "BAT54"
-			(at 250.19 157.988 90)
+			(at 278.13 157.99 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4150,7 +3970,7 @@
 			)
 		)
 		(property "Footprint" "Diode_SMD:D_SOD-123"
-			(at 245.11 156.21 0)
+			(at 273.05 156.21 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4159,7 +3979,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 245.11 156.21 0)
+			(at 273.05 156.21 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4168,7 +3988,7 @@
 			)
 		)
 		(property "Description" "Clamp to ROTOR_RETURN. LCSC TBD."
-			(at 245.11 156.21 0)
+			(at 273.05 156.21 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4177,7 +3997,7 @@
 			)
 		)
 		(property "LCSC" "TBD"
-			(at 245.11 156.21 0)
+			(at 273.05 156.21 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4343,7 +4163,7 @@
 	)
 	(symbol
 		(lib_id "Device:D")
-		(at 245.11 118.11 270)
+		(at 273.05 118.11 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4351,7 +4171,7 @@
 		(dnp no)
 		(uuid "19a29a80-035f-4cbc-8a3b-5d4373c8da1a")
 		(property "Reference" "D17"
-			(at 249.682 117.856 90)
+			(at 277.62 117.86 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4359,7 +4179,7 @@
 			)
 		)
 		(property "Value" "BAT54"
-			(at 249.682 120.142 90)
+			(at 277.62 120.14 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4367,7 +4187,7 @@
 			)
 		)
 		(property "Footprint" "Diode_SMD:D_SOD-123"
-			(at 245.11 118.11 0)
+			(at 273.05 118.11 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4376,7 +4196,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 245.11 118.11 0)
+			(at 273.05 118.11 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4385,7 +4205,7 @@
 			)
 		)
 		(property "Description" "Clamp to ROTOR_RETURN. LCSC TBD."
-			(at 245.11 118.11 0)
+			(at 273.05 118.11 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4394,7 +4214,7 @@
 			)
 		)
 		(property "LCSC" "TBD"
-			(at 245.11 118.11 0)
+			(at 273.05 118.11 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4495,7 +4315,7 @@
 	)
 	(symbol
 		(lib_id "Device:D")
-		(at 245.11 107.95 270)
+		(at 273.05 107.95 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4503,7 +4323,7 @@
 		(dnp no)
 		(uuid "2ce91fa2-edf5-4fca-ac20-960ad4f55eb6")
 		(property "Reference" "D16"
-			(at 249.428 106.934 90)
+			(at 277.37 106.93 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4511,7 +4331,7 @@
 			)
 		)
 		(property "Value" "BAT54"
-			(at 249.936 109.474 90)
+			(at 277.88 109.47 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4519,7 +4339,7 @@
 			)
 		)
 		(property "Footprint" "Diode_SMD:D_SOD-123"
-			(at 245.11 107.95 0)
+			(at 273.05 107.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4528,7 +4348,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 245.11 107.95 0)
+			(at 273.05 107.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4537,7 +4357,7 @@
 			)
 		)
 		(property "Description" "Clamp to +3V3. LCSC TBD."
-			(at 245.11 107.95 0)
+			(at 273.05 107.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4546,7 +4366,7 @@
 			)
 		)
 		(property "LCSC" "TBD"
-			(at 245.11 107.95 0)
+			(at 273.05 107.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4701,7 +4521,7 @@
 	)
 	(symbol
 		(lib_id "Device:D")
-		(at 245.11 146.05 270)
+		(at 273.05 146.05 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4709,7 +4529,7 @@
 		(dnp no)
 		(uuid "3a3b48bc-a6d6-4d75-8f8c-fc346cd0818a")
 		(property "Reference" "D18"
-			(at 249.174 145.034 90)
+			(at 277.11 145.03 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4717,7 +4537,7 @@
 			)
 		)
 		(property "Value" "BAT54"
-			(at 249.428 147.574 90)
+			(at 277.37 147.57 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4725,7 +4545,7 @@
 			)
 		)
 		(property "Footprint" "Diode_SMD:D_SOD-123"
-			(at 245.11 146.05 0)
+			(at 273.05 146.05 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4734,7 +4554,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 245.11 146.05 0)
+			(at 273.05 146.05 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4743,7 +4563,7 @@
 			)
 		)
 		(property "Description" "Clamp to +3V3. LCSC TBD."
-			(at 245.11 146.05 0)
+			(at 273.05 146.05 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4752,7 +4572,7 @@
 			)
 		)
 		(property "LCSC" "TBD"
-			(at 245.11 146.05 0)
+			(at 273.05 146.05 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4842,7 +4662,7 @@
 	)
 	(symbol
 		(lib_id "power:GNDPWR")
-		(at 245.11 160.02 0)
+		(at 273.05 160.02 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom no)
@@ -4850,7 +4670,7 @@
 		(dnp no)
 		(uuid "3ea4d000-92a4-4a98-9f8c-aaace81edaef")
 		(property "Reference" "#PWR034"
-			(at 248.92 156.21 0)
+			(at 276.86 156.21 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4859,7 +4679,7 @@
 			)
 		)
 		(property "Value" "GNDPWR"
-			(at 248.92 161.29 0)
+			(at 276.86 161.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4868,7 +4688,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 245.11 160.02 0)
+			(at 273.05 160.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4877,7 +4697,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 245.11 160.02 0)
+			(at 273.05 160.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4886,7 +4706,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 245.11 160.02 0)
+			(at 273.05 160.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4907,7 +4727,7 @@
 	)
 	(symbol
 		(lib_id "Device:D")
-		(at 245.11 184.15 270)
+		(at 273.05 184.15 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4915,7 +4735,7 @@
 		(dnp no)
 		(uuid "44ab0c41-4154-4b90-9195-e64ad8b9a3ec")
 		(property "Reference" "D21"
-			(at 249.174 183.388 90)
+			(at 277.11 183.39 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4923,7 +4743,7 @@
 			)
 		)
 		(property "Value" "BAT54"
-			(at 249.682 185.674 90)
+			(at 277.62 185.67 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4931,7 +4751,7 @@
 			)
 		)
 		(property "Footprint" "Diode_SMD:D_SOD-123"
-			(at 245.11 184.15 0)
+			(at 273.05 184.15 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4940,7 +4760,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 245.11 184.15 0)
+			(at 273.05 184.15 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4949,7 +4769,7 @@
 			)
 		)
 		(property "Description" "Clamp to +3V3. LCSC TBD."
-			(at 245.11 184.15 0)
+			(at 273.05 184.15 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4958,7 +4778,7 @@
 			)
 		)
 		(property "LCSC" "TBD"
-			(at 245.11 184.15 0)
+			(at 273.05 184.15 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5059,7 +4879,7 @@
 	)
 	(symbol
 		(lib_id "power:GNDPWR")
-		(at 245.11 198.12 0)
+		(at 273.05 198.12 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom no)
@@ -5067,7 +4887,7 @@
 		(dnp no)
 		(uuid "4adb8fcb-b68c-4a09-abf8-07c6d098d8c3")
 		(property "Reference" "#PWR038"
-			(at 248.92 194.31 0)
+			(at 276.86 194.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5076,7 +4896,7 @@
 			)
 		)
 		(property "Value" "GNDPWR"
-			(at 248.92 199.39 0)
+			(at 276.86 199.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5085,7 +4905,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 245.11 198.12 0)
+			(at 273.05 198.12 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5094,7 +4914,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 245.11 198.12 0)
+			(at 273.05 198.12 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5103,7 +4923,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 245.11 198.12 0)
+			(at 273.05 198.12 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5656,7 +5476,7 @@
 	)
 	(symbol
 		(lib_id "Device:D")
-		(at 245.11 69.85 270)
+		(at 273.05 69.85 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5664,7 +5484,7 @@
 		(dnp no)
 		(uuid "64e036e9-e880-4193-95ff-93fea437b8f0")
 		(property "Reference" "D14"
-			(at 249.174 68.326 90)
+			(at 277.11 68.33 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5672,7 +5492,7 @@
 			)
 		)
 		(property "Value" "BAT54"
-			(at 249.682 70.866 90)
+			(at 277.62 70.87 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5680,7 +5500,7 @@
 			)
 		)
 		(property "Footprint" "Diode_SMD:D_SOD-123"
-			(at 245.11 69.85 0)
+			(at 273.05 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5689,7 +5509,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 245.11 69.85 0)
+			(at 273.05 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5698,7 +5518,7 @@
 			)
 		)
 		(property "Description" "Clamp to +3V3. LCSC TBD."
-			(at 245.11 69.85 0)
+			(at 273.05 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5707,7 +5527,7 @@
 			)
 		)
 		(property "LCSC" "TBD"
-			(at 245.11 69.85 0)
+			(at 273.05 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5949,7 +5769,7 @@
 	)
 	(symbol
 		(lib_id "Device:D")
-		(at 245.11 80.01 270)
+		(at 273.05 80.01 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5957,7 +5777,7 @@
 		(dnp no)
 		(uuid "7316a59f-073c-4555-9233-28da8bd6892d")
 		(property "Reference" "D15"
-			(at 249.174 78.232 90)
+			(at 277.11 78.23 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5965,7 +5785,7 @@
 			)
 		)
 		(property "Value" "BAT54"
-			(at 249.682 80.772 90)
+			(at 277.62 80.77 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5973,7 +5793,7 @@
 			)
 		)
 		(property "Footprint" "Diode_SMD:D_SOD-123"
-			(at 245.11 80.01 0)
+			(at 273.05 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5982,7 +5802,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 245.11 80.01 0)
+			(at 273.05 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5991,7 +5811,7 @@
 			)
 		)
 		(property "Description" "Clamp to ROTOR_RETURN. LCSC TBD."
-			(at 245.11 80.01 0)
+			(at 273.05 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6000,7 +5820,7 @@
 			)
 		)
 		(property "LCSC" "TBD"
-			(at 245.11 80.01 0)
+			(at 273.05 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6025,7 +5845,7 @@
 	)
 	(symbol
 		(lib_id "power:GNDPWR")
-		(at 245.11 83.82 0)
+		(at 273.05 83.82 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom no)
@@ -6033,7 +5853,7 @@
 		(dnp no)
 		(uuid "7531211f-1068-4042-b6b9-a28439af9503")
 		(property "Reference" "#PWR029"
-			(at 248.92 80.01 0)
+			(at 276.86 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6042,7 +5862,7 @@
 			)
 		)
 		(property "Value" "GNDPWR"
-			(at 248.92 85.09 0)
+			(at 276.86 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6051,7 +5871,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 245.11 83.82 0)
+			(at 273.05 83.82 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6060,7 +5880,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 245.11 83.82 0)
+			(at 273.05 83.82 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6069,7 +5889,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 245.11 83.82 0)
+			(at 273.05 83.82 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6105,12 +5925,13 @@
 				)
 			)
 		)
-		(property "Value" "EL_POT"
-			(at 183.642 145.796 0)
+		(property "Value" "ELEVATION ROTOR"
+			(at 166.37 137.16 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
@@ -6131,7 +5952,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Elevation pot. Pin 1 wiper to ROTOR_RETURN, pin 2 end A, pin 3 end B. Through-hole, Mouser TBD."
+		(property "Description" "Elevation rotor cable. Pin 1 wiper to ROTOR_RETURN, pin 2 end A, pin 3 end B. Through-hole, Mouser TBD."
 			(at 180.34 151.13 0)
 			(effects
 				(font
@@ -6809,7 +6630,7 @@
 	)
 	(symbol
 		(lib_id "power:GNDPWR")
-		(at 245.11 121.92 0)
+		(at 273.05 121.92 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom no)
@@ -6817,7 +6638,7 @@
 		(dnp no)
 		(uuid "dd848032-49c6-43c8-b8ed-b1ea22960f4c")
 		(property "Reference" "#PWR031"
-			(at 248.92 118.11 0)
+			(at 276.86 118.11 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6826,7 +6647,7 @@
 			)
 		)
 		(property "Value" "GNDPWR"
-			(at 248.92 123.19 0)
+			(at 276.86 123.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6835,7 +6656,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 245.11 121.92 0)
+			(at 273.05 121.92 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6844,7 +6665,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 245.11 121.92 0)
+			(at 273.05 121.92 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6853,7 +6674,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 245.11 121.92 0)
+			(at 273.05 121.92 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7251,5 +7072,3767 @@
 				)
 			)
 		)
+	)
+
+	(wire
+		(pts
+			(xy 273.05 64.77) (xy 273.05 66.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "66b608a6-b6e5-4a73-9219-d88c3799d02c")
+	)
+	(wire
+		(pts
+			(xy 273.05 73.66) (xy 273.05 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "abcab9e5-250e-4a01-87de-450601a0793a")
+	)
+	(wire
+		(pts
+			(xy 273.05 74.93) (xy 273.05 76.20)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8f377045-5229-437e-b2e3-4ba145825fb2")
+	)
+	(wire
+		(pts
+			(xy 265.43 74.93) (xy 273.05 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "82c2b17d-03c1-4fdf-876f-54354b9a3b0d")
+	)
+	(junction
+		(at 273.05 74.93)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "19945f97-e09e-4b89-b9e9-3f0bff37d1cb")
+	)
+	(wire
+		(pts
+			(xy 245.11 74.93) (xy 246.38 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "77f30ca6-32de-4045-bb52-c0376f81b19e")
+	)
+	(wire
+		(pts
+			(xy 254.00 74.93) (xy 256.54 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9023aaa3-5de3-4876-b6ec-6e879b48256e")
+	)
+	(wire
+		(pts
+			(xy 237.49 74.93) (xy 237.49 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5313427f-dcce-4613-af0c-7fad13b47a9b")
+	)
+	(wire
+		(pts
+			(xy 254.00 74.93) (xy 254.00 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b2177e0a-fc37-49ca-a6db-48a44845d39d")
+	)
+	(junction
+		(at 237.49 74.93)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "9f231915-fb4e-4c68-9ed5-5ce62ec74407")
+	)
+	(junction
+		(at 245.11 74.93)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a47b68f7-2129-4611-a50f-a6fd2f5db60c")
+	)
+	(junction
+		(at 254.00 74.93)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "b702d127-0885-49ff-8de9-e6c9209438f6")
+	)
+	(wire
+		(pts
+			(xy 245.11 74.93) (xy 245.11 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b168ab91-0083-4c94-9493-7438c5e8bd09")
+	)
+	(wire
+		(pts
+			(xy 242.57 77.47) (xy 245.11 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4a7a8c29-1852-48d8-93e4-93815b29c4e0")
+	)
+	(junction
+		(at 245.11 77.47)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "3ff274d8-e6cb-4140-a39b-14a8a9a0a749")
+	)
+	(wire
+		(pts
+			(xy 242.57 85.09) (xy 245.11 85.09)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "75e71c74-da29-4c42-ae37-ab8b9c6f4048")
+	)
+	(wire
+		(pts
+			(xy 245.11 85.09) (xy 248.92 85.09)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "641e1ae3-936f-4424-8cbd-0c2aa6e6de50")
+	)
+	(wire
+		(pts
+			(xy 245.11 90.17) (xy 246.38 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5e94c6bd-fe9e-4cd7-b519-3ceea90e49d5")
+	)
+	(junction
+		(at 237.49 90.17)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "be7369e1-31bf-4ca7-b36a-9b8585a07942")
+	)
+	(junction
+		(at 245.11 90.17)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "3de136a1-7162-4688-9026-cfc42c034ca7")
+	)
+	(junction
+		(at 254.00 90.17)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "f3ae9a50-64c7-4d77-b54c-c3905a23e3d5")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 241.30 74.93 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "d6c6623e-eede-43ab-ab82-9d06379062d9")
+		(property "Reference" "R45"
+			(at 241.30 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "121k"
+			(at 241.30 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 241.30 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 241.30 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "AZ A twin-T series resistor, input side. 121 kOhm 1 percent. LCSC C4280654."
+			(at 241.30 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C4280654"
+			(at 241.30 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "Vishay CRCW0603121KFKTC"
+			(at 241.30 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "fff8ce4f-8037-4f8d-b77a-456641da7577")
+		)
+		(pin "2"
+			(uuid "d18316c0-1d7b-4cd6-8ead-d37526922b24")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "R45")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 250.19 74.93 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "4aac1278-4587-4ac2-a364-9f855ecef2b1")
+		(property "Reference" "R46"
+			(at 250.19 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "121k"
+			(at 250.19 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 250.19 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 250.19 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "AZ A twin-T series resistor, output side. 121 kOhm 1 percent. LCSC C4280654."
+			(at 250.19 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C4280654"
+			(at 250.19 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "Vishay CRCW0603121KFKTC"
+			(at 250.19 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "76b453c3-4197-4d47-a4bf-6e80f950a589")
+		)
+		(pin "2"
+			(uuid "7838d6bb-b069-4370-bba5-17a56032028a")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "R46")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 245.11 93.98 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "6d2cad7f-0f13-494f-8b01-fef9b5fcca61")
+		(property "Reference" "R47"
+			(at 236.22 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "60.4k"
+			(at 236.22 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 245.11 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 245.11 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "AZ A twin-T shunt, R/2. 60.4 kOhm 1 percent. LCSC C844800."
+			(at 245.11 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C844800"
+			(at 245.11 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "Vishay CRCW060360K4FKEA"
+			(at 245.11 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "89c7f1d4-1355-4fd0-835a-200e4bf212cd")
+		)
+		(pin "2"
+			(uuid "9655072c-357c-4d57-bd20-85a6ec8bb1c4")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "R47")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 241.30 90.17 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "b71af3c8-c891-4843-9afb-f8fc2110a842")
+		(property "Reference" "C21"
+			(at 241.30 94.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "22n"
+			(at 241.30 96.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 241.30 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 241.30 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "AZ A twin-T series capacitor, input side. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 241.30 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 241.30 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 241.30 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "087a51e8-8ee3-47ca-8b5c-eb83620089ac")
+		)
+		(pin "2"
+			(uuid "a900f5bc-50a1-4e95-a104-7ec6b8345cba")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C21")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 250.19 90.17 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "95aac820-6069-4633-bab0-9bc4243b09d6")
+		(property "Reference" "C22"
+			(at 250.19 94.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "22n"
+			(at 250.19 96.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 250.19 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 250.19 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "AZ A twin-T series capacitor, output side. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 250.19 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 250.19 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 250.19 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "d2a086c4-111e-4a93-97ce-071f23e94151")
+		)
+		(pin "2"
+			(uuid "572acc28-6916-4a4a-8ba7-7766615703cb")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C22")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 242.57 81.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "a980a4fa-29e6-4d9e-8c91-e2b56c882f64")
+		(property "Reference" "C23"
+			(at 233.68 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "22n"
+			(at 233.68 83.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 242.57 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 242.57 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "AZ A twin-T shunt capacitor, one of two in parallel for 2C. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 242.57 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 242.57 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 242.57 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "74f6395c-b2dd-41ff-82e6-dac38f181e44")
+		)
+		(pin "2"
+			(uuid "b278e580-5510-4961-b67f-59ef71b2c09e")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C23")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 248.92 81.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "502f3934-37eb-4f5d-aecd-266151cfc6d5")
+		(property "Reference" "C24"
+			(at 257.81 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "22n"
+			(at 257.81 83.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 248.92 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 248.92 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "AZ A twin-T shunt capacitor, one of two in parallel for 2C. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 248.92 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 248.92 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 248.92 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "508985b4-1bee-493b-b43b-c83d5811f216")
+		)
+		(pin "2"
+			(uuid "319c591c-2cb8-4670-bc4e-9f72cb3d8270")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C24")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GNDPWR")
+		(at 245.11 85.09 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid "245146f8-c304-49f6-933a-9cc6081fcffd")
+		(property "Reference" "#PWR042"
+			(at 248.92 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GNDPWR"
+			(at 248.92 86.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 245.11 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 245.11 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 245.11 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "9a6feaa3-23fd-4f4e-9b65-d4d1fe1f1440")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "#PWR042")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GNDPWR")
+		(at 245.11 97.79 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid "d5e182d7-a9a3-47dc-9a94-6c01788a1f33")
+		(property "Reference" "#PWR043"
+			(at 248.92 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GNDPWR"
+			(at 248.92 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 245.11 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 245.11 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 245.11 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "15351c0a-12ac-4745-b651-7ba94bc3b20e")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "#PWR043")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 273.05 102.87) (xy 273.05 104.14)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "02ff8546-cc3e-48e1-a295-0eff33687cee")
+	)
+	(wire
+		(pts
+			(xy 273.05 111.76) (xy 273.05 113.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6f6633ee-ce24-44a9-b247-f05cc8f041fb")
+	)
+	(wire
+		(pts
+			(xy 273.05 113.03) (xy 273.05 114.30)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "adfbd58a-1ab0-433b-99e7-f8d0b48f600c")
+	)
+	(wire
+		(pts
+			(xy 265.43 113.03) (xy 273.05 113.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "921ec412-b5ec-4692-a274-3e01fd8ad930")
+	)
+	(junction
+		(at 273.05 113.03)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "dbd524c5-a21f-4326-9386-f899fa566ad7")
+	)
+	(wire
+		(pts
+			(xy 245.11 113.03) (xy 246.38 113.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "72d77ba1-9b31-4bcd-968e-e0de1ae2d96b")
+	)
+	(wire
+		(pts
+			(xy 254.00 113.03) (xy 256.54 113.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "97850334-7870-409c-8f8c-f49ec6e8a4f4")
+	)
+	(wire
+		(pts
+			(xy 237.49 113.03) (xy 237.49 128.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "275cf78a-4e05-4c06-90ed-40b5b7e1750c")
+	)
+	(wire
+		(pts
+			(xy 254.00 113.03) (xy 254.00 128.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c160470d-568a-4c13-a0d5-2826ed97d88b")
+	)
+	(junction
+		(at 237.49 113.03)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "406cfd25-6702-44d2-ab0b-08a5cc4bccdd")
+	)
+	(junction
+		(at 245.11 113.03)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "4a22e1e4-062d-4f41-a974-b46601bbe708")
+	)
+	(junction
+		(at 254.00 113.03)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "35fdbb6b-c6a3-4916-ae92-86ba080978b6")
+	)
+	(wire
+		(pts
+			(xy 245.11 113.03) (xy 245.11 115.57)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "60c8940d-17b8-495c-984c-cf097ddd2a45")
+	)
+	(wire
+		(pts
+			(xy 242.57 115.57) (xy 245.11 115.57)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "96505eae-d851-4d5c-b5c4-e19b99951b86")
+	)
+	(junction
+		(at 245.11 115.57)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "30ff580e-41a2-4560-9bc1-365b63352480")
+	)
+	(wire
+		(pts
+			(xy 242.57 123.19) (xy 245.11 123.19)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5263aa72-1a42-40f0-b239-06537c0fb987")
+	)
+	(wire
+		(pts
+			(xy 245.11 123.19) (xy 248.92 123.19)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2e4d940e-0df4-4c43-86e3-78badd504081")
+	)
+	(wire
+		(pts
+			(xy 245.11 128.27) (xy 246.38 128.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "54edd206-539a-4883-aae5-0a6da11a483c")
+	)
+	(junction
+		(at 237.49 128.27)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "fa990920-2b75-44fe-b5f1-c6dc52e1aab8")
+	)
+	(junction
+		(at 245.11 128.27)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "1cfa2f76-ad4a-4837-9f01-f7e0718d326c")
+	)
+	(junction
+		(at 254.00 128.27)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "f05ca2b9-60bf-4378-aad9-07d7c983a21d")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 241.30 113.03 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "27faeb81-bcd7-4d48-8461-55154c43d801")
+		(property "Reference" "R48"
+			(at 241.30 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "121k"
+			(at 241.30 106.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 241.30 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 241.30 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "AZ B twin-T series resistor, input side. 121 kOhm 1 percent. LCSC C4280654."
+			(at 241.30 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C4280654"
+			(at 241.30 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "Vishay CRCW0603121KFKTC"
+			(at 241.30 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "146d69b0-a478-4eb5-8cb1-ad1c307d674a")
+		)
+		(pin "2"
+			(uuid "9c36bdfe-84c3-4d38-8725-265b4c801c57")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "R48")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 250.19 113.03 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "e240298d-4173-4acd-adeb-2cc035efe480")
+		(property "Reference" "R49"
+			(at 250.19 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "121k"
+			(at 250.19 106.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 250.19 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 250.19 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "AZ B twin-T series resistor, output side. 121 kOhm 1 percent. LCSC C4280654."
+			(at 250.19 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C4280654"
+			(at 250.19 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "Vishay CRCW0603121KFKTC"
+			(at 250.19 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "047cdbbc-b548-44f6-8fc4-d03948eaa901")
+		)
+		(pin "2"
+			(uuid "edfec549-a2d8-4a03-bb4b-f95b36e879ae")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "R49")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 245.11 132.08 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "68a62d5c-c2de-42ef-8552-8d7706915ee1")
+		(property "Reference" "R50"
+			(at 236.22 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "60.4k"
+			(at 236.22 133.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 245.11 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 245.11 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "AZ B twin-T shunt, R/2. 60.4 kOhm 1 percent. LCSC C844800."
+			(at 245.11 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C844800"
+			(at 245.11 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "Vishay CRCW060360K4FKEA"
+			(at 245.11 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "e8a4ef30-5aea-404b-b3ca-b85f69b1c62f")
+		)
+		(pin "2"
+			(uuid "9463fa2c-9661-4240-b63e-61b34007b465")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "R50")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 241.30 128.27 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "65128386-c23a-42fe-ba62-6108b6308d26")
+		(property "Reference" "C25"
+			(at 241.30 132.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "22n"
+			(at 241.30 134.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 241.30 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 241.30 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "AZ B twin-T series capacitor, input side. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 241.30 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 241.30 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 241.30 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "fac68f4c-0b6a-41bc-861a-18af0087b3cc")
+		)
+		(pin "2"
+			(uuid "08832884-eeca-4d72-8791-22e2b0f3379a")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C25")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 250.19 128.27 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "2e93cba3-9a32-40a1-9eb7-4930ab3f262e")
+		(property "Reference" "C26"
+			(at 250.19 132.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "22n"
+			(at 250.19 134.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 250.19 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 250.19 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "AZ B twin-T series capacitor, output side. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 250.19 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 250.19 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 250.19 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "d2c6f432-9964-45c3-8932-a0a6b67ad9d4")
+		)
+		(pin "2"
+			(uuid "7b0b4189-4e13-4b0d-adf5-13b35b042dc6")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C26")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 242.57 119.38 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "2c3052a1-0e71-49e7-9e25-dcaab6636805")
+		(property "Reference" "C27"
+			(at 233.68 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "22n"
+			(at 233.68 121.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 242.57 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 242.57 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "AZ B twin-T shunt capacitor, one of two in parallel for 2C. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 242.57 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 242.57 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 242.57 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a5b33c98-2c16-4cec-a3ef-8560c7905c9c")
+		)
+		(pin "2"
+			(uuid "781653ad-3ede-47f5-b91e-cd012664eb17")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C27")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 248.92 119.38 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "174a90fc-0446-45a7-9b2c-a54890daf3f1")
+		(property "Reference" "C28"
+			(at 257.81 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "22n"
+			(at 257.81 121.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 248.92 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 248.92 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "AZ B twin-T shunt capacitor, one of two in parallel for 2C. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 248.92 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 248.92 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 248.92 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3c911ecd-a143-4439-9df2-f06cb1aaf6bf")
+		)
+		(pin "2"
+			(uuid "6ff5912f-04ac-48fb-a520-7ed990f341a8")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C28")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GNDPWR")
+		(at 245.11 123.19 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid "67d87df7-0f35-4345-927e-beea9ee1964d")
+		(property "Reference" "#PWR044"
+			(at 248.92 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GNDPWR"
+			(at 248.92 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 245.11 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 245.11 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 245.11 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "69db658c-cf73-4ae7-bf30-bd48da496454")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "#PWR044")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GNDPWR")
+		(at 245.11 135.89 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid "1a874f8f-4ecd-477f-ad78-2b95766f8eb6")
+		(property "Reference" "#PWR045"
+			(at 248.92 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GNDPWR"
+			(at 248.92 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 245.11 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 245.11 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 245.11 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "d9f2de45-7341-4f98-977a-19cd81b11501")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "#PWR045")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 273.05 140.97) (xy 273.05 142.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "87f361af-d1fe-4df0-9f63-8bbb0f5b5997")
+	)
+	(wire
+		(pts
+			(xy 273.05 149.86) (xy 273.05 151.13)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "84432b53-3a4b-43d9-92c9-cdc580ff3b75")
+	)
+	(wire
+		(pts
+			(xy 273.05 151.13) (xy 273.05 152.40)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0d093f9f-61b9-4a4c-90a3-1440babf068a")
+	)
+	(wire
+		(pts
+			(xy 265.43 151.13) (xy 273.05 151.13)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "08ae9593-3700-4210-a9d1-594d1413cc93")
+	)
+	(junction
+		(at 273.05 151.13)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "17d1abf1-d927-4b90-ad21-a68037757632")
+	)
+	(wire
+		(pts
+			(xy 245.11 151.13) (xy 246.38 151.13)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "24016b8b-d9b1-4803-bdfc-070547c7e829")
+	)
+	(wire
+		(pts
+			(xy 254.00 151.13) (xy 256.54 151.13)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b54c4334-8d39-4c20-b6e1-496ce76a3d9a")
+	)
+	(wire
+		(pts
+			(xy 237.49 151.13) (xy 237.49 166.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0262ef22-c591-418a-a844-f7d20b9fc01c")
+	)
+	(wire
+		(pts
+			(xy 254.00 151.13) (xy 254.00 166.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "612e2737-8ac7-4bc0-913a-acf9aa923884")
+	)
+	(junction
+		(at 237.49 151.13)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "951e5cae-aadf-4f51-b670-ff99bc802341")
+	)
+	(junction
+		(at 245.11 151.13)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "648f66af-04d0-4c2e-ba83-06d39ae209e3")
+	)
+	(junction
+		(at 254.00 151.13)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2482b5f5-ccb4-4858-94d5-52d6daecf2e9")
+	)
+	(wire
+		(pts
+			(xy 245.11 151.13) (xy 245.11 153.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "01c3e68d-7764-42bd-9594-3de8c2b33222")
+	)
+	(wire
+		(pts
+			(xy 242.57 153.67) (xy 245.11 153.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ef57c93a-7816-44a4-8d7c-b55331082887")
+	)
+	(junction
+		(at 245.11 153.67)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "c8620842-d3c4-46f5-a11f-ac84bea23882")
+	)
+	(wire
+		(pts
+			(xy 242.57 161.29) (xy 245.11 161.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ff2bb94a-b7b2-4379-901c-955e0b12bb74")
+	)
+	(wire
+		(pts
+			(xy 245.11 161.29) (xy 248.92 161.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "41ca6db2-e76d-4b87-a38f-786ec57173d1")
+	)
+	(wire
+		(pts
+			(xy 245.11 166.37) (xy 246.38 166.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8d0ace28-82b7-4818-ac81-7c1592422e93")
+	)
+	(junction
+		(at 237.49 166.37)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "080185b5-3dcc-4cc9-9582-424ad46ae503")
+	)
+	(junction
+		(at 245.11 166.37)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "ce503cba-bd8a-49a3-b921-6123501e3720")
+	)
+	(junction
+		(at 254.00 166.37)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2be91d42-b799-4dd6-b4cc-79e76d228428")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 241.30 151.13 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "fbb42de0-a45e-427b-9468-34b33ba3d769")
+		(property "Reference" "R51"
+			(at 241.30 147.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "121k"
+			(at 241.30 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 241.30 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 241.30 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "EL A twin-T series resistor, input side. 121 kOhm 1 percent. LCSC C4280654."
+			(at 241.30 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C4280654"
+			(at 241.30 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "Vishay CRCW0603121KFKTC"
+			(at 241.30 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ce6aeb5a-c48d-4eff-ac4c-b60598cfeab2")
+		)
+		(pin "2"
+			(uuid "185fddfd-021d-4c7f-9200-c36d96d32b44")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "R51")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 250.19 151.13 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "b01865e6-5944-4229-9ad7-19740a88f4a0")
+		(property "Reference" "R52"
+			(at 250.19 147.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "121k"
+			(at 250.19 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 250.19 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 250.19 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "EL A twin-T series resistor, output side. 121 kOhm 1 percent. LCSC C4280654."
+			(at 250.19 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C4280654"
+			(at 250.19 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "Vishay CRCW0603121KFKTC"
+			(at 250.19 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2fb5e4c9-763e-42f1-9c02-b9221a2306db")
+		)
+		(pin "2"
+			(uuid "0c7b587a-a39e-454c-8c5c-fd4a0d8d5657")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "R52")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 245.11 170.18 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "767ec402-6f77-45e8-8906-2043696a76cd")
+		(property "Reference" "R53"
+			(at 236.22 168.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "60.4k"
+			(at 241.30 175.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 245.11 170.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 245.11 170.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "EL A twin-T shunt, R/2. 60.4 kOhm 1 percent. LCSC C844800."
+			(at 245.11 170.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C844800"
+			(at 245.11 170.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "Vishay CRCW060360K4FKEA"
+			(at 245.11 170.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "62e80c19-401c-49f1-8e51-988b230dfda9")
+		)
+		(pin "2"
+			(uuid "82ff17ae-add0-4cec-b97d-ad5239d889f5")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "R53")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 241.30 166.37 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "70d94ca7-0ff0-418f-8891-efeeba3602be")
+		(property "Reference" "C29"
+			(at 241.30 170.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "22n"
+			(at 241.30 172.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 241.30 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 241.30 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "EL A twin-T series capacitor, input side. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 241.30 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 241.30 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 241.30 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1d00139f-e5cb-4257-8211-c783f35f724b")
+		)
+		(pin "2"
+			(uuid "43e4ab12-a12c-4ea4-b0fe-3bcaf92ad790")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C29")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 250.19 166.37 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "0edd63e6-045d-4a03-bb00-c68275254284")
+		(property "Reference" "C30"
+			(at 250.19 170.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "22n"
+			(at 250.19 172.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 250.19 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 250.19 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "EL A twin-T series capacitor, output side. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 250.19 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 250.19 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 250.19 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "7d0c4bc3-806a-43e4-bab5-2d5e36b45bfb")
+		)
+		(pin "2"
+			(uuid "a3969ea8-702d-4d67-aa10-03e516d1fc2d")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C30")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 242.57 157.48 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1522d9ea-e3ed-4061-a150-73b9db1828e2")
+		(property "Reference" "C31"
+			(at 233.68 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "22n"
+			(at 233.68 159.33 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 242.57 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 242.57 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "EL A twin-T shunt capacitor, one of two in parallel for 2C. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 242.57 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 242.57 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 242.57 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "079d8aa6-d29b-415d-9410-9596fb768aee")
+		)
+		(pin "2"
+			(uuid "b776dee5-866a-4aff-b852-f4184203e783")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C31")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 248.92 157.48 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "b83f7e74-28d0-4d27-979e-2bdaae86770e")
+		(property "Reference" "C32"
+			(at 257.81 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "22n"
+			(at 257.81 159.33 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 248.92 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 248.92 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "EL A twin-T shunt capacitor, one of two in parallel for 2C. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 248.92 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 248.92 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 248.92 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "0559572d-b435-406e-a56a-16c6b667dc80")
+		)
+		(pin "2"
+			(uuid "d273b8b7-0a07-4e47-ab1e-8e96f46b7dc7")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C32")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GNDPWR")
+		(at 245.11 161.29 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid "9edb090e-4f90-4988-b840-dda9a10171e6")
+		(property "Reference" "#PWR046"
+			(at 248.92 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GNDPWR"
+			(at 248.92 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 245.11 161.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 245.11 161.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 245.11 161.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "015956ac-9b86-49c6-9fad-3107593d07b4")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "#PWR046")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GNDPWR")
+		(at 245.11 173.99 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid "923f8f8f-a2cf-4532-bce4-d861bd1d2f23")
+		(property "Reference" "#PWR047"
+			(at 248.92 170.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GNDPWR"
+			(at 248.92 175.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 245.11 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 245.11 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 245.11 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "418f3ba4-0aee-4829-b1f5-a294f2adb8d3")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "#PWR047")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 273.05 179.07) (xy 273.05 180.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c364612f-cca4-4ce5-b94e-52f7a6a4023d")
+	)
+	(wire
+		(pts
+			(xy 273.05 187.96) (xy 273.05 189.23)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0a6623af-c27d-4c6b-aead-853eefeb6a9d")
+	)
+	(wire
+		(pts
+			(xy 273.05 189.23) (xy 273.05 190.50)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a7b139a8-4231-45cd-8d3f-2ba8a4723b84")
+	)
+	(wire
+		(pts
+			(xy 265.43 189.23) (xy 273.05 189.23)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "466b50a9-955c-4b65-a99e-1504532be199")
+	)
+	(junction
+		(at 273.05 189.23)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "f5f7aa2e-d61e-4eea-aea5-187e93fef43a")
+	)
+	(wire
+		(pts
+			(xy 245.11 189.23) (xy 246.38 189.23)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "75ea5cfe-6a82-483b-91ab-a3bdb1aedfe6")
+	)
+	(wire
+		(pts
+			(xy 254.00 189.23) (xy 256.54 189.23)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f6aafff2-10d9-4522-97f0-1a64a5e07d6d")
+	)
+	(wire
+		(pts
+			(xy 237.49 189.23) (xy 237.49 204.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "83ca4364-c273-4d89-b9af-7c7ae61ea4fe")
+	)
+	(wire
+		(pts
+			(xy 254.00 189.23) (xy 254.00 204.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7e5b9072-41e0-4c8c-9404-401446b34c64")
+	)
+	(junction
+		(at 237.49 189.23)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a26af12a-1929-44b5-a8bd-eefc8f6781af")
+	)
+	(junction
+		(at 245.11 189.23)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "24b8da39-dfc0-4410-be71-3fd00fc37747")
+	)
+	(junction
+		(at 254.00 189.23)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "377186e5-d812-452e-b9a2-58c15984b681")
+	)
+	(wire
+		(pts
+			(xy 245.11 189.23) (xy 245.11 191.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f7ac5535-a9b1-4d28-b2f1-31892e92c6e9")
+	)
+	(wire
+		(pts
+			(xy 242.57 191.77) (xy 245.11 191.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cb041bd4-f132-4e83-85f6-d3060f5c89ca")
+	)
+	(junction
+		(at 245.11 191.77)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "8df336fd-ee0a-42c4-85c1-6e16ca78d070")
+	)
+	(wire
+		(pts
+			(xy 242.57 199.39) (xy 245.11 199.39)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0f6e44a5-a35d-4d29-8b7b-7de81e2cce19")
+	)
+	(wire
+		(pts
+			(xy 245.11 199.39) (xy 248.92 199.39)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b830b1db-0f8b-4b78-b390-66f2b931208c")
+	)
+	(wire
+		(pts
+			(xy 245.11 204.47) (xy 246.38 204.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c18e7fd3-53b6-41f8-8b99-107ce5144fd2")
+	)
+	(junction
+		(at 237.49 204.47)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "45519433-a628-4a0a-a1a2-00a97a699428")
+	)
+	(junction
+		(at 245.11 204.47)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "4773614d-ff78-4896-9d46-aa7aa8badf4a")
+	)
+	(junction
+		(at 254.00 204.47)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "8e2e567b-7ca8-461f-b433-a79e5c3bd979")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 241.30 189.23 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "ee9964b8-1b02-4b0f-ae08-98e71e7546e3")
+		(property "Reference" "R54"
+			(at 241.30 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "121k"
+			(at 241.30 182.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 241.30 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 241.30 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "EL B twin-T series resistor, input side. 121 kOhm 1 percent. LCSC C4280654."
+			(at 241.30 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C4280654"
+			(at 241.30 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "Vishay CRCW0603121KFKTC"
+			(at 241.30 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "91d5f977-824a-4ea6-a4ce-dc9bd5604f52")
+		)
+		(pin "2"
+			(uuid "504e7fec-3d7d-455b-b042-3d812c4cc39e")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "R54")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 250.19 189.23 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "c6e020c7-7cb8-44c1-a883-5e74ae5f00da")
+		(property "Reference" "R55"
+			(at 250.19 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "121k"
+			(at 250.19 182.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 250.19 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 250.19 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "EL B twin-T series resistor, output side. 121 kOhm 1 percent. LCSC C4280654."
+			(at 250.19 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C4280654"
+			(at 250.19 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "Vishay CRCW0603121KFKTC"
+			(at 250.19 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "72011d40-d5b3-446e-81b0-b257a5e67be7")
+		)
+		(pin "2"
+			(uuid "710efab4-ba83-4a5a-a7f2-d6ad76d7458d")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "R55")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 245.11 208.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "43783429-616c-4b3a-98ff-89591bfa029f")
+		(property "Reference" "R56"
+			(at 236.22 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "60.4k"
+			(at 236.22 209.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 245.11 208.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 245.11 208.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "EL B twin-T shunt, R/2. 60.4 kOhm 1 percent. LCSC C844800."
+			(at 245.11 208.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C844800"
+			(at 245.11 208.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "Vishay CRCW060360K4FKEA"
+			(at 245.11 208.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "e7a4b2d1-ffa1-4caf-8ed9-5944bbc98f7b")
+		)
+		(pin "2"
+			(uuid "5f2b1a0b-d98c-4801-812b-eb012a957c64")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "R56")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 241.30 204.47 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "aaa57ced-f892-4757-8e89-6391e28d9b18")
+		(property "Reference" "C33"
+			(at 241.30 208.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "22n"
+			(at 241.30 210.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 241.30 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 241.30 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "EL B twin-T series capacitor, input side. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 241.30 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 241.30 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 241.30 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ed355874-ada2-44cf-a52c-d8d52fd3583d")
+		)
+		(pin "2"
+			(uuid "0eaf8212-4592-4b04-b898-600d00acdd29")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C33")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 250.19 204.47 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "d46eb3b3-a350-4a38-bd9e-4c4bcf8364bf")
+		(property "Reference" "C34"
+			(at 250.19 208.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "22n"
+			(at 250.19 210.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 250.19 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 250.19 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "EL B twin-T series capacitor, output side. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 250.19 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 250.19 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 250.19 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c1098c0c-2643-4b95-bfe7-65ec13ce84c7")
+		)
+		(pin "2"
+			(uuid "9d8a34fc-d06b-45e0-97a5-54c544dc4803")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C34")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 242.57 195.58 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1492d928-dd3b-4343-bd62-e900118dcbcf")
+		(property "Reference" "C35"
+			(at 233.68 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "22n"
+			(at 233.68 197.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 242.57 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 242.57 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "EL B twin-T shunt capacitor, one of two in parallel for 2C. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 242.57 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 242.57 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 242.57 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "70f98e17-bde7-42d4-ad53-edd0fb7bdcfa")
+		)
+		(pin "2"
+			(uuid "1912a7a9-6fbb-4380-bbfe-453e991f4050")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C35")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 248.92 195.58 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "98be2c09-1c58-4042-a1a3-21cb89372f54")
+		(property "Reference" "C36"
+			(at 257.81 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "22n"
+			(at 257.81 197.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 248.92 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 248.92 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "EL B twin-T shunt capacitor, one of two in parallel for 2C. 22 nF C0G 1 percent. LCSC C2259101."
+			(at 248.92 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2259101"
+			(at 248.92 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KEMET C0805X223F5GEC7800"
+			(at 248.92 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "24d99a2b-c1f9-430a-bfb6-b975baf16197")
+		)
+		(pin "2"
+			(uuid "bc838902-aede-4276-9c86-31a0748f2985")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "C36")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GNDPWR")
+		(at 245.11 199.39 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid "748efc77-3395-47da-b81f-858d2f609b26")
+		(property "Reference" "#PWR048"
+			(at 248.92 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GNDPWR"
+			(at 248.92 200.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 245.11 199.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 245.11 199.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 245.11 199.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "152aff66-cec8-42ec-8963-5a1983cf668d")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "#PWR048")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GNDPWR")
+		(at 245.11 212.09 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid "55a011d7-9578-48b3-ba50-f9ef222a997e")
+		(property "Reference" "#PWR049"
+			(at 248.92 208.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GNDPWR"
+			(at 248.92 213.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 245.11 212.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 245.11 212.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 245.11 212.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ee56a7cc-61e8-4923-82e2-38fed8a5079f")
+		)
+		(instances
+			(project "controller-f407"
+				(path "/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80"
+					(reference "#PWR049")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 232.41 171.45) (xy 232.41 177.80)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "25207b64-47f8-40e8-b14d-373227304ea1")
+	)
+	(wire
+		(pts
+			(xy 232.41 177.80) (xy 260.35 177.80)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c07777dc-334e-4b57-9ba8-f29d19b9d9bd")
+	)
+	(wire
+		(pts
+			(xy 260.35 177.80) (xy 260.35 171.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6a8a7ed8-b121-4791-8222-fb31a28936de")
+	)
+	(junction
+		(at 232.41 171.45)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "ec9b5384-cc8f-4fa5-acea-d7d092062887")
+	)
+	(junction
+		(at 260.35 171.45)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "b8b4e593-d55a-4163-a89a-d2600cded9f4")
+	)
+
+	(wire
+		(pts
+			(xy 245.11 77.47) (xy 248.92 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a1111111-1111-4111-8111-111111111101")
+	)
+	(wire
+		(pts
+			(xy 245.11 115.57) (xy 248.92 115.57)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a1111111-1111-4111-8111-111111111102")
+	)
+	(wire
+		(pts
+			(xy 245.11 153.67) (xy 248.92 153.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a1111111-1111-4111-8111-111111111103")
+	)
+	(wire
+		(pts
+			(xy 245.11 191.77) (xy 248.92 191.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a1111111-1111-4111-8111-111111111104")
+	)
+	(junction
+		(at 248.92 77.47)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a1111111-1111-4111-8111-111111111111")
+	)
+	(junction
+		(at 248.92 115.57)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a1111111-1111-4111-8111-111111111112")
+	)
+	(junction
+		(at 248.92 153.67)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a1111111-1111-4111-8111-111111111113")
+	)
+	(junction
+		(at 248.92 191.77)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a1111111-1111-4111-8111-111111111114")
+	)
+	(wire
+		(pts
+			(xy 265.43 171.45) (xy 280.67 171.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a1111111-1111-4111-8111-111111111120")
 	)
 )
