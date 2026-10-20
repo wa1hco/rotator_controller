@@ -1,6 +1,6 @@
 # Rotator controller PCB outline and end panels: Hammond 1455N1601
 
-Generated 2026-10-11 with KiCad 9.0.2. The generators, the downloaded datasheet copies, and the DRC report from that day are not in this repository. The KiCad project below is that board file. `outline.png` is the annotated top view and end view, redrawn here from the dimensions in this note. The front and rear panel sheets that used to sit on User.Drawings (and the comment frames that sat on those sheets) have been removed. Machining drawings are generated from footprint fields ([ADR 0017](../../../../docs/decisions/0017-enclosure-machining-drawings.md)). The pre-layout 1:1 sheets are in [`../panels/preliminary-pre-layout/`](../panels/preliminary-pre-layout/). The hole table below is what that generator is checked against.
+Generated 2026-10-11 with KiCad 9.0.2. The generators, the downloaded datasheet copies, and the DRC report from that day are not in this repository. The KiCad project below is that board file. `outline.png` is the annotated top view, bottom view, and end view, redrawn here from the dimensions in this note. The front and rear panel sheets that used to sit on User.Drawings (and the comment frames that sat on those sheets) have been removed. Machining drawings are generated from footprint fields ([ADR 0017](../../../../docs/decisions/0017-enclosure-machining-drawings.md)). The pre-layout 1:1 sheets are in [`../panels/preliminary-pre-layout/`](../panels/preliminary-pre-layout/). The hole table below is what that generator is checked against.
 
 Status tags: **[V]** read from a manufacturer drawing/page, **[E]** derived or scaled from one, **[U]** unverified/assumed, **[TBD]** part not chosen yet.
 
@@ -10,8 +10,8 @@ Heights chained from Hammond typical dimensions are about **±0.6 mm** and are n
 
 | File | What |
 |---|---|
-| `RotatorController-1455N1601-outline.kicad_pcb` (+ `.kicad_pro`, `.kicad_dru`) | KiCad 9 board: Edge.Cuts, keep-outs, bar footprint, motor caps, end-plate plane markers, height-limit notes, end view. No front/rear panel sheets. 4-layer stackup + JLCPCB rules. `kicad-cli` 9.0.9 DRC after that removal: 0 violations, 0 unconnected. |
-| `outline.png` | Annotated top view + end view |
+| `RotatorController-1455N1601-outline.kicad_pcb` (+ `.kicad_pro`, `.kicad_dru`) | KiCad 9 board: Edge.Cuts, keep-outs, bar footprint, motor caps on the bottom, end-plate plane markers, height-limit notes, end view. No front/rear panel sheets. 4-layer stackup + JLCPCB rules. `kicad-cli` 9.0.9 DRC after the caps moved to the bottom: 0 violations, 0 unconnected. |
+| `outline.png` | Annotated top view, bottom view, and end view (motor caps on the bottom) |
 | [`../panels/preliminary-pre-layout/`](../panels/preliminary-pre-layout/) | Pre-layout 1:1 panel sheets (SVG/PDF, print at 100 %, 50 mm check bar) and phone PNGs. Superseded by `gen_machining.py` once the layout has `Panel` fields. |
 
 ## Sources
@@ -76,34 +76,39 @@ Board minimums: clearance 0.127, track 0.127, via Ø0.45/0.20 drill, annular 0.1
 
 Target from the CDE schematics in the V2 repo: 130–156 µF, 50 VAC. The proven V2 cap (100 µF) is about 23 % low on its own, so a 33 µF cap goes in parallel. **Total 133 µF nominal** (±10 % each, so 120–146 µF). Both are 100 VDC / 63 VAC metallized polyester. The motor sees about 26–30 VAC (roughly 37–44 VAC across the cap).
 
-| Ref | Part | Value | Max body (mm) | Mount | Height above PCB |
+Both caps are on the **bottom**. The top is crowded, and the heat bar stays there. Slot 6 leaves 24.11 mm under the board, so the bottom limit is 23.1 mm, and 17.2 mm within 8.5 mm of either long edge (bottom corner bosses). SMT stays on the top only (one-side board assembly). Every through-hole part, including these two, is hand-soldered from the top.
+
+| Ref | Part | Value | Max body (mm) | Mount | Height below PCB |
 |---|---|---|---|---|---|
-| C_MOTOR1 | KEMET **R60EW61005000K** (Digi-Key 399-13010-ND), proven on V2 | 100 µF 100 VDC / 63 VAC | 41.8 x 20.3 x 40.1 | lying flat, 25 mm leads bent down | 20.3 (limit 22.9) |
-| C_MOTOR2 | TDK **B32526T1336K000** (Digi-Key 495-4582-ND, Mouser 871-B32526T1336K000) | 33 µF 100 VDC / 63 VAC | 24.0 x 15.0 x 41.5 (w x h x l) | **upright**, leads straight down | 15.0 (limit 22.9) |
+| C_MOTOR1 | KEMET **R60EW61005000K** (Digi-Key 399-13010-ND), proven on V2 | 100 µF 100 VDC / 63 VAC | 41.8 x 20.3 x 40.1 | lying flat on the bottom, 25 mm leads bent up into the board | 20.3 (limit 23.1; body starts at y 8.6, outside the 8.5 mm / 17.2 strip) |
+| C_MOTOR2 | TDK **B32526T1336K000** (Digi-Key 495-4582-ND, Mouser 871-B32526T1336K000) | 33 µF 100 VDC / 63 VAC | 24.0 x 15.0 x 41.5 (w x h x l) | **upright** on the bottom, leads straight up through the board | 15.0 (under 17.2 and under 23.1) |
 
-Sources: KEMET F3103 R60 datasheet (above). TDK B32520…B32529 datasheet, https://www.tdk-electronics.tdk.com/inf/20/20/db/fc_2009/B32520_529.pdf (local copy not imported), B32526 table "100 VDC 63 VAC, 33 µF, 24.0 × 15.0 × 41.5, B32526T1336+***" (max dimensions), lead spacing 37.5 ±0.4, lead d1 1.0 ±0.05, untaped lead length 6 ±1. The short TDK leads are why C_MOTOR2 stands up: there is not enough lead to lie it flat and bend down.
+Sources: KEMET F3103 R60 datasheet (above). TDK B32520…B32529 datasheet, https://www.tdk-electronics.tdk.com/inf/20/20/db/fc_2009/B32520_529.pdf (local copy not imported), B32526 table "100 VDC 63 VAC, 33 µF, 24.0 × 15.0 × 41.5, B32526T1336+***" (max dimensions), lead spacing 37.5 ±0.4, lead d1 1.0 ±0.05, untaped lead length 6 ±1. The short TDK leads are why C_MOTOR2 stands up: there is not enough lead to lie it flat and bend up into the board.
 
-Footprints: `C_MOTOR1` (`C_Rect_KEMET_R60_P37.5_L41.5_W20_H40_Flat`) and `C_MOTOR2` (`C_Rect_TDK_B32526T_P37.5_L41.5_W24_H15_Upright`), bodies on F.Fab and User.Drawings, courtyards on F.CrtYd, notes on User.Comments. Pads are numbered so that **pad 1–pad 1 and pad 2–pad 2** are wired in parallel; both lead pairs sit on the same y (7.15 / 44.65), so the two parallel traces run straight along x.
+Footprints: `C_MOTOR1` (`C_Rect_KEMET_R60_P37.5_L41.5_W20_H40_Flat`) and `C_MOTOR2` (`C_Rect_TDK_B32526T_P37.5_L41.5_W24_H15_Upright`) are on B.Cu. Bodies are on B.Fab and User.Drawings, courtyards on B.CrtYd, notes on User.Comments. Pads stay through-hole (`*.Cu`). The plan did not flip left-right: each body stays on the +x side of its leads, away from the triacs. Pads are numbered so that **pad 1–pad 1 and pad 2–pad 2** are wired in parallel; both lead pairs sit on the same y (10.75 / 48.25), so the two parallel traces run straight along x. Both anchors moved +3.6 mm in +y from the first top-side placement so the flat body clears the bottom bosses.
 
 | Item | Board coordinates (mm, origin = rear-left corner) |
 |---|---|
-| C_MOTOR1 body (flat) | x 51.5–91.6, y 5.0–46.8. The 41.5 x 40 face is on the board; the lead face (41.5 x 20) is at x = 51.5, facing the triacs |
-| C_MOTOR1 lead holes, PTH 1.3 / pad 2.5 | (49.0, 7.15) and (49.0, 44.65), 37.5 apart, 2.5 outboard of the lead face |
-| C_MOTOR1 cable-tie holes, NPTH 3.2 | (49.0, 25.9) and (94.1, 25.9); 2.5 mm tie over the body, or RTV instead |
-| C_MOTOR1 courtyard | x 47.25–96.2, y 4.5–47.3 |
-| C_MOTOR2 body (upright) | x 98.0–122.0, y 5.15–46.65 (24 x 41.5 footprint, 15.0 tall) |
-| C_MOTOR2 lead holes, PTH 1.3 / pad 2.5 | (110.0, 7.15) and (110.0, 44.65), 37.5 apart, centred in the 24 mm thickness |
-| C_MOTOR2 courtyard | x 97.5–122.5, y 4.65–47.15 |
-| Whole cap zone | **x 47.25–122.5, y 4.5–47.3** |
-| Clearances | C_MOTOR1 lead pad edge to bar front face 15.85 (courtyard 15.35); C_MOTOR2 is 66 mm from the bar. Courtyards 1.3 apart (C_MOTOR1 far tie hole at x 94.1 still has 3.9 mm to the C_MOTOR2 body for the tie). Long-edge strip ends y 3.5; courtyards start y 4.5. Front buttons/LEDs start about x 139. Heights 20.3 and 15.0 vs 22.9 limit |
+| C_MOTOR1 body (flat) | x 51.5–91.6, y 8.6–50.4. The 41.5 x 40 face is on the board; the lead face (41.5 x 20) is at x = 51.5, facing the triacs |
+| C_MOTOR1 lead holes, PTH 1.3 / pad 2.5 | (49.0, 10.75) and (49.0, 48.25), 37.5 apart, 2.5 outboard of the lead face |
+| C_MOTOR1 cable-tie holes, NPTH 3.2 | (49.0, 29.5) and (94.1, 29.5); 2.5 mm tie around the body, or RTV instead |
+| C_MOTOR1 courtyard | x 47.25–96.2, y 8.1–50.9 |
+| C_MOTOR2 body (upright) | x 98.0–122.0, y 8.75–50.25 (24 x 41.5 footprint, 15.0 tall) |
+| C_MOTOR2 lead holes, PTH 1.3 / pad 2.5 | (110.0, 10.75) and (110.0, 48.25), 37.5 apart, centred in the 24 mm thickness |
+| C_MOTOR2 courtyard | x 97.5–122.5, y 8.25–50.75 |
+| Whole cap zone | **x 47.25–122.5, y 8.1–50.9** |
+| Clearances | C_MOTOR1 lead pad edge to bar front face 15.85 (courtyard 15.35); C_MOTOR2 is 66 mm from the bar. Courtyards 1.3 apart (C_MOTOR1 far tie hole at x 94.1 still has 3.9 mm to the C_MOTOR2 body for the tie). Bottom limit 23.1; the 17.2 strip is y 0–8.5 and y 90.5–99. C_MOTOR1 is 20.3, so the body starts at y 8.6 (courtyard y 8.1). Bottom bosses reach about 8.3 mm in from the slot and about 5.9 mm above the floor; the body clears them by about 0.3 mm in plan and does not hang into them. Far body edge y 50.4 vs the far strip at y 90.5. C_MOTOR2 is 15.0, under both limits, body y 8.75–50.25. Front buttons/LEDs start about x 139. The heat bar stays on the top |
 
-C_MOTOR1 lead bend: the leads leave the 20.3 face at mid-height, about 10.2 above the PCB. They run 2.5 mm outboard, then bend 90° down: inside radius about 1 mm, with at least 1 mm straight next to the body. Each lead needs about 2.5 + 10.2 + 1.6 board + 1.5 protrusion ≈ 16 mm of its ~25 mm length.
+C_MOTOR1 lead bend (the old top-side bend, mirrored): the leads leave the 20.3 face at mid-height, about 10.2 mm **below** the PCB, at y = 10.75 and y = 48.25. Both of those are more than 8.5 mm from a long edge, and 10.2 mm is under the 17.2 mm strip limit as well as the 23.1 mm open limit. They run 2.5 mm outboard (toward the triacs), then bend 90° **up** into the board: inside radius about 1 mm, with at least 1 mm straight next to the body. Each lead needs about 2.5 + 10.2 + 1.6 board + 1.5 protrusion on the top ≈ 16 mm of its ~25 mm length. Solder that protrusion from the top.
 
-C_MOTOR2: seat it on the board, leads straight through (6 ±1 mm leads, 1.6 mm board). An RTV dot at the base is optional.
+C_MOTOR2: seat the body on the bottom of the board. The 6 ±1 mm leads go straight up through the 1.6 mm board, leaving about 4.4 ±1 mm on the top to solder. An RTV dot at the base, on the bottom, is optional.
+
+Cable ties: the two NPTH 3.2 holes are on the body's y centre (y 29.5). A 2.5 mm tie around the body stays inside the body outline, so it does not reach the 8.5 mm boss strip (the body starts at y 8.6). The far hole at x 94.1 is still 3.9 mm from the C_MOTOR2 body.
 
 Placement reasons:
+- The top is crowded. Both caps hang on the bottom. SMT stays on the top. The heat bar stays on the top.
 - Both caps sit on the AC (edge-A, y = 0) side with the power-input terminal, in front of the triac row, so the /Left–/Right motor leads stay short.
-- y 47.3–95.5 stays free for logic, plus x 122.5–139 on the y < 47 side.
+- On the bottom, y 50.9–95.5 stays free, plus x 122.5–139 on the y < 50.9 side. The top of this plan area is free of these caps.
 - The height-limit note box is at y 78.5–89.5, clear of both caps.
 
 ### Why this pair (price check 2026-10-11, about 8:40 PM ET)
@@ -112,7 +117,7 @@ Digi-Key figures were read from digikey.com product pages. Mouser blocks automat
 
 | Option | Parts | µF | VAC | 1 set | 3 sets | Fits? | Notes |
 |---|---|---|---|---|---|---|---|
-| **b (chosen)** | R60EW61005000K + B32526T1336K000 | 133 | 63 | $39.50 DK ($25.97 + $13.53) | $118.50 DK | yes: flat 20.3 + upright 15.0 | DK stock 1,136 / 125. Mouser 33 µF: $11.19, 1,033 stock [unverified]. If you already have spare R60EWs (you bought 9), it is $13.53 per controller |
+| **b (chosen)** | R60EW61005000K + B32526T1336K000 | 133 | 63 | $39.50 DK ($25.97 + $13.53) | $118.50 DK | yes: flat 20.3 + upright 15.0, on the bottom (limits 23.1 and 17.2) | DK stock 1,136 / 125. Mouser 33 µF: $11.19, 1,033 stock [unverified]. If you already have spare R60EWs (you bought 9), it is $13.53 per controller |
 | b-alt (runner-up) | R60EW61005000K + B32526T1476K000 (47 µF) | 147 | 63 | $42.73 DK ($25.97 + $16.76) | $128.19 DK | yes: upright 19.0, same 24 x 41.5 footprint | Centred in 130–156, but only 34 in stock at DK |
 | b-flat | R60EW61005000K + B32524Q1476K000 (47 µF, 27.5 pitch) | 147 | 63 | $39.43 DK | $118.29 DK | **no**: 21 x 31 x 31.5; upright 31 too tall, and 6 mm leads too short to lay flat | Cheapest on paper by 7 cents |
 | a | 2x R60EW61005000K | 200 | 63 | $51.94 DK | $155.82 DK | yes (2 flat, ~85 x 40) | 200 µF is 28 % over CDE max; too much phase shift. Rejected |
@@ -167,7 +172,7 @@ Vertical tolerance is about ±0.6 mm: extrusion inner height ±0.56, plus the sl
 
 - **Recommended:** start the new F407 layout from this file. Copy the `.kicad_pcb`, `.kicad_pro` and `.kicad_dru` into the project folder renamed to the project name (or File → Open and Save As), then Tools → Update PCB from Schematic. Stackup, rules, keep-outs, the bar, the caps, and the height notes come along. Panel holes do not: add `Panel` / `PanelZ` / `PanelCutout` on the footprints and run `gen_machining.py` (ADR 0017).
 - **Into the existing V4 board:**
-  1. Open this file in pcbnew, set the layer filter, select Edge.Cuts + the remaining User.Drawings (end view, board dimensions, end-plate plane markers) + User.Comments + F.Fab items + the rule areas + footprint HS1, Ctrl+C. Pick the reference point at the origin cross (rear-left corner).
+  1. Open this file in pcbnew, set the layer filter, select Edge.Cuts + the remaining User.Drawings (end view, board dimensions, end-plate plane markers) + User.Comments + F.Fab items + B.Fab and B.CrtYd (the motor caps) + the rule areas + footprints HS1, C_MOTOR1, and C_MOTOR2, Ctrl+C. Pick the reference point at the origin cross (rear-left corner).
   2. In V4, delete the old Edge.Cuts rectangle and the old Dwgs.User panel drawings first.
   3. Ctrl+V, snapping the reference to the board corner you want.
   4. Then Board Setup → Board Stackup → set 4 layers / Import Settings from this `.kicad_pro` for rules and stackup.

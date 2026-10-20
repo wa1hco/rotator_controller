@@ -214,12 +214,12 @@
 		(embedded_fonts no)
 	)
 	(footprint "C_Rect_KEMET_R60_P37.5_L41.5_W20_H40_Flat"
-		(layer "F.Cu")
+		(layer "B.Cu")
 		(uuid "8a93353d-80a9-4d92-a8b8-3c8970b99d06")
-		(at 99 57.15)
+		(at 99 60.75)
 		(property "Reference" "C_MOTOR1"
 			(at 0 0 0)
-			(layer "F.SilkS")
+			(layer "B.SilkS")
 			(hide yes)
 			(uuid "d14af334-c228-489e-b237-f9422512e95d")
 			(effects
@@ -231,7 +231,7 @@
 		)
 		(property "Value" "R60EW61005000K"
 			(at 0 0 0)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "3d8be862-1e3b-4e18-9da7-a16d8e52051c")
 			(effects
@@ -243,7 +243,7 @@
 		)
 		(property "Datasheet" ""
 			(at 0 0 0)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "50641c2f-628e-4770-ba08-694d9e688d21")
 			(effects
@@ -255,7 +255,7 @@
 		)
 		(property "Description" ""
 			(at 0 0 0)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "74675d62-627a-4c0c-b2a2-c66d0005ea17")
 			(effects
@@ -298,12 +298,12 @@
 		(embedded_fonts no)
 	)
 	(footprint "C_Rect_TDK_B32526T_P37.5_L41.5_W24_H15_Upright"
-		(layer "F.Cu")
+		(layer "B.Cu")
 		(uuid "fd91577b-4638-4c75-bade-329de728bdc9")
-		(at 160 57.15)
+		(at 160 60.75)
 		(property "Reference" "C_MOTOR2"
 			(at 0 0 0)
-			(layer "F.SilkS")
+			(layer "B.SilkS")
 			(hide yes)
 			(uuid "1f918ba0-d998-455c-936c-7ec97b7dd2c0")
 			(effects
@@ -315,7 +315,7 @@
 		)
 		(property "Value" "B32526T1336K000"
 			(at 0 0 0)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "be9d8e73-e963-4c9e-871c-62a0353ebee6")
 			(effects
@@ -327,7 +327,7 @@
 		)
 		(property "Datasheet" ""
 			(at 0 0 0)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "dfc10235-0637-47f0-99f5-caea1ea12fc4")
 			(effects
@@ -339,7 +339,7 @@
 		)
 		(property "Description" ""
 			(at 0 0 0)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "500258cf-476a-4154-b26e-9159ebc94b20")
 			(effects
@@ -836,8 +836,8 @@
 		(uuid "4e6b78fe-26a5-4ee1-bc5e-be99e26e97f2")
 	)
 	(gr_rect
-		(start 148 55.15)
-		(end 172 96.65)
+		(start 148 58.75)
+		(end 172 100.25)
 		(stroke
 			(width 0.1)
 			(type default)
@@ -1809,8 +1809,8 @@
 		(uuid "de71ced1-aa7c-44f6-acc2-933b87d8cc01")
 	)
 	(gr_rect
-		(start 101.5 55)
-		(end 141.6 96.8)
+		(start 101.5 58.6)
+		(end 141.6 100.4)
 		(stroke
 			(width 0.1)
 			(type default)
@@ -3428,25 +3428,25 @@
 		(uuid "1141eb11-574d-49f6-b62f-61aa19106c50")
 	)
 	(gr_rect
-		(start 97.25 54.5)
-		(end 146.2 97.3)
+		(start 97.25 58.1)
+		(end 146.2 100.9)
 		(stroke
 			(width 0.05)
 			(type default)
 		)
 		(fill no)
-		(layer "F.CrtYd")
+		(layer "B.CrtYd")
 		(uuid "061b2ee6-df1a-4c24-a881-6874c3ece9ea")
 	)
 	(gr_rect
-		(start 147.5 54.65)
-		(end 172.5 97.15)
+		(start 147.5 58.25)
+		(end 172.5 100.75)
 		(stroke
 			(width 0.05)
 			(type default)
 		)
 		(fill no)
-		(layer "F.CrtYd")
+		(layer "B.CrtYd")
 		(uuid "47311efc-b25a-4398-80b8-a1d1a8589efb")
 	)
 	(gr_rect
@@ -3461,23 +3461,23 @@
 		(uuid "4a5affd4-b57b-4615-9df8-8d7baab56965")
 	)
 	(gr_line
-		(start 101.5 94.65)
-		(end 99 94.65)
+		(start 101.5 98.25)
+		(end 99 98.25)
 		(stroke
 			(width 0.3)
 			(type default)
 		)
-		(layer "F.Fab")
+		(layer "B.Fab")
 		(uuid "12791ced-aee1-4546-87a9-dcdc817b3532")
 	)
 	(gr_line
-		(start 101.5 57.15)
-		(end 99 57.15)
+		(start 101.5 60.75)
+		(end 99 60.75)
 		(stroke
 			(width 0.3)
 			(type default)
 		)
-		(layer "F.Fab")
+		(layer "B.Fab")
 		(uuid "3bf00b83-3b85-4862-9dc1-4676f4472997")
 	)
 	(gr_circle
@@ -3492,35 +3492,35 @@
 		(uuid "9be530df-0885-467d-a126-cf57c614d1c3")
 	)
 	(gr_rect
-		(start 148 55.15)
-		(end 172 96.65)
+		(start 148 58.75)
+		(end 172 100.25)
 		(stroke
 			(width 0.15)
 			(type default)
 		)
 		(fill no)
-		(layer "F.Fab")
+		(layer "B.Fab")
 		(uuid "a00eb702-40fa-4813-8da3-ccbef7cbb3fe")
 	)
 	(gr_rect
-		(start 101.5 55)
-		(end 141.6 96.8)
+		(start 101.5 58.6)
+		(end 141.6 100.4)
 		(stroke
 			(width 0.15)
 			(type default)
 		)
 		(fill no)
-		(layer "F.Fab")
+		(layer "B.Fab")
 		(uuid "b0986e0b-cb7e-4a24-beb5-acfe5954b676")
 	)
 	(gr_line
-		(start 99 75.9)
-		(end 144.1 75.9)
+		(start 99 79.5)
+		(end 144.1 79.5)
 		(stroke
 			(width 0.08)
 			(type default)
 		)
-		(layer "F.Fab")
+		(layer "B.Fab")
 		(uuid "dbb3f28e-baa7-4cde-94f0-6cc821e68eb3")
 	)
 	(gr_circle
@@ -3623,7 +3623,7 @@
 		)
 	)
 	(gr_text "AC motor side 26-30 VAC (cap rated 63 VAC); >=15 mm from bar"
-		(at 121.55 80.3 0)
+		(at 121.55 83.9 0)
 		(layer "Cmts.User")
 		(uuid "0470e211-3dde-4e08-afcd-6086e5d8816d")
 		(effects
@@ -3668,8 +3668,8 @@
 			(justify left)
 		)
 	)
-	(gr_text "(6 mm leads: no flat mount)"
-		(at 160 81.9 0)
+	(gr_text "BOTTOM (6 mm leads: seat on the board, solder from the top)"
+		(at 160 85.5 0)
 		(layer "Cmts.User")
 		(uuid "0818d663-e6f0-4605-885c-0b035c1f1093")
 		(effects
@@ -3725,8 +3725,8 @@
 			)
 		)
 	)
-	(gr_text "C_MOTOR1 || C_MOTOR2 = 133 uF (CDE 130-156); pad 1-1, 2-2"
-		(at 121.55 82.3 0)
+	(gr_text "BOTTOM: C_MOTOR1 || C_MOTOR2 = 133 uF (CDE 130-156); pad 1-1, 2-2"
+		(at 121.55 85.9 0)
 		(layer "Cmts.User")
 		(uuid "210ecd1e-2b95-44bf-991c-57110b9921e1")
 		(effects
@@ -3807,7 +3807,7 @@
 		)
 	)
 	(gr_text "33uF 100VDC/63VAC"
-		(at 160 73.9 0)
+		(at 160 77.5 0)
 		(layer "Cmts.User")
 		(uuid "3a22f90c-cb71-4566-8c9a-408296085bae")
 		(effects
@@ -3876,8 +3876,8 @@
 			(justify left)
 		)
 	)
-	(gr_text "run 2.5 outboard then bend 90 deg down (r ~1, >=1 mm straight from body)"
-		(at 121.55 76.1 0)
+	(gr_text "BOTTOM: run 2.5 outboard then bend 90 deg up into the board (r ~1, >=1 mm straight from body)"
+		(at 121.55 79.7 0)
 		(layer "Cmts.User")
 		(uuid "59549882-1918-4291-8e30-0d6d1d4cc730")
 		(effects
@@ -3887,8 +3887,8 @@
 			)
 		)
 	)
-	(gr_text "41.5x40 face on board; leads exit 41.5x20 face at ~10.2 above PCB,"
-		(at 121.55 74.3 0)
+	(gr_text "BOTTOM. 41.5x40 face on board; leads exit 41.5x20 face at ~10.2 below PCB,"
+		(at 121.55 77.9 0)
 		(layer "Cmts.User")
 		(uuid "64c755ed-90af-4575-8f60-4bf22e3632c5")
 		(effects
@@ -3955,8 +3955,8 @@
 			(justify left)
 		)
 	)
-	(gr_text "leads 1.0 straight down"
-		(at 160 79.9 0)
+	(gr_text "BOTTOM: leads straight up through the board (solder from the top)"
+		(at 160 83.5 0)
 		(layer "Cmts.User")
 		(uuid "c05310ce-af11-4a9e-929c-3a7aca0acd4f")
 		(effects
@@ -3988,8 +3988,8 @@
 			)
 		)
 	)
-	(gr_text "cable tie (2.5 mm) through 2x NPTH 3.2 over body, or RTV the body down"
-		(at 121.55 78.3 0)
+	(gr_text "BOTTOM: cable tie (2.5 mm) through 2x NPTH 3.2 around the body, or RTV it to the board"
+		(at 121.55 81.9 0)
 		(layer "Cmts.User")
 		(uuid "c4f9c3dc-d5eb-40de-a62a-cd2b678eb8a9")
 		(effects
@@ -4000,7 +4000,7 @@
 		)
 	)
 	(gr_text "24 x 41.5 footprint"
-		(at 160 77.9 0)
+		(at 160 81.5 0)
 		(layer "Cmts.User")
 		(uuid "d1061580-6c3b-4608-9d8e-978ffa743c8f")
 		(effects
@@ -4034,7 +4034,7 @@
 		)
 	)
 	(gr_text "RTV dot at base optional"
-		(at 160 83.9 0)
+		(at 160 87.5 0)
 		(layer "Cmts.User")
 		(uuid "dd099c2e-9471-44db-ac5c-703e56cb0ad4")
 		(effects
@@ -4080,8 +4080,8 @@
 			(justify right)
 		)
 	)
-	(gr_text "UPRIGHT, H 15.0 max"
-		(at 160 75.9 0)
+	(gr_text "BOTTOM, UPRIGHT, H 15.0 max"
+		(at 160 79.5 0)
 		(layer "Cmts.User")
 		(uuid "e957541d-53e3-4fd2-a5cf-951b2983cf5a")
 		(effects
@@ -4136,37 +4136,40 @@
 			)
 		)
 	)
-	(gr_text "C_MOTOR2"
-		(at 160 69.9 0)
-		(layer "F.Fab")
+	(gr_text "BOTTOM C_MOTOR2"
+		(at 160 73.5 0)
+		(layer "B.Fab")
 		(uuid "647df385-8550-4b2e-a4db-6cf757716537")
 		(effects
 			(font
 				(size 1.2 1.2)
 				(thickness 0.18)
 			)
+			(justify mirror)
 		)
 	)
-	(gr_text "C_MOTOR1 R60EW61005000K 100uF flat, H 20.3"
-		(at 121.55 71.9 0)
-		(layer "F.Fab")
+	(gr_text "BOTTOM C_MOTOR1 R60EW61005000K 100uF flat, H 20.3"
+		(at 121.55 75.5 0)
+		(layer "B.Fab")
 		(uuid "82744c84-17f2-42b6-a1f9-9eaf67237aa8")
 		(effects
 			(font
 				(size 1.2 1.2)
 				(thickness 0.18)
 			)
+			(justify mirror)
 		)
 	)
 	(gr_text "B32526T1336K000"
-		(at 160 71.9 0)
-		(layer "F.Fab")
+		(at 160 75.5 0)
+		(layer "B.Fab")
 		(uuid "edfdc8a8-bb59-4b89-8da4-a28e68f3c84f")
 		(effects
 			(font
 				(size 1.1 1.1)
 				(thickness 0.165)
 			)
+			(justify mirror)
 		)
 	)
 	(dimension
@@ -4174,7 +4177,7 @@
 		(layer "Dwgs.User")
 		(uuid "0602ee32-2039-4872-b130-a185f6559f63")
 		(pts
-			(xy 103 57.15) (xy 103 94.65)
+			(xy 103 60.75) (xy 103 98.25)
 		)
 		(height 0)
 		(format
@@ -4194,7 +4197,7 @@
 			(keep_text_aligned yes)
 		)
 		(gr_text "37.50 mm"
-			(at 101.65 75.9 90)
+			(at 101.65 79.5 90)
 			(layer "Dwgs.User")
 			(uuid "0602ee32-2039-4872-b130-a185f6559f63")
 			(effects
@@ -4244,7 +4247,7 @@
 		(layer "Dwgs.User")
 		(uuid "08ddc71a-c9c7-4a43-ba1d-9f0d2b50ab13")
 		(pts
-			(xy 101.5 96.8) (xy 141.6 96.8)
+			(xy 101.5 100.4) (xy 141.6 100.4)
 		)
 		(height -7)
 		(format
@@ -4264,7 +4267,7 @@
 			(keep_text_aligned yes)
 		)
 		(gr_text "40.10 mm"
-			(at 121.55 88.45 0)
+			(at 121.55 92.05 0)
 			(layer "Dwgs.User")
 			(uuid "08ddc71a-c9c7-4a43-ba1d-9f0d2b50ab13")
 			(effects
@@ -4384,7 +4387,7 @@
 		(layer "Dwgs.User")
 		(uuid "270f7440-171f-466b-91e8-a8ccf0616728")
 		(pts
-			(xy 148 96.65) (xy 172 96.65)
+			(xy 148 100.25) (xy 172 100.25)
 		)
 		(height -7)
 		(format
@@ -4404,7 +4407,7 @@
 			(keep_text_aligned yes)
 		)
 		(gr_text "24.00 mm"
-			(at 160 88.3 0)
+			(at 160 91.9 0)
 			(layer "Dwgs.User")
 			(uuid "270f7440-171f-466b-91e8-a8ccf0616728")
 			(effects
@@ -4454,7 +4457,7 @@
 		(layer "Dwgs.User")
 		(uuid "44084a84-278c-46f7-88e7-b449ca8e42ea")
 		(pts
-			(xy 141.6 99.65) (xy 148 99.65)
+			(xy 141.6 103.25) (xy 148 103.25)
 		)
 		(height 0)
 		(format
@@ -4474,7 +4477,7 @@
 			(keep_text_aligned yes)
 		)
 		(gr_text "6.40 mm"
-			(at 144.8 98.3 0)
+			(at 144.8 101.9 0)
 			(layer "Dwgs.User")
 			(uuid "44084a84-278c-46f7-88e7-b449ca8e42ea")
 			(effects
@@ -4664,7 +4667,7 @@
 		(layer "Dwgs.User")
 		(uuid "6553b750-e15a-48ac-a596-942251e2f362")
 		(pts
-			(xy 172 55.15) (xy 172 96.65)
+			(xy 172 58.75) (xy 172 100.25)
 		)
 		(height -5)
 		(format
@@ -4684,7 +4687,7 @@
 			(keep_text_aligned yes)
 		)
 		(gr_text "41.50 mm"
-			(at 175.65 75.9 90)
+			(at 175.65 79.5 90)
 			(layer "Dwgs.User")
 			(uuid "6553b750-e15a-48ac-a596-942251e2f362")
 			(effects
@@ -4699,7 +4702,7 @@
 		(layer "Dwgs.User")
 		(uuid "6e142876-30f7-4233-866e-ad47e902e475")
 		(pts
-			(xy 50 57) (xy 99 57)
+			(xy 50 60.6) (xy 99 60.6)
 		)
 		(height 0)
 		(format
@@ -4719,7 +4722,7 @@
 			(keep_text_aligned yes)
 		)
 		(gr_text "49.00 mm"
-			(at 74.5 55.65 0)
+			(at 74.5 59.25 0)
 			(layer "Dwgs.User")
 			(uuid "6e142876-30f7-4233-866e-ad47e902e475")
 			(effects
@@ -4804,7 +4807,7 @@
 		(layer "Dwgs.User")
 		(uuid "add29ef7-cae8-4b85-ad24-733a80928745")
 		(pts
-			(xy 141.6 55) (xy 141.6 96.8)
+			(xy 141.6 58.6) (xy 141.6 100.4)
 		)
 		(height -6)
 		(format
@@ -4824,7 +4827,7 @@
 			(keep_text_aligned yes)
 		)
 		(gr_text "41.80 mm"
-			(at 146.25 75.9 90)
+			(at 146.25 79.5 90)
 			(layer "Dwgs.User")
 			(uuid "add29ef7-cae8-4b85-ad24-733a80928745")
 			(effects
@@ -4839,7 +4842,7 @@
 		(layer "Dwgs.User")
 		(uuid "b4236486-6d5a-47a2-bbb8-d14c80c7bcdd")
 		(pts
-			(xy 99 96.8) (xy 101.5 96.8)
+			(xy 99 100.4) (xy 101.5 100.4)
 		)
 		(height -4)
 		(format
@@ -4859,7 +4862,7 @@
 			(keep_text_aligned yes)
 		)
 		(gr_text "2.50 mm"
-			(at 100.25 91.45 0)
+			(at 100.25 95.05 0)
 			(layer "Dwgs.User")
 			(uuid "b4236486-6d5a-47a2-bbb8-d14c80c7bcdd")
 			(effects
@@ -4979,7 +4982,7 @@
 		(layer "Dwgs.User")
 		(uuid "ebb24202-766a-4409-99e7-725ca319cb23")
 		(pts
-			(xy 163 57.15) (xy 163 94.65)
+			(xy 163 60.75) (xy 163 98.25)
 		)
 		(height 0)
 		(format
@@ -4999,7 +5002,7 @@
 			(keep_text_aligned yes)
 		)
 		(gr_text "37.50 mm"
-			(at 161.65 75.9 90)
+			(at 161.65 79.5 90)
 			(layer "Dwgs.User")
 			(uuid "ebb24202-766a-4409-99e7-725ca319cb23")
 			(effects

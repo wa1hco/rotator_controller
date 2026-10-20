@@ -19,7 +19,7 @@ Test-fit one board in a box before drilling a batch.
 |---|---|
 | [RotatorController-1455N1601-outline.kicad_pcb](outline-1455N1601/RotatorController-1455N1601-outline.kicad_pcb) | Edge.Cuts, slot keep-outs, triac-bar zone, motor-cap zone, end-plate plane markers, height-limit notes. Not the V4 board. The front and rear panel sheets are not on this board. |
 | [`.kicad_pro`](outline-1455N1601/RotatorController-1455N1601-outline.kicad_pro) / [`.kicad_dru`](outline-1455N1601/RotatorController-1455N1601-outline.kicad_dru) | KiCad 9 project and JLCPCB rule file |
-| [outline.png](outline-1455N1601/outline.png) | Top view and end view |
+| [outline.png](outline-1455N1601/outline.png) | Top view, bottom view, and end view (motor caps on the bottom) |
 | [README](outline-1455N1601/README.md) | Dimensions, sources, and what is still unverified |
 
 The long edges have a 2.5 mm copper keep-out and a 3.5 mm component-body
