@@ -658,6 +658,14 @@
     [
       "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
       "rotor_drive"
+    ],
+    [
+      "c3d4e5f6-a7b8-4c9d-8e1f-2a3b4c5d6e7f",
+      "drive_mcu"
+    ],
+    [
+      "d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80",
+      "analog_input"
     ]
   ],
   "text_variables": {}
