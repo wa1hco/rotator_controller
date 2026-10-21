@@ -5887,12 +5887,12 @@
 		)
 	)
 	(footprint "controller-f407:C_Rect_KEMET_R60_P37.5_L41.5_W20_H40_Flat"
-		(layer "F.Cu")
+		(layer "B.Cu")
 		(uuid "3c4b7e3d-2740-4db8-9f12-1bffd7f96d24")
 		(at 259.51 141.06 90)
 		(property "Reference" "C6"
 			(at 0 0 90)
-			(layer "F.SilkS")
+			(layer "B.SilkS")
 			(hide yes)
 			(uuid "92615340-696a-4d3f-9a2d-6345555b27cf")
 			(effects
@@ -5900,11 +5900,13 @@
 					(size 1.27 1.27)
 					(thickness 0.15)
 				)
+			
+				(justify mirror)
 			)
 		)
 		(property "Value" "100uF"
 			(at 0 0 90)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "ea70a7b9-3b90-4905-89ff-61b2fc914a7a")
 			(effects
@@ -5912,11 +5914,13 @@
 					(size 1.27 1.27)
 					(thickness 0.15)
 				)
+			
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" "~"
 			(at 0 0 90)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "cb6dde27-4571-4010-b279-bb12feb03367")
 			(effects
@@ -5924,11 +5928,13 @@
 					(size 1.27 1.27)
 					(thickness 0.15)
 				)
+			
+				(justify mirror)
 			)
 		)
-		(property "Description" "100 uF 100 VDC/63 VAC, flat, leads bent down. Digi-Key 399-13010-ND. Mouser number not found."
+		(property "Description" "100 uF 100 VDC/63 VAC, flat on the bottom, leads bent up into the board and soldered from the top. Digi-Key 399-13010-ND. Mouser number not found."
 			(at 0 0 90)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "20505e0d-e6aa-491a-b156-7671696cfb68")
 			(effects
@@ -5936,12 +5942,14 @@
 					(size 1.27 1.27)
 					(thickness 0.15)
 				)
+			
+				(justify mirror)
 			)
 		)
 		(property "Mouser" "TBD"
 			(at 0 0 90)
 			(unlocked yes)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "b5f39767-41b8-4015-a773-19b279545aa8")
 			(effects
@@ -5949,12 +5957,14 @@
 					(size 1 1)
 					(thickness 0.15)
 				)
+			
+				(justify mirror)
 			)
 		)
 		(property "MPN" "KEMET R60EW61005000K"
 			(at 0 0 90)
 			(unlocked yes)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "ba071bcf-6ccb-4e12-b60f-f610900b35cd")
 			(effects
@@ -5962,12 +5972,14 @@
 					(size 1 1)
 					(thickness 0.15)
 				)
+			
+				(justify mirror)
 			)
 		)
 		(property "Populate" "Fit for CDE. DNP when the rotor has its own cap (G-5500, HDR-300)."
 			(at 0 0 90)
 			(unlocked yes)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "cbf71fc6-16a9-46c6-83c4-a04edddb3ed4")
 			(effects
@@ -5975,6 +5987,8 @@
 					(size 1 1)
 					(thickness 0.15)
 				)
+			
+				(justify mirror)
 			)
 		)
 		(property ki_fp_filters "C_*")
@@ -25916,12 +25930,12 @@
 		)
 	)
 	(footprint "controller-f407:C_Rect_TDK_B32526T_P37.5_L41.5_W24_H15_Upright"
-		(layer "F.Cu")
+		(layer "B.Cu")
 		(uuid "ee894de7-c12d-4421-b1df-d6ae52dbbb1c")
 		(at 259.51 80.06 90)
 		(property "Reference" "C7"
 			(at 0 0 90)
-			(layer "F.SilkS")
+			(layer "B.SilkS")
 			(hide yes)
 			(uuid "3ada7252-3ad5-4910-869d-fb2af18f20e0")
 			(effects
@@ -25929,11 +25943,13 @@
 					(size 1.27 1.27)
 					(thickness 0.15)
 				)
+			
+				(justify mirror)
 			)
 		)
 		(property "Value" "33uF"
 			(at 0 0 90)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "70a64317-54cc-4c9b-80fc-146e1124584f")
 			(effects
@@ -25941,11 +25957,13 @@
 					(size 1.27 1.27)
 					(thickness 0.15)
 				)
+			
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" "~"
 			(at 0 0 90)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "a57bd2ee-0d44-4ede-8696-7ae632762f83")
 			(effects
@@ -25953,11 +25971,13 @@
 					(size 1.27 1.27)
 					(thickness 0.15)
 				)
+			
+				(justify mirror)
 			)
 		)
 		(property "Description" ""
 			(at 0 0 90)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "16ecd6fb-f262-4169-9ad9-f74c9bed1610")
 			(effects
@@ -25965,12 +25985,14 @@
 					(size 1.27 1.27)
 					(thickness 0.15)
 				)
+			
+				(justify mirror)
 			)
 		)
 		(property "Mouser" "871-B32526T1336K000"
 			(at 0 0 90)
 			(unlocked yes)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "ff548cb5-f1c8-4b50-8334-ecbb72a9858e")
 			(effects
@@ -25978,12 +26000,14 @@
 					(size 1 1)
 					(thickness 0.15)
 				)
+			
+				(justify mirror)
 			)
 		)
 		(property "MPN" "TDK B32526T1336K000"
 			(at 0 0 90)
 			(unlocked yes)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "5e9b32d7-e6e3-46d0-a362-caa8d6a085cc")
 			(effects
@@ -25991,12 +26015,14 @@
 					(size 1 1)
 					(thickness 0.15)
 				)
+			
+				(justify mirror)
 			)
 		)
 		(property "Populate" "Fit for CDE. DNP when the rotor has its own cap. Mouser number unverified (ADR 0016)."
 			(at 0 0 90)
 			(unlocked yes)
-			(layer "F.Fab")
+			(layer "B.Fab")
 			(hide yes)
 			(uuid "a27eba9d-5e69-464e-8d7a-4335d7ffe899")
 			(effects
@@ -26004,6 +26030,8 @@
 					(size 1 1)
 					(thickness 0.15)
 				)
+			
+				(justify mirror)
 			)
 		)
 		(property ki_fp_filters "C_*")
@@ -30473,7 +30501,7 @@
 			(type default)
 		)
 		(fill no)
-		(layer "F.CrtYd")
+		(layer "B.CrtYd")
 		(uuid "a21e1fef-cf58-449d-a40c-a97219ee101d")
 	)
 	(gr_rect
@@ -30484,7 +30512,7 @@
 			(type default)
 		)
 		(fill no)
-		(layer "F.CrtYd")
+		(layer "B.CrtYd")
 		(uuid "e4bb31b1-e8a4-470e-8a2b-998b04b3a79c")
 	)
 	(gr_circle
@@ -30527,7 +30555,7 @@
 			(type default)
 		)
 		(fill no)
-		(layer "F.Fab")
+		(layer "B.Fab")
 		(uuid "6fca11ea-e4aa-46a4-bca1-4e0667bb488c")
 	)
 	(gr_rect
@@ -30538,7 +30566,7 @@
 			(type default)
 		)
 		(fill no)
-		(layer "F.Fab")
+		(layer "B.Fab")
 		(uuid "7506fa0c-db24-47fc-9cc5-e0844b526709")
 	)
 	(gr_line
@@ -30548,7 +30576,7 @@
 			(width 0.3)
 			(type default)
 		)
-		(layer "F.Fab")
+		(layer "B.Fab")
 		(uuid "53d2a8db-48f9-46f9-848b-d390b1e0ce9b")
 	)
 	(gr_line
@@ -30558,7 +30586,7 @@
 			(width 0.3)
 			(type default)
 		)
-		(layer "F.Fab")
+		(layer "B.Fab")
 		(uuid "460b709b-45b2-4ce9-9d80-acb7ec2281dc")
 	)
 	(gr_text "extrusion end"
@@ -30757,7 +30785,7 @@
 			(justify left)
 		)
 	)
-	(gr_text "41.5x40 face on board; leads exit 41.5x20 face at ~10.2 above PCB,"
+	(gr_text "BOTTOM. 41.5x40 face on board; leads exit 41.5x20 face at ~10.2 below PCB,"
 		(at 229.98 36.69 0)
 		(layer "Cmts.User")
 		(uuid "535f7f8d-2da3-4b3b-b093-f19d3af42148")
@@ -30768,7 +30796,7 @@
 			)
 		)
 	)
-	(gr_text "run 2.5 outboard then bend 90 deg down (r ~1, >=1 mm straight from body)"
+	(gr_text "BOTTOM: run 2.5 outboard then bend 90 deg up into the board (r ~1, >=1 mm straight from body)"
 		(at 229.98 38.49 0)
 		(layer "Cmts.User")
 		(uuid "aabb35af-bc27-47d2-9fc5-97ee2df460bf")
@@ -30779,7 +30807,7 @@
 			)
 		)
 	)
-	(gr_text "cable tie (2.5 mm) through 2x NPTH 3.2 over body, or RTV the body down"
+	(gr_text "BOTTOM: cable tie (2.5 mm) through 2x NPTH 3.2 around the body, or RTV it to the board"
 		(at 229.98 40.69 0)
 		(layer "Cmts.User")
 		(uuid "65d94963-23af-4af6-a202-b52c04d9f9e7")
@@ -30801,7 +30829,7 @@
 			)
 		)
 	)
-	(gr_text "C_MOTOR1 || C_MOTOR2 = 133 uF (CDE 130-156); pad 1-1, 2-2"
+	(gr_text "BOTTOM: C_MOTOR1 || C_MOTOR2 = 133 uF (CDE 130-156); pad 1-1, 2-2"
 		(at 229.98 44.69 0)
 		(layer "Cmts.User")
 		(uuid "b7b6e63d-03bc-494c-b517-fe4554deff37")
@@ -30823,7 +30851,7 @@
 			)
 		)
 	)
-	(gr_text "UPRIGHT, H 15.0 max"
+	(gr_text "BOTTOM, UPRIGHT, H 15.0 max"
 		(at 265.2 38.34 0)
 		(layer "Cmts.User")
 		(uuid "6642b56b-90bf-4bc0-a939-db93f3835a64")
@@ -30845,7 +30873,7 @@
 			)
 		)
 	)
-	(gr_text "leads 1.0 straight down"
+	(gr_text "BOTTOM: leads straight up through the board (solder from the top)"
 		(at 265.2 42.34 0)
 		(layer "Cmts.User")
 		(uuid "17a910c1-bf7b-4f97-af3d-b178bc39ffd1")
@@ -30856,7 +30884,7 @@
 			)
 		)
 	)
-	(gr_text "(6 mm leads: no flat mount)"
+	(gr_text "BOTTOM (6 mm leads: seat on the board, solder from the top)"
 		(at 265.2 44.34 0)
 		(layer "Cmts.User")
 		(uuid "3aaffba0-be13-4f41-86aa-62bddae8ad96")
@@ -31165,35 +31193,41 @@
 	)
 	(gr_text "B32526T1336K000"
 		(at 274.26 80.06 90)
-		(layer "F.Fab")
+		(layer "B.Fab")
 		(uuid "2ea377c2-1419-4363-abbf-360c659af209")
 		(effects
 			(font
 				(size 1.1 1.1)
 				(thickness 0.165)
 			)
+		
+			(justify mirror)
 		)
 	)
 	(gr_text "C_MOTOR2"
 		(at 272.26 80.06 90)
-		(layer "F.Fab")
+		(layer "B.Fab")
 		(uuid "cdc287f6-1406-4e99-a42c-8546b8645b39")
 		(effects
 			(font
 				(size 1.2 1.2)
 				(thickness 0.18)
 			)
+		
+			(justify mirror)
 		)
 	)
 	(gr_text "C_MOTOR1 \nR60EW61005000K 100uF flat, H 20.3"
 		(at 274.26 118.51 90)
-		(layer "F.Fab")
+		(layer "B.Fab")
 		(uuid "98caf99a-591c-4d23-bed1-ea382f1f33a1")
 		(effects
 			(font
 				(size 1.2 1.2)
 				(thickness 0.18)
 			)
+		
+			(justify mirror)
 		)
 	)
 	(dimension
